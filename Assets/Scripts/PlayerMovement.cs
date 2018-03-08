@@ -2,42 +2,53 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour {
-	
-	public float moveSpeed;
-	private Vector3 velocity;
-	Rigidbody rb;
-	Camera mainCamera;
-	Animator myAnim;
-	float inputVelocity;
+public class PlayerMovement : MonoBehaviour
+{
+    public float moveSpeed;
+    private Rigidbody rb;
+    private Animator anim;
 
-	// Use this for initialization
-	void Start () {
-		rb = GetComponent<Rigidbody>();
-		mainCamera = Camera.main;
-		myAnim = GetComponent<Animator> ();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		float horizontalInput = Input.GetAxis ("Horizontal");
-		float verticalInput = Input.GetAxis ("Vertical");
-		Vector3 inputDirection = new Vector3 (horizontalInput, 0, verticalInput);
-		inputVelocity = inputDirection.sqrMagnitude;
+    private Vector3 inputDirection;
+    private Vector3 moveVelocity;
 
-		velocity = transform.forward * moveSpeed * inputVelocity;
-		if (inputVelocity > 0) {
-			Vector3 cameraForward = mainCamera.transform.forward;
-			cameraForward.y = 0;
-			Quaternion cameraRelativeRotation = Quaternion.FromToRotation (Vector3.forward, cameraForward);
-			Vector3 lookToward =  cameraRelativeRotation * inputDirection;
-			Ray characterForwardRay = new Ray (transform.position, lookToward);
-			transform.LookAt (characterForwardRay.GetPoint (1));
-		}
-	}
+    private Camera mainCamera;
 
-	void FixedUpdate() {
-		rb.velocity = velocity;
-		myAnim.SetFloat ("BlendSpeed", rb.velocity.magnitude);
-	}
-}
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        mainCamera = Camera.main;
+        anim = GetComponent<Animator>();
+    }
+
+    void Update()
+    {
+        float lh = Input.GetAxis("Horizontal");
+        float lv = Input.GetAxis("Vertical");
+
+        inputDirection = new Vector3(lh, 0f, lv);
+        Vector3 cameraForward = mainCamera.transform.forward;
+        cameraForward.y = 0;
+        Quaternion cameraRelativeRotation = Quaternion.FromToRotation(Vector3.forward, cameraForward);
+        Vector3 lookToward = cameraRelativeRotation * inputDirection;
+
+        if (inputDirection.sqrMagnitude > 0)
+        {
+            Ray lookRay = new Ray(transform.position, lookToward);
+            transform.LookAt(lookRay.GetPoint(1));
+        }
+
+        moveVelocity = transform.forward* moveSpeed * inputDirection.sqrMagnitude;
+        moveVelocity = Vector3.ClampMagnitude(moveVelocity, moveSpeed);
+        Animating();
+    }
+
+    void FixedUpdate()
+    {
+        rb.velocity = moveVelocity;
+    }
+
+    void Animating()
+    {
+        anim.SetFloat("blendSpeed", rb.velocity.magnitude);
+    }
+ }
