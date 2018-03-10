@@ -34,11 +34,11 @@ public class PlayerMovement : MonoBehaviour
 
         if(rb.velocity.magnitude < 4.5)
         {
-            smoothing = 20.0f;
+            smoothing = 30.0f;
         }
         else
         {
-            smoothing = 3.5f;
+            smoothing = 6f;
         }
 
         lookToward = Vector3.Lerp (transform.forward, cameraRelativeRotation * inputDirection, smoothing*Time.deltaTime);
