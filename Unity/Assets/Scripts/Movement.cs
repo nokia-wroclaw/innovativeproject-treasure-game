@@ -39,15 +39,15 @@ public abstract class Movement : MonoBehaviour
         rb.velocity = moveVelocity;
     }
 
-    protected virtual void Move(float xDir, float zDir, Transform reference)
+    protected virtual void Move(float xDir, float zDir, Vector3 forward)
     {
         var inputDirection = new Vector3(xDir, 0f, zDir);
-        var directionReference = reference.forward;
+        var directionReference = forward;
         directionReference.y = 0;
         var referenceRelativeRotation = Quaternion.FromToRotation(Vector3.forward, directionReference);
 
         lookToward = Vector3.Lerp(transform.forward, referenceRelativeRotation * inputDirection, Smoothing * Time.deltaTime);
-
+        
         if (inputDirection.sqrMagnitude > 0)
         {
             var lookRay = new Ray(transform.position, lookToward);

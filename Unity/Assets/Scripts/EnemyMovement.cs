@@ -7,8 +7,7 @@ public class EnemyMovement : Movement
 
     public GameObject pointA;
     public GameObject pointB;
-    private bool reverseMove = false;
-    private Vector3 position;
+    private Vector3 direction;
 
     /*protected override float Smoothing
     {
@@ -22,6 +21,10 @@ public class EnemyMovement : Movement
     protected override void Start()
     {
         base.Start();
+        if(Vector3.Distance(this.transform.position, pointA.transform.position) > Vector3.Distance(this.transform.position, pointB.transform.position))
+            direction = pointA.transform.position - transform.position;
+        else
+            direction = pointB.transform.position - transform.position;
     }
 
     protected override void Update()
@@ -32,24 +35,20 @@ public class EnemyMovement : Movement
 
     private void MovementController()
     {
+        Move(direction.x, direction.z, Vector3.forward);
 
-        if (reverseMove)
+        if (Vector3.Distance(this.transform.position, pointB.transform.position) < 3.0f) 
         {
-            position = new Vector3(0, 0, -1);
-        }
-        else
-        {
-            position = new Vector3(0, 0, 1);
-
+            Debug.Log("pyk1");
+            direction = pointA.transform.position - transform.position;
         }
 
-        Move(position.x, position.z, pointB.transform);
-        // print(Vector3.Distance(this.transform.position, pointB.transform.position));
+        if (Vector3.Distance(this.transform.position, pointA.transform.position) < 3.0f) 
+        {
+            Debug.Log("pyk2");
+            direction = pointB.transform.position - transform.position;
+        }
 
-        if ((Vector3.Distance(this.transform.position, pointB.transform.position) < 2.0f || Vector3.Distance(this.transform.position, pointA.transform.position) < 2.0f))
-            reverseMove = !reverseMove;
-
-        print(rb.velocity.magnitude);
     }
 
    

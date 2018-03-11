@@ -9,7 +9,7 @@ public class PlayerMovement : Movement
         float lh = Input.GetAxis("Horizontal");
         float lv = Input.GetAxis("Vertical");
 
-        Move(lh, lv, Camera.main.transform);
+        Move(lh, lv, Camera.main.transform.forward);
 
         Animating();
     }
