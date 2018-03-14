@@ -8,86 +8,129 @@ export default class Map extends React.Component {
         super(props);
         this.stage = null;
         this.layer = null;
+        this.width = Math.floor(800);
+        this.height = Math.floor(500);
+        this.selectBox = this.selectBox.bind(this);
+        this.dragstart = this.dragstart.bind(this);
+        this.dragend = this.dragend.bind(this);
+        this.imageOnLoad = this.imageOnLoad.bind(this)
     }
     componentDidMount() {
-        //const tween = null;
+        var tween = null;
+        var width = this.width;
+        var height = this.height;
 
         this.stage = new Konva.Stage({
             container: this.containerRef,
-            width: 1024,
-            height: 600
+            width: width,
+            height: height,
+            padding: 100
         });
-
-
         this.layer = new Konva.Layer();
-        //const dragLayer = new Konva.Layer();
+        var dragLayer = new Konva.Layer();
 
-        this.stage.add(this.layer);
+        this.stage.add(this.layer, dragLayer);
 
-        /*stage.on("dragstart", function (evt) {
-            const shape = evt.target;
-            // moving to another layer will improve dragging performance
-            shape.moveTo(dragLayer);
-            stage.draw();
-
-            if (tween) {
-                tween.pause();
-            }
-            shape.setAttrs({
-                shadowOffset: {
-                    x: 15,
-                    y: 15
-                },
-                scale: {
-                    x: shape.getAttr("startScale") * 1.2,
-                    y: shape.getAttr("startScale") * 1.2
-                }
-            });
+        this.stage.on("dragstart", (e) => {
+            this.dragstart(e, tween, dragLayer);
         });
 
-        stage.on("dragend", function (evt) {
-            const shape = evt.target;
-            shape.moveTo(layer);
-            stage.draw();
-            shape.to({
-                duration: 0.5,
-                easing: Konva.Easings.ElasticEaseOut,
-                scaleX: shape.getAttr("startScale"),
-                scaleY: shape.getAttr("startScale"),
-                shadowOffsetX: 5,
-                shadowOffsetY: 5
-            });
-        });*/
+        this.stage.on("dragend", (e) => {
+            this.dragend(e);
+        })
+    }
+
+    dragstart(e, tween, dragLayer) {
+        const shape = e.target;
+        // moving to another layer will improve dragging performance
+        shape.moveTo(dragLayer);
+        this.stage.draw();
+
+        if (tween) {
+            tween.pause();
+        }
+
+        shape.setAttrs({
+            shadowOffset: {
+                x: 10,
+                y: 10
+            },
+            scale: {
+                x: 1.2,
+                y: 1.2
+            }
+        });
+    }
+
+    dragend(e) {
+        const image = e.target;
+        image.moveTo(this.layer);
+        this.stage.draw();
+        console.log("Image X: " + image.x() + ", Image Y: " + image.y());
+        image.to({
+            duration: 1,
+            easing: Konva.Easings.ElasticEaseOut,
+            scaleX: 1,
+            scaleY: 1,
+            shadowOffsetX: 0,
+            shadowOffsetY: 0
+        });
     }
 
     render() {
         return (
-            <div
-                className="container"
-                ref={ref => {
-                    console.log(ref);
-                    this.containerRef = ref;
-                }}
-            />
+            <div>
+                <img src="./box1.png" alt="box" className="box" onClick={() => this.selectBox("./box1.png")} />
+                <img src="./box2.png" alt="box" className="box" onClick={() => this.selectBox("./box2.png")} />
+                <div
+                    className="container"
+                    ref={ref => {
+                        this.containerRef = ref;
+                    }}
+                />
+            </div>
         );
     }
 
-    addImage() {
+    selectBox(path) {
+        this.addImage(path)
+    }
+
+    imageOnLoad(imageObj) {
+        var scale = 1;
+        var image = new Konva.Image({
+            x: Math.abs(Math.random() * this.stage.getWidth() - 100),
+            y: Math.abs(Math.random() * this.stage.getHeight() - 100),
+            scale: {
+                x: scale,
+                y: scale
+            },
+            shadowOffset: {
+                x: 0,
+                y: 0
+            },
+            width: 100,
+            height: 100,
+            image: imageObj,
+            draggable: true,
+        });
+
+        image.on('mouseover', function () {
+            document.body.style.cursor = 'pointer';
+        });
+        image.on('mouseout', function () {
+            document.body.style.cursor = 'default';
+        });
+        this.layer.add(image);
+        this.stage.draw()
+    }
+
+    addImage(path) {
+
         var imageObj = new Image();
-        imageObj.src = this.props.selectedElement;
-        imageObj.misc = { stage: this.stage, layer: this.layer };
-        console.log(this.stage)
-        imageObj.onload = function () {
-            var image = new Konva.Image({
-                x: Math.random() * this.misc.stage.getWidth(),
-                y: Math.random() * this.misc.stage.getHeight(),
-                width: 100,
-                height: 100,
-                image: imageObj,
-                draggable: true
-            });
-            this.misc.layer.add(image);
-            this.misc.layer.draw();
+        imageObj.src = path
+        imageObj.onload = () => {
+            this.imageOnLoad(imageObj);
         };
     }
 }
