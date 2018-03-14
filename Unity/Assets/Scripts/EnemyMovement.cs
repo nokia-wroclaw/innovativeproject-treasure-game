@@ -12,11 +12,10 @@ public class EnemyMovement : Movement
     {
         get
         {   
-            return 6.0f;
+            return 5.5f;
         }
-    }
+    }*/
 
-    */
     protected override void Start()
     {
         base.Start();

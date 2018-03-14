@@ -34,7 +34,7 @@ public abstract class Movement : MonoBehaviour
     protected abstract void Update();
 
 
-    protected virtual void FixedUpdate()
+    protected void FixedUpdate()
     {
         rb.velocity = moveVelocity;
     }

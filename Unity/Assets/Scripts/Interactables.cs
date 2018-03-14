@@ -5,15 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class Interactables : MonoBehaviour
 {
-    public void Interact()
+    private void Interact()
     {
         SceneManager.LoadScene("MainMenu");
         print("Interacting");
-    }
-
-    void Update()
-    {
-
     }
 
     void OnTriggerEnter(Collider other)

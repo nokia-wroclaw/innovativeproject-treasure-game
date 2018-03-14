@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerVisibility : MonoBehaviour
 {
-    public Transform Player;
+    public Transform player;
     public float fieldOfViewDegrees;
     public float visibilityDistance;
 
@@ -17,10 +17,11 @@ public class PlayerVisibility : MonoBehaviour
     {
         RaycastHit hit;
         Vector3 rayDirection;
-        // Debug.DrawRay(transform.position, rayDirection, Color.red);
+        
         while (true)
         {
-            rayDirection = Player.transform.position - transform.position;
+            rayDirection = player.transform.position - transform.position;
+            Debug.DrawRay(transform.position, rayDirection, Color.red);
 
             if (Vector3.Angle(rayDirection, transform.forward) <= fieldOfViewDegrees * 0.5f)
             {
