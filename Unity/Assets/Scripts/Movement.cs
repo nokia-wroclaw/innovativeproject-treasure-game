@@ -13,7 +13,7 @@ public abstract class Movement : MonoBehaviour
     {
         get
         {
-            if (rb.velocity.magnitude < 4.5)
+            if (rb.velocity.magnitude < 5.5)
             {
                 return 30.0f;
             }
@@ -34,7 +34,7 @@ public abstract class Movement : MonoBehaviour
     protected abstract void Update();
 
 
-    protected void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         rb.velocity = moveVelocity;
     }

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EnemyMovement : Movement
 {
-
     public GameObject pointA;
     public GameObject pointB;
     private Vector3 direction;
@@ -39,17 +38,13 @@ public class EnemyMovement : Movement
 
         if (Vector3.Distance(this.transform.position, pointB.transform.position) < 3.0f) 
         {
-            Debug.Log("pyk1");
             direction = pointA.transform.position - transform.position;
         }
 
         if (Vector3.Distance(this.transform.position, pointA.transform.position) < 3.0f) 
         {
-            Debug.Log("pyk2");
             direction = pointB.transform.position - transform.position;
         }
 
-    }
-
-   
+    } 
 }

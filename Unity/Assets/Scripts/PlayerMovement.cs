@@ -13,5 +13,10 @@ public class PlayerMovement : Movement
 
         Animating();
     }
- 
- }
+
+    protected override void FixedUpdate()
+    {
+        base.FixedUpdate();
+
+    }
+}
