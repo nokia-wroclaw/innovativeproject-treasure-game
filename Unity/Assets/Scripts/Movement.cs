@@ -9,7 +9,7 @@ public abstract class Movement : MonoBehaviour
     protected Vector3 moveVelocity;
     protected Vector3 lookToward;
 
-    protected  virtual float Smoothing
+    protected virtual float Smoothing
     {
         get
         {
