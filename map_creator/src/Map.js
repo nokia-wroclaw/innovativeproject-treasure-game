@@ -17,7 +17,7 @@ export default class Map extends React.Component {
         this.selectBox = this.selectBox.bind(this);
         this.dragstart = this.dragstart.bind(this);
         this.dragend = this.dragend.bind(this);
-        this.imageOnLoad = this.imageOnLoad.bind(this)
+        this.imageOnLoad = this.imageOnLoad.bind(this);
         this.drawGrid = this.drawGrid.bind(this);
         this.clear = this.clear.bind(this);
         this.generate = this.generate.bind(this);
@@ -58,7 +58,6 @@ export default class Map extends React.Component {
         var dragLayer = new Konva.Layer();
 
         this.drawGrid();
-
 
         this.stage.add(this.layer, dragLayer);
 
@@ -211,7 +210,7 @@ export default class Map extends React.Component {
         });
 
         image.type = type;
-
+        image.src=imageObj.src;
         image.imageIndex = this.imageIndex;
         this.imageIndex++;
 
@@ -257,6 +256,19 @@ export default class Map extends React.Component {
         this.stage.draw()
     }
 
+    reloadImage(image) {
+        this.layer.add(image);
+        this.stage.draw()
+    }
+
+    loadImages(){
+        this.objects.forEach((entry) => {
+            this.reloadImage(entry);
+        });
+    }   
+    
+
+
     addImage(path, type) {
 
         var imageObj = new Image();
@@ -282,6 +294,7 @@ export default class Map extends React.Component {
     handleSubmit(event) {
         this.width=this.state.width;
         this.height=this.state.height;
-        this.componentDidMount() 
+        this.componentDidMount()
+        this.loadImages(); 
       }
 }
