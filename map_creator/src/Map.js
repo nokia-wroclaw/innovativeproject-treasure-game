@@ -21,6 +21,10 @@ export default class Map extends React.Component {
         this.drawGrid = this.drawGrid.bind(this);
         this.clear = this.clear.bind(this);
         this.generate = this.generate.bind(this);
+
+        this.state = {width: this.width,height: this.height};
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
     componentDidMount() {
         var tween = null;
@@ -158,6 +162,19 @@ export default class Map extends React.Component {
                 <p>
                     <button type="button" onClick={this.generate}>Generate map!</button>
                 </p>
+                <form onSubmit={this.handleSubmit}>
+                    <label>
+                         width:
+                         <input name="width" type="number" min="1" value={this.state.width} onChange={this.handleChange} />
+                    </label>
+                    <label>
+                         height:
+                         <input name="height" type="number" min="1" value={this.state.height} onChange={this.handleChange} />
+                    </label>
+
+                    <input type="button"  onClick={this.handleSubmit} value="Change" />
+                </form>
+
                 <img src="./box1.png" alt="box" className="box" onClick={() => this.selectBox("./box1.png", "box1")} />
                 <img src="./box2.png" alt="box" className="box" onClick={() => this.selectBox("./box2.png", "box2")} />
                 <div
@@ -249,4 +266,22 @@ export default class Map extends React.Component {
             this.imageOnLoad(imageObj, type);
         };
     }
+
+    handleChange(event) {
+
+        const target = event.target;
+        const value = event.target.value;
+        const name = target.name;
+        
+        this.setState({
+            [name]: value
+          });
+      }
+
+    
+    handleSubmit(event) {
+        this.width=this.state.width;
+        this.height=this.state.height;
+        this.componentDidMount() 
+      }
 }
