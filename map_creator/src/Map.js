@@ -21,6 +21,8 @@ export default class Map extends React.Component {
         this.drawGrid = this.drawGrid.bind(this);
         this.clear = this.clear.bind(this);
         this.generate = this.generate.bind(this);
+        this.generateRandom = this.generateRandom.bind(this);
+        this.checkPos = this.checkPos.bind(this);
 
         this.state = {width: this.width,height: this.height,blockSize: this.blockSize};
         this.handleChange = this.handleChange.bind(this);
@@ -104,6 +106,16 @@ export default class Map extends React.Component {
         });
     }
 
+    generateRandom() {
+        this.objects = [];
+        var items = [['./box1.png', 'box1'], ['./box2.png', 'box2'], ['./piramid1.png', 'piramid1']];
+        for (var i = 0; i < 7; i++) {
+            const randomElement = items[Math.floor(Math.random() * items.length)];
+            this.addImage(randomElement[0], randomElement[1]);
+        }
+        this.clear();
+    }
+
     dragstart(e, tween, dragLayer) {
         const image = e.target;
         this.shadowRectangle.setAttrs({
@@ -161,6 +173,9 @@ export default class Map extends React.Component {
                 <p>
                     <button type="button" onClick={this.generate}>Generate map!</button>
                 </p>
+                <p>
+                    <button type="button" onClick={this.generateRandom}>Generate random map!</button>
+                </p>
                 <form onSubmit={this.handleSubmit}>
                     <label>
                         Box size:
@@ -180,6 +195,7 @@ export default class Map extends React.Component {
 
                 <img src="./box1.png" alt="box" className="box" onClick={() => this.selectBox("./box1.png", "box1")} />
                 <img src="./box2.png" alt="box" className="box" onClick={() => this.selectBox("./box2.png", "box2")} />
+                <img src="./piramid1.png" alt="box" className="box" onClick={() => this.selectBox("./piramid1.png", "piramid1")} />
                 <div
                     className="container"
                     ref={ref => {
@@ -212,6 +228,10 @@ export default class Map extends React.Component {
             image: imageObj,
             draggable: true,
         });
+        var pos = {x: -1, y: -1};
+        this.checkPos(image, pos)
+
+        image.position({x: pos.x, y: pos.y});
 
         image.type = type;
         image.src=imageObj.src;
@@ -233,25 +253,12 @@ export default class Map extends React.Component {
         image.on('dragmove', () => {
             var x = -1;
             var y = -1;
-            // Checking x position
-            if (image.x() < 0) {
-                x = 0;
-            } else if (image.x() + image.width() > this.width) {
-                x = this.width - image.width();
-            } else {
-                x = Math.round(image.x() / this.blockSize) * this.blockSize;
-            }
-            // Checking y position
-            if (image.y() < 0) {
-                y = 0;
-            } else if (image.y() + image.height() > this.height) {
-                y = this.height - image.height();
-            } else {
-                y = Math.round(image.y() / this.blockSize) * this.blockSize;
-            }
+            var pos = {x: -1, y: -1};
+            this.checkPos(image, pos);
+
             this.shadowRectangle.position({
-                x: x,
-                y: y
+                x: pos.x,
+                y: pos.y
             });
             this.stage.batchDraw();
         });
@@ -271,6 +278,24 @@ export default class Map extends React.Component {
         });
     }   
     
+    checkPos(image, pos) {
+      // Checking x position
+        if (image.x() < 0) {
+            pos.x = 0;
+        } else if (image.x() + image.width() > this.width) {
+            pos.x = this.width - image.width();
+        } else {
+            pos.x = Math.round(image.x() / this.blockSize) * this.blockSize;
+        }
+        // Checking y position
+        if (image.y() < 0) {
+            pos.y = 0;
+        } else if (image.y() + image.height() > this.height) {
+            pos.y = this.height - image.height();
+        } else {
+            pos.y = Math.round(image.y() / this.blockSize) * this.blockSize;
+        }
+    }
 
 
     addImage(path, type) {
