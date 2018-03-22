@@ -22,7 +22,7 @@ export default class Map extends React.Component {
         this.clear = this.clear.bind(this);
         this.generate = this.generate.bind(this);
 
-        this.state = {width: this.width,height: this.height};
+        this.state = {width: this.width,height: this.height,blockSize: this.blockSize};
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -163,12 +163,16 @@ export default class Map extends React.Component {
                 </p>
                 <form onSubmit={this.handleSubmit}>
                     <label>
-                         width:
-                         <input name="width" type="number" min="1" value={this.state.width} onChange={this.handleChange} />
+                        Box size:
+                         <input name="blockSize" type="number" value={this.state.blockSize} onChange={this.handleChange} />
                     </label>
                     <label>
-                         height:
-                         <input name="height" type="number" min="1" value={this.state.height} onChange={this.handleChange} />
+                         Width:
+                         <input name="width" type="number" value={this.state.width} onChange={this.handleChange} step={this.state.blockSize} />
+                    </label>
+                    <label>
+                         Height:
+                         <input name="height" type="number" value={this.state.height} onChange={this.handleChange} step={this.state.blockSize} />
                     </label>
 
                     <input type="button"  onClick={this.handleSubmit} value="Change" />
@@ -294,6 +298,7 @@ export default class Map extends React.Component {
     handleSubmit(event) {
         this.width=this.state.width;
         this.height=this.state.height;
+        this.blockSize=this.state.blockSize;
         this.componentDidMount()
         this.loadImages(); 
       }
