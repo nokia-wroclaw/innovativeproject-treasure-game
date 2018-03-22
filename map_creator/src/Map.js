@@ -14,19 +14,7 @@ export default class Map extends React.Component {
         this.objects = [];
         this.width = Math.floor(800 / this.blockSize) * this.blockSize;
         this.height = Math.floor(500 / this.blockSize) * this.blockSize;
-        this.selectBox = this.selectBox.bind(this);
-        this.dragstart = this.dragstart.bind(this);
-        this.dragend = this.dragend.bind(this);
-        this.imageOnLoad = this.imageOnLoad.bind(this);
-        this.drawGrid = this.drawGrid.bind(this);
-        this.redraw = this.redraw.bind(this);
-        this.generate = this.generate.bind(this);
-        this.generateRandom = this.generateRandom.bind(this);
-        this.checkPos = this.checkPos.bind(this);
-
         this.state = {width: this.width,height: this.height,blockSize: this.blockSize};
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
     }
     componentDidMount() {
         var tween = null;
@@ -70,6 +58,20 @@ export default class Map extends React.Component {
         this.stage.on("dragend", (e) => {
             this.dragend(e);
         })
+    }
+
+    bindMethods() {
+        this.selectBox = this.selectBox.bind(this);
+        this.dragstart = this.dragstart.bind(this);
+        this.dragend = this.dragend.bind(this);
+        this.imageOnLoad = this.imageOnLoad.bind(this);
+        this.drawGrid = this.drawGrid.bind(this);
+        this.redraw = this.redraw.bind(this);
+        this.generate = this.generate.bind(this);
+        this.generateRandom = this.generateRandom.bind(this);
+        this.checkPos = this.checkPos.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     drawGrid() {
