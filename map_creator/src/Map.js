@@ -17,6 +17,7 @@ export default class Map extends React.Component {
         this.state = {width: this.width,height: this.height,blockSize: this.blockSize};
     }
     componentDidMount() {
+        this.bindMethods();
         var tween = null;
         var width = this.width;
         var height = this.height;
