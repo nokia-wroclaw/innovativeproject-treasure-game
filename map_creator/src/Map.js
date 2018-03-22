@@ -94,7 +94,10 @@ export default class Map extends React.Component {
         this.layer.removeChildren();
         this.drawGrid();
         this.layer.add(this.shadowRectangle);
+        var pos={x: -1, y: -1};
         this.objects.forEach((entry) => {
+            entry.setHeight(this.blockSize*4);
+            entry.setWidth(this.blockSize*4);
             this.layer.add(entry);
         });
         this.stage.batchDraw();
@@ -320,11 +323,13 @@ export default class Map extends React.Component {
       }
 
     
-    handleSubmit(event) {
+    handleSubmit() {
         this.width=this.state.width;
         this.height=this.state.height;
         this.blockSize=this.state.blockSize;
-        this.componentDidMount()
-        this.loadImages(); 
+        this.stage.setHeight(this.state.height);
+        this.stage.setWidth(this.state.width);
+        this.clear();
+        this.stage.batchDraw;
       }
 }
