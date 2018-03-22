@@ -1,8 +1,8 @@
 {
-        "mapSize":[ 20, 25 ],
+        "mapSize":[25, 25],
         "gameObjects": [
-            { "size":[1, 10, 1], "position":[0, 0, 0], "type": "block"},
-            { "size":[1, 20, 1], "position":[2, 0, 0], "type": "block"},
-            { "size":[1, 30, 1], "position":[4, 0, 0], "type": "block"}
+            { "size":[1, 10, 1], "position":[0, 0, 0], "type": "Block"},
+            { "size":[1, 20, 1], "position":[2, 0, 0], "type": "Block"},
+            { "size":[1, 30, 1], "position":[4, 0, 0], "type": "Block"}
         ]
 }

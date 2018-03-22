@@ -8,7 +8,6 @@ public class Interactables : MonoBehaviour
     private void Interact()
     {
         SceneManager.LoadScene("MainMenu");
-        print("Interacting");
     }
 
     void OnTriggerEnter(Collider other)
