@@ -19,7 +19,7 @@ export default class Map extends React.Component {
         this.dragend = this.dragend.bind(this);
         this.imageOnLoad = this.imageOnLoad.bind(this);
         this.drawGrid = this.drawGrid.bind(this);
-        this.clear = this.clear.bind(this);
+        this.redraw = this.redraw.bind(this);
         this.generate = this.generate.bind(this);
         this.generateRandom = this.generateRandom.bind(this);
         this.checkPos = this.checkPos.bind(this);
@@ -90,12 +90,14 @@ export default class Map extends React.Component {
         }
     }
 
-    clear() {
+    redraw() {
         this.layer.removeChildren();
         this.drawGrid();
         this.layer.add(this.shadowRectangle);
         var pos={x: -1, y: -1};
         this.objects.forEach((entry) => {
+            this.checkPos(entry, pos);
+            entry.setAttrs({x: pos.x, y: pos.y})
             entry.setHeight(this.blockSize*4);
             entry.setWidth(this.blockSize*4);
             this.layer.add(entry);
@@ -116,7 +118,7 @@ export default class Map extends React.Component {
             const randomElement = items[Math.floor(Math.random() * items.length)];
             this.addImage(randomElement[0], randomElement[1]);
         }
-        this.clear();
+        this.redraw();
     }
 
     dragstart(e, tween, dragLayer) {
@@ -250,7 +252,7 @@ export default class Map extends React.Component {
 
         image.on("dblclick", () => {
             delete this.objects[image.imageIndex];
-            this.clear();
+            this.redraw();
         });
 
         image.on('dragmove', () => {
@@ -329,7 +331,7 @@ export default class Map extends React.Component {
         this.blockSize=this.state.blockSize;
         this.stage.setHeight(this.state.height);
         this.stage.setWidth(this.state.width);
-        this.clear();
+        this.redraw();
         this.stage.batchDraw;
       }
 }
