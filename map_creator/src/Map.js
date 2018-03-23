@@ -19,9 +19,9 @@ export default class Map extends React.Component {
         this.state = { width: this.width, height: this.height, blockSize: this.blockSize };
     }
     componentDidMount() {
-        var tween = null;
-        var width = this.width;
-        var height = this.height;
+        const tween = null;
+        const width = this.width;
+        const height = this.height;
 
         this.shadowRectangle = new Konva.Rect({
             x: 0,
@@ -47,7 +47,7 @@ export default class Map extends React.Component {
         this.layer = new Konva.Layer();
         this.shadowRectangle.hide();
         this.layer.add(this.shadowRectangle);
-        var dragLayer = new Konva.Layer();
+        const dragLayer = new Konva.Layer();
 
         this.drawGrid();
 
@@ -61,6 +61,8 @@ export default class Map extends React.Component {
             this.dragend(e);
         })
     }
+
+    // Misc
 
     bindMethods() {
         this.selectBox = this.selectBox.bind(this);
@@ -76,8 +78,10 @@ export default class Map extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    // Stage stuff
+
     drawGrid() {
-        for (var i = 0; i < this.width / this.blockSize; i++) {
+        for (let i = 0; i < this.width / this.blockSize; i++) {
             this.layer.add(new Konva.Line({
                 points: [Math.round(i * this.blockSize) + 0.5, 0, Math.round(i * this.blockSize) + 0.5, this.height],
                 stroke: '#ddd',
@@ -85,7 +89,7 @@ export default class Map extends React.Component {
             }));
         }
 
-        for (var j = 0; j < this.height / this.blockSize; j++) {
+        for (let j = 0; j < this.height / this.blockSize; j++) {
             this.layer.add(new Konva.Line({
                 points: [0, Math.round(j * this.blockSize), this.width, Math.round(j * this.blockSize)],
                 stroke: '#ddd',
@@ -98,7 +102,7 @@ export default class Map extends React.Component {
         this.layer.removeChildren();
         this.drawGrid();
         this.layer.add(this.shadowRectangle);
-        var pos = { x: -1, y: -1 };
+        const pos = { x: -1, y: -1 };
         this.objects.forEach((entry) => {
             this.checkPos(entry, pos);
             entry.setAttrs({ x: pos.x, y: pos.y })
@@ -109,6 +113,8 @@ export default class Map extends React.Component {
         this.stage.batchDraw();
     }
 
+    // Click events
+
     generate() {
         this.objects.forEach((entry) => {
             console.log("Object " + entry.type + " X: " + entry.x() + ", Y: " + entry.y());
@@ -117,8 +123,8 @@ export default class Map extends React.Component {
 
     generateRandom() {
         this.objects = [];
-        var items = [['./box1.png', 'box1'], ['./box2.png', 'box2'], ['./piramid1.png', 'piramid1']];
-        for (var i = 0; i < 7; i++) {
+        const items = [['./box1.png', 'box1'], ['./box2.png', 'box2'], ['./piramid1.png', 'piramid1']];
+        for (let i = 0; i < 7; i++) {
             const randomElement = items[Math.floor(Math.random() * items.length)];
             this.addImage(randomElement[0], randomElement[1]);
         }
@@ -176,6 +182,121 @@ export default class Map extends React.Component {
         console.log("Image X: " + image.x() + ", Image Y: " + image.y());
     }
 
+    selectBox(path, type) {
+        this.addImage(path, type)
+    }
+
+    handleChange(event) {
+
+        const target = event.target;
+        const value = event.target.value;
+        const name = target.name;
+
+        this.setState({
+            [name]: value
+        });
+    }
+
+    handleSubmit() {
+        this.width = this.state.width;
+        this.height = this.state.height;
+        this.blockSize = this.state.blockSize;
+        this.stage.setHeight(this.state.height);
+        this.stage.setWidth(this.state.width);
+        this.redraw();
+    }
+
+    // Image stuff 
+
+    imageOnLoad(imageObj, type) {
+        const scale = 1;
+        const image = new Konva.Image({
+            x: Math.abs(Math.random() * this.stage.getWidth() - 100),
+            y: Math.abs(Math.random() * this.stage.getHeight() - 100),
+            scale: {
+                x: scale,
+                y: scale
+            },
+            shadowOffset: {
+                x: 0,
+                y: 0
+            },
+            width: this.blockSize * 4,
+            height: this.blockSize * 4,
+            image: imageObj,
+            draggable: true,
+        });
+        const pos = { x: -1, y: -1 };
+        this.checkPos(image, pos)
+
+        image.position({ x: pos.x, y: pos.y });
+
+        image.type = type;
+        image.src = imageObj.src;
+        image.imageIndex = this.imageIndex;
+        this.imageIndex++;
+
+        image.on('mouseover', function () {
+            document.body.style.cursor = 'pointer';
+        });
+        image.on('mouseout', function () {
+            document.body.style.cursor = 'default';
+        });
+
+        image.on("dblclick", () => {
+            delete this.objects[image.imageIndex];
+            this.redraw();
+        });
+
+        image.on('dragmove', () => {
+            const pos = { x: -1, y: -1 };
+            this.checkPos(image, pos);
+
+            this.shadowRectangle.position({
+                x: pos.x,
+                y: pos.y
+            });
+            this.stage.batchDraw();
+        });
+        this.objects.push(image);
+        this.layer.add(image);
+        this.stage.draw()
+    }
+
+    addImage(path, type) {
+
+        const imageObj = new Image();
+        imageObj.src = path
+        imageObj.misc = { stage: this.stage, layer: this.layer };
+        imageObj.onload = () => {
+            this.imageOnLoad(imageObj, type);
+        };
+    }
+
+    reloadImage(image) {
+        this.layer.add(image);
+        this.stage.batchDraw();
+    }
+
+    checkPos(image, pos) {
+        // Checking x position
+        if (image.x() < 0) {
+            pos.x = 0;
+        } else if (image.x() + image.width() > this.width) {
+            pos.x = this.width - image.width();
+        } else {
+            pos.x = Math.round(image.x() / this.blockSize) * this.blockSize;
+        }
+        // Checking y position
+        if (image.y() < 0) {
+            pos.y = 0;
+        } else if (image.y() + image.height() > this.height) {
+            pos.y = this.height - image.height();
+        } else {
+            pos.y = Math.round(image.y() / this.blockSize) * this.blockSize;
+        }
+    }
+
     render() {
         return (
             <div>
@@ -213,129 +334,5 @@ export default class Map extends React.Component {
                 />
             </div>
         );
-    }
-
-    selectBox(path, type) {
-        this.addImage(path, type)
-    }
-
-    imageOnLoad(imageObj, type) {
-        var scale = 1;
-        var image = new Konva.Image({
-            x: Math.abs(Math.random() * this.stage.getWidth() - 100),
-            y: Math.abs(Math.random() * this.stage.getHeight() - 100),
-            scale: {
-                x: scale,
-                y: scale
-            },
-            shadowOffset: {
-                x: 0,
-                y: 0
-            },
-            width: this.blockSize * 4,
-            height: this.blockSize * 4,
-            image: imageObj,
-            draggable: true,
-        });
-        var pos = { x: -1, y: -1 };
-        this.checkPos(image, pos)
-
-        image.position({ x: pos.x, y: pos.y });
-
-        image.type = type;
-        image.src = imageObj.src;
-        image.imageIndex = this.imageIndex;
-        this.imageIndex++;
-
-        image.on('mouseover', function () {
-            document.body.style.cursor = 'pointer';
-        });
-        image.on('mouseout', function () {
-            document.body.style.cursor = 'default';
-        });
-
-        image.on("dblclick", () => {
-            delete this.objects[image.imageIndex];
-            this.redraw();
-        });
-
-        image.on('dragmove', () => {
-            var x = -1;
-            var y = -1;
-            var pos = { x: -1, y: -1 };
-            this.checkPos(image, pos);
-
-            this.shadowRectangle.position({
-                x: pos.x,
-                y: pos.y
-            });
-            this.stage.batchDraw();
-        });
-        this.objects.push(image);
-        this.layer.add(image);
-        this.stage.draw()
-    }
-
-    reloadImage(image) {
-        this.layer.add(image);
-        this.stage.draw()
-    }
-
-    loadImages() {
-        this.objects.forEach((entry) => {
-            this.reloadImage(entry);
-        });
-    }
-
-    checkPos(image, pos) {
-        // Checking x position
-        if (image.x() < 0) {
-            pos.x = 0;
-        } else if (image.x() + image.width() > this.width) {
-            pos.x = this.width - image.width();
-        } else {
-            pos.x = Math.round(image.x() / this.blockSize) * this.blockSize;
-        }
-        // Checking y position
-        if (image.y() < 0) {
-            pos.y = 0;
-        } else if (image.y() + image.height() > this.height) {
-            pos.y = this.height - image.height();
-        } else {
-            pos.y = Math.round(image.y() / this.blockSize) * this.blockSize;
-        }
-    }
-
-
-    addImage(path, type) {
-
-        var imageObj = new Image();
-        imageObj.src = path
-        imageObj.misc = { stage: this.stage, layer: this.layer };
-        imageObj.onload = () => {
-            this.imageOnLoad(imageObj, type);
-        };
-    }
-
-    handleChange(event) {
-
-        const target = event.target;
-        const value = event.target.value;
-        const name = target.name;
-
-        this.setState({
-            [name]: value
-        });
-    }
-
-
-    handleSubmit() {
-        this.width = this.state.width;
-        this.height = this.state.height;
-        this.blockSize = this.state.blockSize;
-        this.stage.setHeight(this.state.height);
-        this.stage.setWidth(this.state.width);
-        this.redraw();
-        // this.stage.batchDraw;
     }
 }
