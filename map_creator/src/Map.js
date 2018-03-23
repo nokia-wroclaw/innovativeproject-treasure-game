@@ -1,5 +1,6 @@
 import React from 'react';
 import * as Konva from "konva";
+import * as fs from "browser-filesaver";
 import './Map.css';
 
 export default class Map extends React.Component {
@@ -120,6 +121,7 @@ export default class Map extends React.Component {
     // Click events
 
     generate() {
+        // this.readAssets();
         let i = 0;
         this.objects.forEach((entry) => {
             this.mapObject[entry.type].push({ "x": entry.x(), "y": entry.y() });
@@ -128,12 +130,16 @@ export default class Map extends React.Component {
             console.log("Object " + entry.type + " X: " + entry.x() + ", Y: " + entry.y());
             i++;
         });
-        // this.download();
+        // var x = this.mapToJson(this.mapObject);
+        // var blob =
+        //     new Blob(x, {type: 'text/plain;charset=utf-8'});
+        // fs.saveAs(blob, 'XD.json');
+        this.download();
     }
 
     generateRandom() {
         this.objects = [];
-        const items = [['./box1.png', 'box1'], ['./box2.png', 'box2'], ['./piramid1.png', 'piramid1']];
+        const items = [['./assets/box1.png', 'box1'], ['./assets/box2.png', 'box2'], ['./assets/piramid1.png', 'piramid1']];
         for (let i = 0; i < 7; i++) {
             const randomElement = items[Math.floor(Math.random() * items.length)];
             this.addImage(randomElement[0], randomElement[1]);
@@ -308,18 +314,6 @@ export default class Map extends React.Component {
     }
 
     readAssets() {
-        var dir = require('node-dir');
-
-        dir.readFiles(__dirname,
-            function (err, content, next) {
-                if (err) throw err;
-                console.log('content:', content);  // get content of files
-                next();
-            },
-            function (err, files) {
-                if (err) throw err;
-                console.log('finished reading files:', files); // get filepath 
-            });
     }
     // Map stuff
 
@@ -376,9 +370,9 @@ export default class Map extends React.Component {
                     <input type="button" onClick={this.handleSubmit} value="Change" />
                 </form>
 
-                <img src="./box1.png" alt="box" className="box" onClick={() => this.selectBox("./box1.png", "box1")} />
-                <img src="./box2.png" alt="box" className="box" onClick={() => this.selectBox("./box2.png", "box2")} />
-                <img src="./piramid1.png" alt="box" className="box" onClick={() => this.selectBox("./piramid1.png", "piramid1")} />
+                <img src="./assets/box1.png" alt="box" className="box" onClick={() => this.selectBox("./assets/box1.png", "box1")} />
+                <img src="./assets/box2.png" alt="box" className="box" onClick={() => this.selectBox("./assets/box2.png", "box2")} />
+                <img src="./assets/piramid1.png" alt="box" className="box" onClick={() => this.selectBox("./assets/piramid1.png", "piramid1")} />
                 <div
                     className="container"
                     ref={ref => {
