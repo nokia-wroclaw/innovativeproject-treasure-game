@@ -12,6 +12,7 @@ export default class Map extends React.Component {
         this.blockSize = 30;
         this.imageIndex = 0;
         this.objects = [];
+        this.mapObject = { "box1": [], "box2": [], "piramid1": [] };
         this.width = Math.floor(800 / this.blockSize) * this.blockSize;
         this.height = Math.floor(500 / this.blockSize) * this.blockSize;
         this.bindMethods = this.bindMethods.bind(this);
@@ -22,6 +23,7 @@ export default class Map extends React.Component {
         const tween = null;
         const width = this.width;
         const height = this.height;
+        this.readAssets();
 
         this.shadowRectangle = new Konva.Rect({
             x: 0,
@@ -76,6 +78,8 @@ export default class Map extends React.Component {
         this.checkPos = this.checkPos.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.strMapToObj = this.strMapToObj.bind(this);
+        this.readAssets = this.readAssets.bind(this);
     }
 
     // Stage stuff
@@ -116,9 +120,15 @@ export default class Map extends React.Component {
     // Click events
 
     generate() {
+        let i = 0;
         this.objects.forEach((entry) => {
+            this.mapObject[entry.type].push({ "x": entry.x(), "y": entry.y() });
+            var x = this.mapToJson(this.mapObject);
+            console.log(x);
             console.log("Object " + entry.type + " X: " + entry.x() + ", Y: " + entry.y());
+            i++;
         });
+        // this.download();
     }
 
     generateRandom() {
@@ -296,6 +306,49 @@ export default class Map extends React.Component {
             pos.y = Math.round(image.y() / this.blockSize) * this.blockSize;
         }
     }
+
+    readAssets() {
+        var dir = require('node-dir');
+
+        dir.readFiles(__dirname,
+            function (err, content, next) {
+                if (err) throw err;
+                console.log('content:', content);  // get content of files
+                next();
+            },
+            function (err, files) {
+                if (err) throw err;
+                console.log('finished reading files:', files); // get filepath 
+            });
+    }
+    // Map stuff
+
+    download() {
+        var element = document.createElement('a');
+        element.setAttribute('href', 'XD.json');
+        element.setAttribute('download', 'map.json');
+
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
+    }
+
+    strMapToObj(strMap) {
+        let obj = Object.create(null);
+        for (let [k, v] of strMap) {
+            obj[k] = v;
+        }
+        return obj;
+    }
+
+    mapToJson(map) {
+        return JSON.stringify(map);
+    }
+
+    // Render
 
     render() {
         return (
