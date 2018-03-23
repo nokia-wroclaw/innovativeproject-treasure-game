@@ -14,10 +14,11 @@ export default class Map extends React.Component {
         this.objects = [];
         this.width = Math.floor(800 / this.blockSize) * this.blockSize;
         this.height = Math.floor(500 / this.blockSize) * this.blockSize;
-        this.state = {width: this.width,height: this.height,blockSize: this.blockSize};
+        this.bindMethods = this.bindMethods.bind(this);
+        this.bindMethods();
+        this.state = { width: this.width, height: this.height, blockSize: this.blockSize };
     }
     componentDidMount() {
-        this.bindMethods();
         var tween = null;
         var width = this.width;
         var height = this.height;
@@ -97,12 +98,12 @@ export default class Map extends React.Component {
         this.layer.removeChildren();
         this.drawGrid();
         this.layer.add(this.shadowRectangle);
-        var pos={x: -1, y: -1};
+        var pos = { x: -1, y: -1 };
         this.objects.forEach((entry) => {
             this.checkPos(entry, pos);
-            entry.setAttrs({x: pos.x, y: pos.y})
-            entry.setHeight(this.blockSize*4);
-            entry.setWidth(this.blockSize*4);
+            entry.setAttrs({ x: pos.x, y: pos.y })
+            entry.setHeight(this.blockSize * 4);
+            entry.setWidth(this.blockSize * 4);
             this.layer.add(entry);
         });
         this.stage.batchDraw();
@@ -190,15 +191,15 @@ export default class Map extends React.Component {
                          <input name="blockSize" type="number" value={this.state.blockSize} onChange={this.handleChange} />
                     </label>
                     <label>
-                         Width:
+                        Width:
                          <input name="width" type="number" value={this.state.width} onChange={this.handleChange} step={this.state.blockSize} />
                     </label>
                     <label>
-                         Height:
+                        Height:
                          <input name="height" type="number" value={this.state.height} onChange={this.handleChange} step={this.state.blockSize} />
                     </label>
 
-                    <input type="button"  onClick={this.handleSubmit} value="Change" />
+                    <input type="button" onClick={this.handleSubmit} value="Change" />
                 </form>
 
                 <img src="./box1.png" alt="box" className="box" onClick={() => this.selectBox("./box1.png", "box1")} />
@@ -236,13 +237,13 @@ export default class Map extends React.Component {
             image: imageObj,
             draggable: true,
         });
-        var pos = {x: -1, y: -1};
+        var pos = { x: -1, y: -1 };
         this.checkPos(image, pos)
 
-        image.position({x: pos.x, y: pos.y});
+        image.position({ x: pos.x, y: pos.y });
 
         image.type = type;
-        image.src=imageObj.src;
+        image.src = imageObj.src;
         image.imageIndex = this.imageIndex;
         this.imageIndex++;
 
@@ -261,7 +262,7 @@ export default class Map extends React.Component {
         image.on('dragmove', () => {
             var x = -1;
             var y = -1;
-            var pos = {x: -1, y: -1};
+            var pos = { x: -1, y: -1 };
             this.checkPos(image, pos);
 
             this.shadowRectangle.position({
@@ -280,14 +281,14 @@ export default class Map extends React.Component {
         this.stage.draw()
     }
 
-    loadImages(){
+    loadImages() {
         this.objects.forEach((entry) => {
             this.reloadImage(entry);
         });
-    }   
-    
+    }
+
     checkPos(image, pos) {
-      // Checking x position
+        // Checking x position
         if (image.x() < 0) {
             pos.x = 0;
         } else if (image.x() + image.width() > this.width) {
@@ -321,20 +322,20 @@ export default class Map extends React.Component {
         const target = event.target;
         const value = event.target.value;
         const name = target.name;
-        
+
         this.setState({
             [name]: value
-          });
-      }
+        });
+    }
 
-    
+
     handleSubmit() {
-        this.width=this.state.width;
-        this.height=this.state.height;
-        this.blockSize=this.state.blockSize;
+        this.width = this.state.width;
+        this.height = this.state.height;
+        this.blockSize = this.state.blockSize;
         this.stage.setHeight(this.state.height);
         this.stage.setWidth(this.state.width);
         this.redraw();
-        this.stage.batchDraw;
-      }
+        // this.stage.batchDraw;
+    }
 }
