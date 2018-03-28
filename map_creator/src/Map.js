@@ -81,6 +81,7 @@ export default class Map extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.strMapToObj = this.strMapToObj.bind(this);
         this.readAssets = this.readAssets.bind(this);
+        this.checkOverlap = this.checkOverlap.bind(this);
     }
 
     // Stage stuff
@@ -140,15 +141,18 @@ export default class Map extends React.Component {
     generateRandom() {
         this.objects = [];
         const items = [['./assets/box1.png', 'box1'], ['./assets/box2.png', 'box2'], ['./assets/piramid1.png', 'piramid1']];
-        for (let i = 0; i < 7; i++) {
+        for (let i = 0; i < 10; i++) {
             const randomElement = items[Math.floor(Math.random() * items.length)];
-            this.addImage(randomElement[0], randomElement[1]);
+            if (this.addImage(randomElement[0], randomElement[1])) {
+                continue;
+            }
         }
         this.redraw();
     }
 
     dragstart(e, tween, dragLayer) {
         const image = e.target;
+        this.shadowRectangle.show();
         this.shadowRectangle.setAttrs({
             width: image.width(),
             height: image.height()
@@ -179,10 +183,10 @@ export default class Map extends React.Component {
     }
 
     dragend(e) {
-        this.shadowRectangle.hide();
         const image = e.target;
+        //delete this.objects[image.imageIndex];
         image.moveTo(this.layer);
-        this.stage.draw();
+
         image.to({
             duration: 1,
             easing: Konva.Easings.ElasticEaseOut,
@@ -191,10 +195,22 @@ export default class Map extends React.Component {
             shadowOffsetX: 0,
             shadowOffsetY: 0
         });
-        image.position({
-            x: this.shadowRectangle.x(),
-            y: this.shadowRectangle.y()
-        });
+        if (!this.checkOverlap(image, this.shadowRectangle.x(), this.shadowRectangle.y())) {
+            image.position({
+                x: this.shadowRectangle.x(),
+                y: this.shadowRectangle.y()
+            });
+        } else {
+            image.position({
+                x: image.currentX,
+                y: image.currentY
+            });
+        }
+        image.currentX = image.x();
+        image.currentY = image.y();
+        //this.objects.push(image);
+        this.stage.draw();
+        this.shadowRectangle.hide();
         console.log("Image X: " + image.x() + ", Image Y: " + image.y());
     }
 
@@ -243,13 +259,18 @@ export default class Map extends React.Component {
             draggable: true,
         });
         const pos = { x: -1, y: -1 };
-        this.checkPos(image, pos)
 
+        this.checkPos(image, pos);
+        if (this.checkOverlap(image, image.x(), image.y())) {
+            return false;
+        }
         image.position({ x: pos.x, y: pos.y });
 
         image.type = type;
         image.src = imageObj.src;
         image.imageIndex = this.imageIndex;
+        image.currentX = pos.x;
+        image.currentY = pos.y;
         this.imageIndex++;
 
         image.on('mouseover', function () {
@@ -267,16 +288,28 @@ export default class Map extends React.Component {
         image.on('dragmove', () => {
             const pos = { x: -1, y: -1 };
             this.checkPos(image, pos);
-
             this.shadowRectangle.position({
                 x: pos.x,
                 y: pos.y
             });
+            if (this.checkOverlap(image, this.shadowRectangle.x(), this.shadowRectangle.y())) {
+                console.log("DRAGMOVE OVERLAPS");
+                this.shadowRectangle.setAttrs({
+                    fill: '#ff0000',
+                    stroke: '#b30000'
+                });
+            } else {
+                this.shadowRectangle.setAttrs({
+                    fill: '#07fc1b',
+                    stroke: '#03bc12'
+                });
+            }
             this.stage.batchDraw();
         });
         this.objects.push(image);
         this.layer.add(image);
-        this.stage.draw()
+        this.stage.draw();
+        return true;
     }
 
     addImage(path, type) {
@@ -285,7 +318,7 @@ export default class Map extends React.Component {
         imageObj.src = path
         imageObj.misc = { stage: this.stage, layer: this.layer };
         imageObj.onload = () => {
-            this.imageOnLoad(imageObj, type);
+            return this.imageOnLoad(imageObj, type);
         };
     }
 
@@ -311,6 +344,38 @@ export default class Map extends React.Component {
         } else {
             pos.y = Math.round(image.y() / this.blockSize) * this.blockSize;
         }
+    }
+
+    checkOverlap(image, x, y) {
+        let counter = 0;
+        let imageRect = image.getClientRect(); // use this to get bounding rect for shapes other than rectangles.
+        let X = x
+        let Y = y
+        let A = x + imageRect.width;
+        let B = y + imageRect.height;
+        let r = false;
+        this.objects.forEach((entry) => {
+            if (entry !== image) {
+                let boardImage = entry.getClientRect();
+
+                // corners of shape 2
+                let X1 = boardImage.x;
+                let A1 = boardImage.x + boardImage.width;
+                let Y1 = boardImage.y
+                let B1 = boardImage.y + boardImage.height;
+                // console.log("BOARD RECT: ", X1, Y1, A1, B1);
+                // Simple overlapping rect collision test
+                if (A <= X1 || A1 <= X || B <= Y1 || B1 <= Y) {
+                    r = r;
+                } else {
+                    r = true;
+                }
+            } else {
+                counter++;
+            }
+        });
+        console.log("COUNTER:", counter);
+        return r;
     }
 
     readAssets() {
