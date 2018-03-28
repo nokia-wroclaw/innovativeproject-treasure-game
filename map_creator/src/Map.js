@@ -10,7 +10,7 @@ export default class Map extends React.Component {
         this.stage = null;
         this.layer = null;
         this.shadowRectangle = null;
-        this.blockSize = 30;
+        this.blockSize = 80;
         this.imageIndex = 0;
         this.objects = [];
         this.mapObject = { "box1": [], "box2": [], "piramid1": [] };
@@ -112,8 +112,8 @@ export default class Map extends React.Component {
         this.objects.forEach((entry) => {
             this.checkPos(entry, pos);
             entry.setAttrs({ x: pos.x, y: pos.y })
-            entry.setHeight(this.blockSize * 4);
-            entry.setWidth(this.blockSize * 4);
+            entry.setHeight(this.blockSize);
+            entry.setWidth(this.blockSize);
             this.layer.add(entry);
         });
         this.stage.batchDraw();
@@ -253,8 +253,8 @@ export default class Map extends React.Component {
                 x: 0,
                 y: 0
             },
-            width: this.blockSize * 4,
-            height: this.blockSize * 4,
+            width: this.blockSize,
+            height: this.blockSize,
             image: imageObj,
             draggable: true,
         });
