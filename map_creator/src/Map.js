@@ -14,11 +14,11 @@ export default class Map extends React.Component {
         this.imageIndex = 0;
         this.objects = [];
         this.mapObject = { "box1": [], "box2": [], "piramid1": [] };
-        this.width = Math.floor(800 / this.blockSize) * this.blockSize;
-        this.height = Math.floor(500 / this.blockSize) * this.blockSize;
+        this.width = 800;
+        this.height = 480;
         this.bindMethods = this.bindMethods.bind(this);
         this.bindMethods();
-        this.state = { width: this.width, height: this.height, blockSize: this.blockSize };
+        this.state = { width: parseInt(this.width / this.blockSize), height: this.height / this.blockSize, blockSize: this.blockSize };
     }
     componentDidMount() {
         const tween = null;
@@ -107,16 +107,25 @@ export default class Map extends React.Component {
     redraw() {
         this.layer.removeChildren();
         this.drawGrid();
-        this.layer.add(this.shadowRectangle);
+        this.shadowRectangle.hide();
         const pos = { x: -1, y: -1 };
+        this.checkPos(this.shadowRectangle, pos);
+        this.shadowRectangle.setAttrs({
+            x: pos.x,
+            y: pos.y,
+            width: this.blockSize,
+            height: this.blockSize
+        })
+        this.layer.add(this.shadowRectangle);
         this.objects.forEach((entry) => {
+            const pos = { x: -1, y: -1 };
             this.checkPos(entry, pos);
             entry.setAttrs({ x: pos.x, y: pos.y })
             entry.setHeight(this.blockSize);
             entry.setWidth(this.blockSize);
             this.layer.add(entry);
         });
-        this.stage.batchDraw();
+        this.stage.draw();
     }
 
     // Click events
@@ -152,13 +161,12 @@ export default class Map extends React.Component {
 
     dragstart(e, tween, dragLayer) {
         const image = e.target;
-        this.shadowRectangle.show();
         this.shadowRectangle.setAttrs({
             width: image.width(),
             height: image.height()
-        })
-
+        });
         this.shadowRectangle.show();
+
         this.shadowRectangle.moveToTop();
 
         image.moveToTop();
@@ -184,7 +192,6 @@ export default class Map extends React.Component {
 
     dragend(e) {
         const image = e.target;
-        //delete this.objects[image.imageIndex];
         image.moveTo(this.layer);
 
         image.to({
@@ -221,20 +228,25 @@ export default class Map extends React.Component {
     handleChange(event) {
 
         const target = event.target;
-        const value = event.target.value;
+        const value = parseInt(event.target.value);
         const name = target.name;
-
+        console.log("Setting value ", value);
         this.setState({
             [name]: value
         });
     }
 
     handleSubmit() {
-        this.width = this.state.width;
-        this.height = this.state.height;
-        this.blockSize = this.state.blockSize;
-        this.stage.setHeight(this.state.height);
-        this.stage.setWidth(this.state.width);
+        this.blockSize = parseInt(this.state.blockSize);
+        this.width = parseInt(this.state.width) * this.blockSize;
+        this.height = parseInt(this.state.height) * this.blockSize;
+        console.log("Setting this.width and this.height to: ", this.width, this.height);
+        this.stage.setHeight(this.height);
+        this.stage.setWidth(this.width);
+        // this.setState({
+        //     width: this.width,
+        //     height: this.height
+        // });
         this.redraw();
     }
 
@@ -243,8 +255,8 @@ export default class Map extends React.Component {
     imageOnLoad(imageObj, type) {
         const scale = 1;
         const image = new Konva.Image({
-            x: Math.abs(Math.random() * this.stage.getWidth() - 100),
-            y: Math.abs(Math.random() * this.stage.getHeight() - 100),
+            x: Math.abs(Math.random() * this.stage.getWidth()),
+            y: Math.abs(Math.random() * this.stage.getHeight()),
             scale: {
                 x: scale,
                 y: scale
@@ -288,6 +300,8 @@ export default class Map extends React.Component {
         image.on('dragmove', () => {
             const pos = { x: -1, y: -1 };
             this.checkPos(image, pos);
+            console.log("Setting rectangle position to: ", pos.x, pos.y);
+            console.log("this.width, this.height: ", this.width, this.height);
             this.shadowRectangle.position({
                 x: pos.x,
                 y: pos.y
@@ -329,42 +343,39 @@ export default class Map extends React.Component {
 
     checkPos(image, pos) {
         // Checking x position
-        if (image.x() < 0) {
+        var x = parseFloat(image.x());
+        var y = parseFloat(image.y());
+
+        if (x < 0) {
             pos.x = 0;
-        } else if (image.x() + image.width() > this.width) {
+        } else if (x + image.width() > this.width) {
             pos.x = this.width - image.width();
         } else {
-            pos.x = Math.round(image.x() / this.blockSize) * this.blockSize;
+            pos.x = Math.round(x / this.blockSize) * this.blockSize;
         }
         // Checking y position
-        if (image.y() < 0) {
+        if (y < 0) {
             pos.y = 0;
-        } else if (image.y() + image.height() > this.height) {
+        } else if (parseFloat(y) + image.height() > this.height) {
             pos.y = this.height - image.height();
         } else {
-            pos.y = Math.round(image.y() / this.blockSize) * this.blockSize;
+            pos.y = Math.round(y / this.blockSize) * this.blockSize;
         }
     }
 
     checkOverlap(image, x, y) {
         let counter = 0;
-        let imageRect = image.getClientRect(); // use this to get bounding rect for shapes other than rectangles.
         let X = x
         let Y = y
-        let A = x + imageRect.width;
-        let B = y + imageRect.height;
+        let A = x + image.width();
+        let B = y + image.height();
         let r = false;
         this.objects.forEach((entry) => {
             if (entry !== image) {
-                let boardImage = entry.getClientRect();
-
-                // corners of shape 2
-                let X1 = boardImage.x;
-                let A1 = boardImage.x + boardImage.width;
-                let Y1 = boardImage.y
-                let B1 = boardImage.y + boardImage.height;
-                // console.log("BOARD RECT: ", X1, Y1, A1, B1);
-                // Simple overlapping rect collision test
+                let X1 = entry.x();
+                let A1 = entry.x() + entry.width();
+                let Y1 = entry.y()
+                let B1 = entry.y() + entry.height();
                 if (A <= X1 || A1 <= X || B <= Y1 || B1 <= Y) {
                     r = r;
                 } else {
@@ -374,7 +385,6 @@ export default class Map extends React.Component {
                 counter++;
             }
         });
-        console.log("COUNTER:", counter);
         return r;
     }
 
@@ -425,11 +435,11 @@ export default class Map extends React.Component {
                     </label>
                     <label>
                         Width:
-                         <input name="width" type="number" value={this.state.width} onChange={this.handleChange} step={this.state.blockSize} />
+                         <input name="width" type="number" value={this.state.width} onChange={this.handleChange} step="1" />
                     </label>
                     <label>
                         Height:
-                         <input name="height" type="number" value={this.state.height} onChange={this.handleChange} step={this.state.blockSize} />
+                         <input name="height" type="number" value={this.state.height} onChange={this.handleChange} step="1" />
                     </label>
 
                     <input type="button" onClick={this.handleSubmit} value="Change" />
