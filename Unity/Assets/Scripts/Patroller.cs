@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = System.Random;
 
 public class Patroller : MonoBehaviour 
 {
-    public Transform[] patrolTargets;
+   // public Transform[] patrolTargets;
+    private Vector3[] patrolTargets;
 
 	private NavMeshAgent agent;
     private Animator anim;
@@ -23,6 +25,7 @@ public class Patroller : MonoBehaviour
         player = playerVisibility.Player;
         if (player == null)
             Debug.LogError("Cannot find player object");
+        patrolTargets = GeneratePatrolTargets();
     }
 	
 	void FixedUpdate () 
@@ -56,6 +59,43 @@ public class Patroller : MonoBehaviour
         anim.SetFloat("blendSpeed", agent.velocity.sqrMagnitude);
 	}
 	
+    private Vector3[] GeneratePatrolTargets()
+    {
+        RaycastHit hit;
+        var patrolTargets = new Vector3[4];
+        var random = new Random();
+        var mapSize = Terrain.activeTerrain.terrainData.size;
+        var counter = 0;
+        for (int i = 0; i < 4; i++)
+        {
+            Vector3 point;
+            bool found = false;
+
+            do
+            {
+                point = new Vector3(((float)random.Next(0, 101) / 100) * mapSize.x,
+                                    1,
+                                    ((float)random.Next(0, 101) / 100) * mapSize.z);
+                
+                if (Physics.Raycast(new Vector3(point.x, point.y + 10, point.z), Vector3.down, out hit))
+                {
+                    if (hit.transform.CompareTag("Terrain"))
+                    {
+                        found = true;
+                    }
+                }
+                counter++;
+
+            } while (!found);
+            
+            patrolTargets[i] = point;
+            Debug.LogFormat("Point {0}: {1}", i, point);
+        }
+        Debug.LogFormat("Number of hits: {0}", counter);
+
+        return patrolTargets;
+    }
+
 	private IEnumerator GoToNextPoint()
 	{
         if (patrolTargets.Length == 0)
@@ -66,7 +106,8 @@ public class Patroller : MonoBehaviour
         patrolling = true;
         yield return new WaitForSeconds(2.0f);
         arrived = false;
-        agent.destination = patrolTargets[destPoint].position;
+        //agent.destination = patrolTargets[destPoint].position;
+        agent.destination = patrolTargets[destPoint];
         destPoint = (destPoint + 1) % patrolTargets.Length;
     }
 }
