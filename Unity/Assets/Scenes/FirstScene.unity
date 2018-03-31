@@ -569,9 +569,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4143a175e7235fb4caa0d2784f83fb48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 603534038}
   fieldOfViewDegrees: 170
-  visibilityDistance: 8
+  visibilityDistance: 10
+  endGameDistance: 3
 --- !u!195 &616050980
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2046,7 +2046,6 @@ GameObject:
   - component: {fileID: 1972621082}
   - component: {fileID: 1972621081}
   - component: {fileID: 1972621084}
-  - component: {fileID: 1972621086}
   m_Layer: 0
   m_Name: Terrain
   m_TagString: Untagged
@@ -2062,7 +2061,7 @@ TerrainCollider:
   m_GameObject: {fileID: 1972621080}
   m_Material: {fileID: 0}
   m_Enabled: 1
-  m_TerrainData: {fileID: 15600000, guid: 78381c7eb6f3c454aa86d659b1a2ef98, type: 2}
+  m_TerrainData: {fileID: 15600000, guid: 37d1c40d7162cdf4e9377ad5f2a00f0b, type: 2}
   m_EnableTreeColliders: 1
 --- !u!218 &1972621082
 Terrain:
@@ -2195,14 +2194,3 @@ TrailRenderer:
     generateLightingData: 0
   m_MinVertexDistance: 0.1
   m_Autodestruct: 0
---- !u!114 &1972621086
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1972621080}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3fea4c7243880954cac6799267fdf145, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
