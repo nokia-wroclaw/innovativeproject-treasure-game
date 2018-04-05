@@ -133,7 +133,7 @@ export default class Map extends React.Component {
 
     generate() {
         // this.readAssets();
-        this.mapObject = { "box1": [], "box2": [], "piramid1": [] };
+        this.mapObject = { "box1": [], "box2": [], "piramid1": [] , "guard":[]};
         this.objects.forEach((entry) => {
             this.mapObject[entry.type].push({ "x": entry.x(), "y": entry.y() });
             var x = this.mapToJson(this.mapObject);
@@ -147,7 +147,7 @@ export default class Map extends React.Component {
 
     generateRandom() {
         this.objects = [];
-        const items = [['./assets/box1.png', 'box1'], ['./assets/box2.png', 'box2'], ['./assets/piramid1.png', 'piramid1']];
+        const items = [['./assets/box1.png', 'box1'], ['./assets/box2.png', 'box2'], ['./assets/piramid1.png', 'piramid1'],['./assets/guard.png', 'guard']];
         for (let i = 0; i < 10; i++) {
             const randomElement = items[Math.floor(Math.random() * items.length)];
             if (this.addImage(randomElement[0], randomElement[1])) {
@@ -390,19 +390,6 @@ export default class Map extends React.Component {
     }
     // Map stuff
 
-    download() {
-        var element = document.createElement('a');
-        element.setAttribute('href', 'XD.json');
-        element.setAttribute('download', 'map.json');
-
-        element.style.display = 'none';
-        document.body.appendChild(element);
-
-        element.click();
-
-        document.body.removeChild(element);
-    }
-
     strMapToObj(strMap) {
         let obj = Object.create(null);
         for (let [k, v] of strMap) {
@@ -446,6 +433,7 @@ export default class Map extends React.Component {
                 <img src="./assets/box1.png" alt="box" className="box" onClick={() => this.selectBox("./assets/box1.png", "box1")} />
                 <img src="./assets/box2.png" alt="box" className="box" onClick={() => this.selectBox("./assets/box2.png", "box2")} />
                 <img src="./assets/piramid1.png" alt="box" className="box" onClick={() => this.selectBox("./assets/piramid1.png", "piramid1")} />
+                <img src="./assets/guard.png" alt="box" className="box" onClick={() => this.selectBox("./assets/guard.png", "guard")} />
                 <div
                     className="container"
                     ref={ref => {
