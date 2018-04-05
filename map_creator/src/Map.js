@@ -132,6 +132,7 @@ export default class Map extends React.Component {
 
     generate() {
         // this.readAssets();
+        this.mapObject = { "box1": [], "box2": [], "piramid1": [] };
         let i = 0;
         this.objects.forEach((entry) => {
             this.mapObject[entry.type].push({ "x": entry.x(), "y": entry.y() });
