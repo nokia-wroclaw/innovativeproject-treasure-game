@@ -32,7 +32,7 @@ public class Patroller : MonoBehaviour
 	{
         if (agent.pathPending)
             return;
-        
+
         if (patrolling)
         {
             if (playerVisibility.Chasing)
@@ -44,7 +44,7 @@ public class Patroller : MonoBehaviour
                 if (agent.remainingDistance < agent.stoppingDistance)
                 {
                     if (!arrived)
-                    {
+                        {
                         arrived = true;
                         StartCoroutine(GoToNextPoint());
                     }
@@ -55,7 +55,6 @@ public class Patroller : MonoBehaviour
         }
         else
             StartCoroutine(GoToNextPoint());
-
         anim.SetFloat("blendSpeed", agent.velocity.sqrMagnitude);
 	}
 	
@@ -102,12 +101,27 @@ public class Patroller : MonoBehaviour
         {
             yield break;
         }
-
         patrolling = true;
         yield return new WaitForSeconds(2.0f);
         arrived = false;
         //agent.destination = patrolTargets[destPoint].position;
         agent.destination = patrolTargets[destPoint];
-        destPoint = (destPoint + 1) % patrolTargets.Length;
+        destPoint = (destPoint + 1) % patrolTargets.Length;        
     }
+
+    private IEnumerator Stun()
+    {
+        Debug.Log("Stuned");
+        agent.speed = 0;
+        yield return new WaitForSeconds(10.0f);
+        agent.speed = 2;
+    }
+
+    public void StunEnemy()
+    {
+        var visibility = GetComponent<PlayerVisibility>();
+        visibility.isStuned = true;
+        StartCoroutine(Stun());
+    }
+
 }

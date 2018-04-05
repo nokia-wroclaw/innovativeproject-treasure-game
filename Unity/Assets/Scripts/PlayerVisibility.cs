@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerVisibility : MonoBehaviour
 {   
+    public bool isStuned = false;
     public float fieldOfViewDegrees;
     public float visibilityDistance;
     public float endGameDistance;
@@ -36,7 +37,13 @@ public class PlayerVisibility : MonoBehaviour
                     if (hit.transform.CompareTag("Player"))
                     {
                         if (hit.distance <= endGameDistance)
-                            break;
+                            if(isStuned)
+                            {
+                                yield return new WaitForSeconds(10.0f);
+                                isStuned = false;
+                            }
+                            else
+                                break;
 
                         if (hit.distance <= visibilityDistance)
                             Chasing = true;
@@ -46,7 +53,6 @@ public class PlayerVisibility : MonoBehaviour
 
             yield return new WaitForSeconds(0.2f);
         }
-
         SwitchScene();
     }
 

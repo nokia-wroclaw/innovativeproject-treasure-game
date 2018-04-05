@@ -1,20 +1,35 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Interactables : MonoBehaviour
 {
-    private void Interact()
+    private bool interactable = false;
+
+    public virtual void Interact()
     {
-        SceneManager.LoadScene("MainMenu");
     }
 
-    void OnTriggerEnter(Collider other)
+    void Update()
     {
-        if (other.gameObject.tag == "Player")
+        if(interactable && Input.GetKeyDown(KeyCode.E))
         {
             Interact();
         }
     }
+    
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            interactable = true;
+        }
+    }
+    void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            interactable = false;
+        }
+    }
+    
 }
