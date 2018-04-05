@@ -1,6 +1,7 @@
 import React from 'react';
 import * as Konva from "konva";
-import * as fs from "browser-filesaver";
+//import * as fs from "browser-filesaver";
+import * as FileSaver from 'file-saver';
 import './Map.css';
 
 export default class Map extends React.Component {
@@ -133,19 +134,15 @@ export default class Map extends React.Component {
     generate() {
         // this.readAssets();
         this.mapObject = { "box1": [], "box2": [], "piramid1": [] };
-        let i = 0;
         this.objects.forEach((entry) => {
             this.mapObject[entry.type].push({ "x": entry.x(), "y": entry.y() });
             var x = this.mapToJson(this.mapObject);
             console.log(x);
             console.log("Object " + entry.type + " X: " + entry.x() + ", Y: " + entry.y());
-            i++;
         });
-        // var x = this.mapToJson(this.mapObject);
-        // var blob =
-        //     new Blob(x, {type: 'text/plain;charset=utf-8'});
-        // fs.saveAs(blob, 'XD.json');
-        this.download();
+        var x = this.mapToJson(this.mapObject);
+        var file = new File([x], "map.json",{type: "application/json"});
+        FileSaver.saveAs(file);
     }
 
     generateRandom() {
