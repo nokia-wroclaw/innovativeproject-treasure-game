@@ -4,11 +4,13 @@ public class MapData
     [System.Serializable]
     public struct GameObjectData
     {
-        public float[] size;
         public float[] position;
+        public float[] size;
         public string type;
     }
 
-    public float[] mapSize;
     public GameObjectData[] gameObjects;
+    public float[] mapSize,
+                   playerPosition;
+
 }

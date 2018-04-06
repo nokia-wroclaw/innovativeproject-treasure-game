@@ -40,30 +40,34 @@ public class MapDataController : MonoBehaviour
     private void BuildElements()
     {
         var terrain = GetComponent<Terrain>();
-        terrain.terrainData.size = new Vector3(mapData.mapSize[0], 0, mapData.mapSize[1]);
- 
+        terrain.terrainData.size = new Vector3(mapData.mapSize[0]/80, 0, mapData.mapSize[1]/80);
+
+        var playerPosition = new Vector3(mapData.playerPosition[0]/80, 0, mapData.playerPosition[1]/80);
+        // TODO
+
         foreach (var gameObject in mapData.gameObjects)
         {
+            Debug.Log(gameObject.type);
             var prefabToBuild = prefabs.FirstOrDefault(n => n.name == gameObject.type);
-            if(prefabToBuild == null)
+            if (prefabToBuild == null)
             {
-                Debug.LogErrorFormat("There's no such thing as \"{0}\" GameObject type", gameObject.type);
-                return;
+                Debug.LogErrorFormat("There's no {0} prefab", gameObject.type);
+                break;
             }
 
-            var createdObject = Instantiate(prefabToBuild);
-
-            if(gameObject.type != "Monster")
+            if(gameObject.type != "guard")
             {
-                var sizeV3 = new Vector3(gameObject.size[0], gameObject.size[1], gameObject.size[2]);
-                var positionV3 = new Vector3(gameObject.position[0] + sizeV3.x / 2,
-                                             gameObject.position[1] + sizeV3.y / 2,
-                                             gameObject.position[2] + sizeV3.z / 2);
+                var createdObject = Instantiate(prefabToBuild);
+                var sizeV3 = new Vector3(gameObject.size[0]/80, 3, gameObject.size[1]/80);
+                var positionV3 = new Vector3((gameObject.position[0])/80 + sizeV3.x / 2,
+                                             sizeV3.y / 2,
+                                             (mapData.mapSize[1] - 80 -  gameObject.position[1])/80 + sizeV3.z / 2);
                 createdObject.transform.localScale = sizeV3;
                 createdObject.transform.localPosition = positionV3;
             }
-            
+
         }
+
     }
 
 }
