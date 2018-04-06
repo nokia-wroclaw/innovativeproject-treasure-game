@@ -14,7 +14,7 @@ export default class Map extends React.Component {
         this.blockSize = 80;
         this.imageIndex = 0;
         this.objects = [];
-        this.mapObject = { "box1": [], "box2": [], "piramid1": [] };
+        this.mapObject = {};
         this.width = 800;
         this.height = 480;
         this.bindMethods = this.bindMethods.bind(this);
@@ -133,21 +133,22 @@ export default class Map extends React.Component {
 
     generate() {
         // this.readAssets();
-        this.mapObject = { "box1": [], "box2": [], "piramid1": [] , "guard":[]};
+        // this.mapObject = { mapSize: [this.width, this.height], playerPosition: [0, 0], "box1": [], "box2": [], "piramid1": [], "guard": [] }; 
+        this.mapObject = { mapSize: [this.width, this.height], playerPosition: [0, 0], gameObjects: [] };
         this.objects.forEach((entry) => {
-            this.mapObject[entry.type].push({ "x": entry.x(), "y": entry.y() });
+            this.mapObject["gameObjects"].push({ "size": [entry.width(), entry.height()], "position": [entry.x(), entry.y()], type: entry.type });
             var x = this.mapToJson(this.mapObject);
             console.log(x);
             console.log("Object " + entry.type + " X: " + entry.x() + ", Y: " + entry.y());
         });
         var x = this.mapToJson(this.mapObject);
-        var file = new File([x], "map.json",{type: "application/json"});
+        var file = new File([x], "map.json", { type: "application/json" });
         FileSaver.saveAs(file);
     }
 
     generateRandom() {
         this.objects = [];
-        const items = [['./assets/box1.png', 'box1'], ['./assets/box2.png', 'box2'], ['./assets/piramid1.png', 'piramid1'],['./assets/guard.png', 'guard']];
+        const items = [['./assets/box1.png', 'box1'], ['./assets/box2.png', 'box2'], ['./assets/piramid1.png', 'piramid1'], ['./assets/guard.png', 'guard']];
         for (let i = 0; i < 10; i++) {
             const randomElement = items[Math.floor(Math.random() * items.length)];
             if (this.addImage(randomElement[0], randomElement[1])) {
