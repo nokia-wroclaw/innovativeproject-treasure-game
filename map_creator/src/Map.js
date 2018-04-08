@@ -430,7 +430,15 @@ export default class Map extends React.Component {
 
                     <input type="button" onClick={this.handleSubmit} value="Change" />
                 </form>
-
+                <iframe name='XD' width="0" height="0" borde="0" style={{ visibility: "hidden" }}></iframe>
+                <p>
+                    Upload map to a server
+                          <form action="http://localhost:5000/uploader" method="POST"
+                        encType="multipart/form-data" target='XD'>
+                        <input type="file" name="file" />
+                        <input type="submit" />
+                    </form>
+                </p>
                 <img src="./assets/box1.png" alt="box" className="box" onClick={() => this.selectBox("./assets/box1.png", "box1")} />
                 <img src="./assets/box2.png" alt="box" className="box" onClick={() => this.selectBox("./assets/box2.png", "box2")} />
                 <img src="./assets/piramid1.png" alt="box" className="box" onClick={() => this.selectBox("./assets/piramid1.png", "piramid1")} />
@@ -441,7 +449,7 @@ export default class Map extends React.Component {
                         this.containerRef = ref;
                     }}
                 />
-            </div>
+            </div >
         );
     }
 }
