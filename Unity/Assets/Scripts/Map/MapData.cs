@@ -11,6 +11,7 @@ public class MapData
 
     public GameObjectData[] gameObjects;
     public float[] mapSize,
-                   playerPosition;
+                   playerPosition,
+                   treasurePosition;
 
 }

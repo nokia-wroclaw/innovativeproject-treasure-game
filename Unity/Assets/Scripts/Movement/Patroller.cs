@@ -5,7 +5,6 @@ using Random = System.Random;
 
 public class Patroller : MonoBehaviour 
 {
-   // public Transform[] patrolTargets;
     private Vector3[] patrolTargets;
 
 	private NavMeshAgent agent;
@@ -83,7 +82,11 @@ public class Patroller : MonoBehaviour
                     }
                 }
                 counter++;
-
+                if(counter > 10000)
+                {
+                    Debug.LogError("Too many tries to generate random patrol points");
+                    break;
+                }
             } while (!found);
             
             patrolTargets[i] = point;
@@ -103,14 +106,13 @@ public class Patroller : MonoBehaviour
         patrolling = true;
         yield return new WaitForSeconds(2.0f);
         arrived = false;
-        //agent.destination = patrolTargets[destPoint].position;
         agent.destination = patrolTargets[destPoint];
         destPoint = (destPoint + 1) % patrolTargets.Length;        
     }
 
     private IEnumerator Stun()
     {
-        Debug.Log("Stuned");
+        Debug.Log("Stunned");
         agent.speed = 0;
         yield return new WaitForSeconds(10.0f);
         agent.speed = 2;

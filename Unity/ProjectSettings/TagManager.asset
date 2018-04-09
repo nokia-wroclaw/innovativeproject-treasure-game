@@ -7,6 +7,8 @@ TagManager:
   - PrefabTag
   - Terrain
   - Enemy
+  - Environment
+  - Treasure
   layers:
   - Default
   - TransparentFX

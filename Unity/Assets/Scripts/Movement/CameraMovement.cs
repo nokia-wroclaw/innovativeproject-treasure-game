@@ -13,7 +13,7 @@ public class CameraMovement : MonoBehaviour
     private Vector3 targetCamPosition;
 
     void Start()
-    {             
+    { 
         temp = target.position;   
         temp.x += xDistance;
         temp.y += yDistance;
