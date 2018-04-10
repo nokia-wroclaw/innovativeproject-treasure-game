@@ -1,8 +1,20 @@
 import React from 'react';
 import * as Konva from "konva";
-//import * as fs from "browser-filesaver";
 import * as FileSaver from 'file-saver';
 import './Map.css';
+
+export const getImages = () => {
+    const images = [
+        { path: require('./assets/box1.png'), type: 'box1' },
+        { path: require('./assets/box2.png'), type: 'box2' },
+        { path: require('./assets/piramid1.png'), type: 'piramid1' },
+        { path: require('./assets/guard.png'), type: 'guard' },
+        // require('./assets/box2.png'),
+        // require('./assets/piramid1.png'),
+        // require('./assets/guard.png')
+    ];
+    return images;
+};
 
 export default class Map extends React.Component {
 
@@ -18,7 +30,11 @@ export default class Map extends React.Component {
         this.width = 800;
         this.height = 480;
         this.bindMethods = this.bindMethods.bind(this);
+        this.images = getImages();
+        this.freeSpots = [];
+        this.oldSize = {};
         this.bindMethods();
+        this.initFreeSpots();
         this.state = { width: parseInt(this.width / this.blockSize), height: this.height / this.blockSize, blockSize: this.blockSize };
     }
     componentDidMount() {
@@ -83,6 +99,7 @@ export default class Map extends React.Component {
         this.strMapToObj = this.strMapToObj.bind(this);
         this.readAssets = this.readAssets.bind(this);
         this.checkOverlap = this.checkOverlap.bind(this);
+        this.initFreeSpots = this.initFreeSpots.bind(this);
     }
 
     // Stage stuff
@@ -110,20 +127,26 @@ export default class Map extends React.Component {
         this.drawGrid();
         this.shadowRectangle.hide();
         const pos = { x: -1, y: -1 };
+        this.shadowRectangle.setWidth(this.blockSize);
+        this.shadowRectangle.setHeight(this.blockSize);
         this.checkPos(this.shadowRectangle, pos);
         this.shadowRectangle.setAttrs({
             x: pos.x,
-            y: pos.y,
-            width: this.blockSize,
-            height: this.blockSize
+            y: pos.y
         })
         this.layer.add(this.shadowRectangle);
+        console.log(this.width, this.height);
         this.objects.forEach((entry) => {
             const pos = { x: -1, y: -1 };
-            this.checkPos(entry, pos);
-            entry.setAttrs({ x: pos.x, y: pos.y })
             entry.setHeight(this.blockSize);
             entry.setWidth(this.blockSize);
+            let newX = entry.x() / (this.oldSize.width / this.width);
+            let newY = entry.y() / (this.oldSize.height / this.height);
+            entry.setAttrs({ x: newX, y: newY })
+            this.checkPos(entry, pos);
+            entry.setAttrs({ x: pos.x, y: pos.y })
+            entry.currentX = entry.x();
+            entry.currentY = entry.y();
             this.layer.add(entry);
         });
         this.stage.draw();
@@ -148,14 +171,21 @@ export default class Map extends React.Component {
 
     generateRandom() {
         this.objects = [];
-        const items = [['./assets/box1.png', 'box1'], ['./assets/box2.png', 'box2'], ['./assets/piramid1.png', 'piramid1'], ['./assets/guard.png', 'guard']];
+        // const items = [['./assets/box1.png', 'box1'], ['./assets/box2.png', 'box2'], ['./assets/piramid1.png', 'piramid1'], ['./assets/guard.png', 'guard']];
         for (let i = 0; i < 10; i++) {
-            const randomElement = items[Math.floor(Math.random() * items.length)];
-            if (this.addImage(randomElement[0], randomElement[1])) {
+            const randomElement = this.images[Math.floor(Math.random() * this.images.length)];
+            if (this.addImage(randomElement.path, randomElement.type)) {
                 continue;
             }
         }
         this.redraw();
+    }
+
+    remove(array, index) {
+
+        if (index !== -1) {
+            array.splice(index, 1);
+        }
     }
 
     dragstart(e, tween, dragLayer) {
@@ -207,6 +237,7 @@ export default class Map extends React.Component {
                 y: this.shadowRectangle.y()
             });
         } else {
+            console.log("WRACAM XD")
             image.position({
                 x: image.currentX,
                 y: image.currentY
@@ -236,9 +267,11 @@ export default class Map extends React.Component {
     }
 
     handleSubmit() {
+        this.oldSize = { width: this.width, height: this.height };
         this.blockSize = parseInt(this.state.blockSize);
         this.width = parseInt(this.state.width) * this.blockSize;
         this.height = parseInt(this.state.height) * this.blockSize;
+        this.initFreeSpots();
         console.log("Setting this.width and this.height to: ", this.width, this.height);
         this.stage.setHeight(this.height);
         this.stage.setWidth(this.width);
@@ -253,9 +286,12 @@ export default class Map extends React.Component {
 
     imageOnLoad(imageObj, type) {
         const scale = 1;
+        var index = Math.floor(Math.random() * this.freeSpots.length);
+        let freeSpot = this.freeSpots[index]
+        this.remove(this.freeSpots, index);
         const image = new Konva.Image({
-            x: Math.abs(Math.random() * this.stage.getWidth()),
-            y: Math.abs(Math.random() * this.stage.getHeight()),
+            x: freeSpot.row * this.blockSize,
+            y: freeSpot.col * this.blockSize,
             scale: {
                 x: scale,
                 y: scale
@@ -275,6 +311,7 @@ export default class Map extends React.Component {
         if (this.checkOverlap(image, image.x(), image.y())) {
             return false;
         }
+        console.log(pos.x, pos.y);
         image.position({ x: pos.x, y: pos.y });
 
         image.type = type;
@@ -403,6 +440,18 @@ export default class Map extends React.Component {
         return JSON.stringify(map);
     }
 
+    initFreeSpots() {
+        this.freeSpots = [];
+        let rows = parseInt(this.width / this.blockSize);
+        let cols = parseInt(this.height / this.blockSize);
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
+                this.freeSpots.push({ row: i, col: j });
+            }
+        }
+
+    }
+
     // Render
 
     render() {
@@ -439,10 +488,12 @@ export default class Map extends React.Component {
                         <input type="submit" />
                     </form>
                 </p>
-                <img src="./assets/box1.png" alt="box" className="box" onClick={() => this.selectBox("./assets/box1.png", "box1")} />
-                <img src="./assets/box2.png" alt="box" className="box" onClick={() => this.selectBox("./assets/box2.png", "box2")} />
-                <img src="./assets/piramid1.png" alt="box" className="box" onClick={() => this.selectBox("./assets/piramid1.png", "piramid1")} />
-                <img src="./assets/guard.png" alt="box" className="box" onClick={() => this.selectBox("./assets/guard.png", "guard")} />
+                <div id='images'>
+                    <img src={this.images[0].path} alt="box" className="box" onClick={() => this.selectBox(this.images[0].path, this.images[0].type)} />
+                    <img src={this.images[1].path} alt="box" className="box" onClick={() => this.selectBox(this.images[1].path, this.images[1].type)} />
+                    <img src={this.images[2].path} alt="box" className="box" onClick={() => this.selectBox(this.images[2].path, this.images[2].type)} />
+                    <img src={this.images[3].path} alt="box" className="box" onClick={() => this.selectBox(this.images[3].path, this.images[3].type)} />
+                </div>
                 <div
                     className="container"
                     ref={ref => {
