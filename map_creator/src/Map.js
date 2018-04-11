@@ -95,6 +95,7 @@ export default class Map extends React.Component {
         this.generateRandom = this.generateRandom.bind(this);
         this.checkPos = this.checkPos.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleScale = this.handleScale.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.strMapToObj = this.strMapToObj.bind(this);
         this.readAssets = this.readAssets.bind(this);
@@ -260,10 +261,24 @@ export default class Map extends React.Component {
         const target = event.target;
         const value = parseInt(event.target.value);
         const name = target.name;
-        console.log("Setting value ", value);
+        console.log("Setting value",name,":", value);
         this.setState({
             [name]: value
         });
+    }
+
+    handleScale(event) {
+        const target = event.target;
+        const value = event.target.value;
+        const name = target.name;
+        console.log("Setting value",name,":", value);
+        this.stage.scale({
+                x: value,
+                y: value
+            });
+        this.stage.setHeight(this.height*value);
+        this.stage.setWidth(this.width*value);
+        this.stage.batchDraw();
     }
 
     handleSubmit() {
@@ -494,6 +509,7 @@ export default class Map extends React.Component {
                     <img src={this.images[2].path} alt="box" className="box" onClick={() => this.selectBox(this.images[2].path, this.images[2].type)} />
                     <img src={this.images[3].path} alt="box" className="box" onClick={() => this.selectBox(this.images[3].path, this.images[3].type)} />
                 </div>
+                <input name="scale" type="range" defaultValue="1.0" min="0.1" max ="2.0" step="0.01" onChange={this.handleScale}/>
                 <div
                     className="container"
                     ref={ref => {
