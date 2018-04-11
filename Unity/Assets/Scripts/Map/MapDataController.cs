@@ -42,10 +42,8 @@ public class MapDataController : MonoBehaviour
 
     private void BuildElements()
     {
-        var environment = GameObject.FindGameObjectWithTag("Environment");
-
         var terrain = GetComponent<Terrain>();
-        terrain.terrainData.size = new Vector3(mapData.mapSize[0] / 80f, 0f, mapData.mapSize[1] / 80);
+        terrain.terrainData.size = new Vector3(mapData.mapSize[0] / 80f, 0f, mapData.mapSize[1] / 80f);
 
         var player = GameObject.FindGameObjectWithTag("Player");
         player.transform.localPosition = new Vector3(mapData.playerPosition[0] / 80f, 0f, mapData.playerPosition[1] / 80f);
@@ -66,10 +64,10 @@ public class MapDataController : MonoBehaviour
 
             var createdObject = Instantiate(prefabToBuild);
 
-            createdObject.transform.localScale = new Vector3(obstacle.size[0] / 80f, 3f, obstacle.size[1] / 80f); ;
+            createdObject.transform.localScale = new Vector3(obstacle.size[0] / 80f, 3f, obstacle.size[1] / 80f);
             createdObject.transform.localPosition = new Vector3((obstacle.position[0]) / 80f + createdObject.transform.localScale.x / 2f,
-                                                                createdObject.transform.localScale.y / 2,
-                                                                (mapData.mapSize[1] - 80f - obstacle.position[1]) / 80f + createdObject.transform.localScale.z / 2f); ;
+                                                                createdObject.transform.localScale.y / 2f,
+                                                                (mapData.mapSize[1] - 80f - obstacle.position[1]) / 80f + createdObject.transform.localScale.z / 2f);
         }
 
         navMeshSurface.BuildNavMesh();
@@ -88,7 +86,7 @@ public class MapDataController : MonoBehaviour
 
             createdObject.transform.localPosition = new Vector3((enemy.position[0]) / 80f,
                                                                 0,
-                                                                (mapData.mapSize[1] - 80f - enemy.position[1]) / 80f); ;
+                                                                (mapData.mapSize[1] - 80f - enemy.position[1]) / 80f);
         }
         
     }

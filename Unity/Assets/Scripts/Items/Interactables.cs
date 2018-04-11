@@ -5,7 +5,7 @@ public abstract class Interactables : MonoBehaviour
 {
     protected bool interactable = false;
 
-    protected virtual Func<bool> InteractCondition { get; set; } = () => true;
+    protected abstract Func<bool> InteractCondition { get; }
 
     protected abstract void Interact();
 

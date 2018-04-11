@@ -8,9 +8,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 965ee3de6d671064880efb5b4573b74c, type: 3}
-  m_Name: Trap
+  m_Script: {fileID: 11500000, guid: c3847e41c6edd0d4cb38fc3baea393fa, type: 3}
+  m_Name: MovementPotion
   m_EditorClassIdentifier: 
-  name: Trap
+  name: MovementPotion
   icon: {fileID: 21300000, guid: c6958bfe0609ee04c95c0bf02ca0d9bb, type: 3}
-  itemToDrop: {fileID: 1524046824218458, guid: 51742e538b6913145a63702ca51d8a15, type: 2}
