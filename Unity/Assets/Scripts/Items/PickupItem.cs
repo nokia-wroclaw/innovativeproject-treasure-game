@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PotionController : Interactables
+public class PickupItem : Interactables
 {
     [SerializeField]
     private Item itemToPickup;
@@ -12,11 +10,14 @@ public class PotionController : Interactables
 
     protected override void Interact()
     {
-        Pickup();
+        if (gameObject.tag != "DroppedItem")
+        {
+            Pickup();
+        }  
     }
 
     private void Pickup()
-    {
+    {   
         bool pickedUp = Inventory.instance.AddItem(itemToPickup);
         if (pickedUp)
             Destroy(gameObject);

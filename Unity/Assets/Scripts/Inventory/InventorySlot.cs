@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class InventorySlot : MonoBehaviour
@@ -32,9 +31,12 @@ public class InventorySlot : MonoBehaviour
 
 	public void UseItem()
 	{
-		if(item != null)
-        {   
-			StartCoroutine(item.Use());
-		}
+        if (item != null)
+        {
+            bool used = false;
+            StartCoroutine(item.Use(result => used = result));
+            if (used)
+                Inventory.instance.RemoveItem(item);
+        }
     }
 }

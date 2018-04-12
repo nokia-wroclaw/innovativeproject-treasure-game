@@ -3,13 +3,13 @@ using UnityEngine;
 
 public abstract class Interactables : MonoBehaviour
 {
-    protected bool interactable = false;
+    private bool interactable = false;
 
     protected abstract Func<bool> InteractCondition { get; }
 
     protected abstract void Interact();
 
-    protected void Update()
+    private void Update()
     {
         if(interactable && InteractCondition())
         {

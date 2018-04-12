@@ -9,6 +9,8 @@ TagManager:
   - Enemy
   - Environment
   - Treasure
+  - Door
+  - DroppedItem
   layers:
   - Default
   - TransparentFX

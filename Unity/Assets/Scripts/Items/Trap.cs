@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Item", menuName = "Inventory/Trap")]
@@ -7,11 +8,11 @@ public class Trap : Item
     [SerializeField]
     private GameObject itemToDrop;
 
-    public override IEnumerator Use()
+    public override IEnumerator Use(Action<bool> result)
     {   
         var playerObject = GameObject.FindGameObjectWithTag("Player");
-        var trapPosition = playerObject.transform.position + new Vector3(0, playerObject.transform.localScale.y/2, 0);
-        Instantiate(itemToDrop, trapPosition, playerObject.transform.rotation);
+        Instantiate(itemToDrop, playerObject.transform.position, itemToDrop.transform.rotation);
+        result(true);
         yield return null;
     }
 }

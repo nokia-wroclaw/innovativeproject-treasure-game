@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine.SceneManagement;
 
-public class TreasureChest : Interactables
+public class TreasureChestController : Interactables
 {
     protected override Func<bool> InteractCondition => () => true;
     protected override void Interact()
