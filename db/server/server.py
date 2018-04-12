@@ -1,14 +1,19 @@
 from flask import Flask, render_template, request
-from werkzeug import secure_filename
+from pymongo import MongoClient
 import os
 import time
-from json import dumps
+from json import dumps, loads
 
 app = Flask(__name__)
 
 
 global index
 map_dir = 'maps'
+
+client = MongoClient(
+    'mongodb+srv://webapp:XD12345@game-7sfnp.mongodb.net/test')
+
+db = client.business
 
 
 @app.route('/upload')
@@ -18,18 +23,34 @@ def upload_file1():
 
 @app.route('/maps', methods=['GET'])
 def process():
-    rv = {file: time.strftime('%D %H:%M:%S', time.gmtime(
-        os.path.getmtime('maps\\'+file))) for file in os.listdir(map_dir)}
-    return dumps(rv)
+    cursor = db.maps.find({}, {'_id': False})
+    maps = {'maps': []}
+    for doc in cursor:
+        try:
+            maps['maps'].append(doc['filename'])
+        except Exception:
+            pass
+    return dumps(maps)
+
+
+@app.route('/map/<map_name>', methods=['GET'])
+def get_map(map_name):
+    doc = db.maps.find_one({'filename': map_name}, {'_id': False})
+    return dumps(doc)
 
 
 @app.route('/uploader', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         f = request.files['file']
-        filename = ''.join(f.filename.split('.')[:-1])
-        f.save(secure_filename('maps\\' + filename + str(index) + '.json'))
-        return 'file uploaded successfully'
+        parsed = loads(f.read())
+        filename = ''.join(f.filename.split('.')[:-1]) + str(index) + '.json'
+        parsed['filename'] = filename
+        try:
+            result = db.maps.insert_one(parsed)
+            return 'File uploaded successfully'
+        except Exception:
+            return 'Error while uploading a file'
 
 
 if __name__ == '__main__':
