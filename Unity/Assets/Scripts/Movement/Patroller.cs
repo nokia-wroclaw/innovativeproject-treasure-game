@@ -5,9 +5,10 @@ using Random = System.Random;
 
 public class Patroller : MonoBehaviour 
 {
-    private Vector3[] patrolTargets;
+    public bool usePredefinedPatrolTargets;
+    public Vector3[] patrolTargets;
 
-	private NavMeshAgent agent;
+    private NavMeshAgent agent;
     private Animator anim;
     private GameObject player;
     private PlayerVisibility playerVisibility;
@@ -22,7 +23,8 @@ public class Patroller : MonoBehaviour
 		anim = GetComponent<Animator>();
         playerVisibility = GetComponent<PlayerVisibility>();
         player = GameObject.FindGameObjectWithTag("Player");
-        patrolTargets = GeneratePatrolTargets();
+        if (!usePredefinedPatrolTargets)
+            patrolTargets = GeneratePatrolTargets();
     }
 	
 	void FixedUpdate () 
