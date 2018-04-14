@@ -1,0 +1,115 @@
+{
+    "mapSize": [
+        8000,
+        4800
+    ],
+    "playerPosition": [
+        0,
+        0
+    ],
+    "treasurePosition": [
+        320,
+        640
+    ],
+    "gameObjects": [
+        {
+            "size": [
+                80,
+                80
+            ],
+            "position": [
+                240,
+                400
+            ],
+            "type": "box1"
+        },
+        {
+            "size": [
+                80,
+                80
+            ],
+            "position": [
+                720,
+                400
+            ],
+            "type": "box1"
+        },
+        {
+            "size": [
+                0,
+                0
+            ],
+            "position": [
+                80,
+                320
+            ],
+            "type": "guard"
+        },
+        {
+            "size": [
+                0,
+                0
+            ],
+            "position": [
+                560,
+                80
+            ],
+            "type": "guard"
+        },
+        {
+            "size": [
+                80,
+                80
+            ],
+            "position": [
+                640,
+                240
+            ],
+            "type": "piramid1"
+        },
+        {
+            "size": [
+                80,
+                80
+            ],
+            "position": [
+                0,
+                160
+            ],
+            "type": "box1"
+        },
+        {
+            "size": [
+                80,
+                80
+            ],
+            "position": [
+                400,
+                320
+            ],
+            "type": "box1"
+        },
+        {
+            "size": [
+                80,
+                80
+            ],
+            "position": [
+                560,
+                160
+            ],
+            "type": "box2"
+        },
+        {
+            "size": [
+                0,
+                0
+            ],
+            "position": [
+                240,
+                80
+            ],
+            "type": "guard"
+        }
+    ]
+}
