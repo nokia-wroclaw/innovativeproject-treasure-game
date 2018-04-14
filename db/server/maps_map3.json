@@ -1,0 +1,122 @@
+{
+    "mapSize": [
+        200,
+        120
+    ],
+    "playerPosition": [
+        0,
+        0
+    ],
+    "gameObjects": [
+        {
+            "size": [
+                20,
+                20
+            ],
+            "position": [
+                100,
+                40
+            ],
+            "type": "box2"
+        },
+        {
+            "size": [
+                20,
+                20
+            ],
+            "position": [
+                120,
+                100
+            ],
+            "type": "guard"
+        },
+        {
+            "size": [
+                20,
+                20
+            ],
+            "position": [
+                120,
+                80
+            ],
+            "type": "piramid1"
+        },
+        {
+            "size": [
+                20,
+                20
+            ],
+            "position": [
+                160,
+                60
+            ],
+            "type": "box2"
+        },
+        {
+            "size": [
+                20,
+                20
+            ],
+            "position": [
+                140,
+                20
+            ],
+            "type": "guard"
+        },
+        {
+            "size": [
+                20,
+                20
+            ],
+            "position": [
+                40,
+                80
+            ],
+            "type": "box2"
+        },
+        {
+            "size": [
+                20,
+                20
+            ],
+            "position": [
+                80,
+                60
+            ],
+            "type": "box1"
+        },
+        {
+            "size": [
+                20,
+                20
+            ],
+            "position": [
+                180,
+                100
+            ],
+            "type": "box1"
+        },
+        {
+            "size": [
+                20,
+                20
+            ],
+            "position": [
+                100,
+                0
+            ],
+            "type": "piramid1"
+        },
+        {
+            "size": [
+                20,
+                20
+            ],
+            "position": [
+                40,
+                0
+            ],
+            "type": "guard"
+        }
+    ]
+}
