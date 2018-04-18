@@ -6,12 +6,12 @@ using UnityEngine;
 public class Trap : Item
 {
     [SerializeField]
-    private GameObject itemToDrop;
+    private GameObject _itemToDrop;
 
     public override IEnumerator Use(Action<bool> result)
     {   
         var playerObject = GameObject.FindGameObjectWithTag("Player");
-        Instantiate(itemToDrop, playerObject.transform.position, itemToDrop.transform.rotation);
+        Instantiate(_itemToDrop, playerObject.transform.position, _itemToDrop.transform.rotation);
         result(true);
         yield return null;
     }

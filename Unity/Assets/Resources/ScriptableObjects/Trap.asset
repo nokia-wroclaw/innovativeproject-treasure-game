@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Name: Trap
   m_EditorClassIdentifier: 
   name: Trap
-  icon: {fileID: 21300000, guid: c6958bfe0609ee04c95c0bf02ca0d9bb, type: 3}
-  itemToDrop: {fileID: 1717773436709696, guid: ce6b42f217ffb6e4fa40ad198bbff351, type: 2}
+  icon: {fileID: 21300000, guid: 60a4e186a4319f5429b3c055f0a8022d, type: 3}
+  _itemToDrop: {fileID: 1717773436709696, guid: ce6b42f217ffb6e4fa40ad198bbff351,
+    type: 2}

@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae34ebb3a24b9b743aa2c64128ff6e4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemToPickup: {fileID: 11400000, guid: 731e90f0d90b9024a84ae6674c5a5b98, type: 2}
+  _itemToPickup: {fileID: 11400000, guid: 731e90f0d90b9024a84ae6674c5a5b98, type: 2}
 --- !u!136 &136354357682009788
 CapsuleCollider:
   m_ObjectHideFlags: 1

@@ -6,19 +6,19 @@ public class InventorySlot : MonoBehaviour
     public Image icon;
 	public Button removeButton;
 
-	private Item item;
+	private Item _item;
 
 	public void AddItem(Item newItem)
 	{
-		item = newItem;
-		icon.sprite = item.icon;
+		_item = newItem;
+		icon.sprite = _item.icon;
 		icon.enabled = true;
 		removeButton.interactable = true;
 	}
 
 	public void ClearSlot()
 	{
-		item = null;
+		_item = null;
 		icon.sprite = null;
 		icon.enabled = false;
 		removeButton.interactable = false;
@@ -26,17 +26,17 @@ public class InventorySlot : MonoBehaviour
 
 	public void OnRemoveButton()
 	{
-		Inventory.instance.RemoveItem(item);
+		Inventory.instance.RemoveItem(_item);
 	}
 
 	public void UseItem()
 	{
-        if (item != null)
+        if (_item != null)
         {
             bool used = false;
-            StartCoroutine(item.Use(result => used = result));
+            StartCoroutine(_item.Use(result => used = result));
             if (used)
-                Inventory.instance.RemoveItem(item);
+                Inventory.instance.RemoveItem(_item);
         }
     }
 }

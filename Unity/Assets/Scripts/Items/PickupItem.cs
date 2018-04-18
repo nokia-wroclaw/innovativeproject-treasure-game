@@ -4,7 +4,7 @@ using UnityEngine;
 public class PickupItem : Interactables
 {
     [SerializeField]
-    private Item itemToPickup;
+    private Item _itemToPickup;
 
     protected override Func<bool> InteractCondition => (() => Input.GetKeyDown(KeyCode.E));
 
@@ -18,7 +18,7 @@ public class PickupItem : Interactables
 
     private void Pickup()
     {   
-        bool pickedUp = Inventory.instance.AddItem(itemToPickup);
+        bool pickedUp = Inventory.instance.AddItem(_itemToPickup);
         if (pickedUp)
             Destroy(gameObject);
     }

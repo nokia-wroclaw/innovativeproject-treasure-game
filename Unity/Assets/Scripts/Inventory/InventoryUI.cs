@@ -4,27 +4,27 @@ public class InventoryUI : MonoBehaviour
 {
 	public Transform itemsParent;
 
-	private Inventory inventory;
-    private InventorySlot[] slots;
+	private Inventory _inventory;
+    private InventorySlot[] _slots;
 
 	void Start()
 	{
-		inventory = Inventory.instance;
-		inventory.onItemChangedCallback += UpdateUI;
-		slots = itemsParent.GetComponentsInChildren<InventorySlot>();
+		_inventory = Inventory.instance;
+		_inventory.onItemChangedCallback += UpdateUI;
+		_slots = itemsParent.GetComponentsInChildren<InventorySlot>();
 	}
 
 	void UpdateUI()
 	{
-		for(int i = 0; i < slots.Length; i++)
+		for(int i = 0; i < _slots.Length; i++)
 		{
-			if(i < inventory.listOfItems.Count)
+			if(i < _inventory.listOfItems.Count)
 			{
-				slots[i].AddItem(inventory.listOfItems[i]);
+				_slots[i].AddItem(_inventory.listOfItems[i]);
 			}
 			else
 			{
-				slots[i].ClearSlot();
+				_slots[i].ClearSlot();
 			}
 		}
 	}

@@ -7,7 +7,7 @@ public class EnemyMovement : Movement
     public GameObject pointA;
     public GameObject pointB;
 
-    private Vector3 direction;
+    private Vector3 _direction;
 
     /*protected override float Smoothing
     {
@@ -21,9 +21,9 @@ public class EnemyMovement : Movement
     {
         base.Start();
         if(Vector3.Distance(this.transform.position, pointA.transform.position) > Vector3.Distance(this.transform.position, pointB.transform.position))
-            direction = pointA.transform.position - transform.position;
+            _direction = pointA.transform.position - transform.position;
         else
-            direction = pointB.transform.position - transform.position;
+            _direction = pointB.transform.position - transform.position;
     }
 
     protected override void Update()
@@ -34,16 +34,16 @@ public class EnemyMovement : Movement
 
     private void MovementController()
     {
-        Move(direction.x, direction.z, Vector3.forward);
+        Move(_direction.x, _direction.z, Vector3.forward);
 
         if (Vector3.Distance(this.transform.position, pointB.transform.position) < 3.0f) 
         {
-            direction = pointA.transform.position - transform.position;
+            _direction = pointA.transform.position - transform.position;
         }
 
         if (Vector3.Distance(this.transform.position, pointA.transform.position) < 3.0f) 
         {
-            direction = pointB.transform.position - transform.position;
+            _direction = pointB.transform.position - transform.position;
         }
 
     } 
