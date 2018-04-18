@@ -278,7 +278,7 @@ export default class Map extends React.Component {
             });
         this.stage.setHeight(this.height*value);
         this.stage.setWidth(this.width*value);
-        this.stage.batchDraw();
+        this.stage.draw();
     }
 
     handleSubmit() {
@@ -288,8 +288,9 @@ export default class Map extends React.Component {
         this.height = parseInt(this.state.height) * this.blockSize;
         this.initFreeSpots();
         console.log("Setting this.width and this.height to: ", this.width, this.height);
-        this.stage.setHeight(this.height);
-        this.stage.setWidth(this.width);
+        let scale = this.stage.scaleX();
+        this.stage.setHeight(this.height*scale);
+        this.stage.setWidth(this.width*scale);
         // this.setState({
         //     width: this.width,
         //     height: this.height
