@@ -53,7 +53,7 @@ export default class Map extends React.Component {
         this.images.items = getItems();
         this.images.singletons = getSingletons();
         this.freeSpots = [];
-        this.oldSize = {};
+        this.oldSize = { width: this.width, height: this.height };
         this.bindMethods();
         this.initFreeSpots();
         this.state = { width: parseInt(this.width / this.blockSize), height: this.height / this.blockSize, blockSize: this.blockSize };
