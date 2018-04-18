@@ -191,7 +191,7 @@ export default class Map extends React.Component {
             console.log("Object " + entry.type + " X: " + entry.x() + ", Y: " + entry.y());
         });
         var x = this.mapToJson(this.mapObject);
-        var file = new File([x], "map.json", { type: "application/json" });
+        var file = new File([x], "gameData.json", { type: "application/json" });
         FileSaver.saveAs(file);
     }
 
