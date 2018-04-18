@@ -43,13 +43,17 @@ public class MapDataController : MonoBehaviour
     private void BuildElements()
     {
         var terrain = GetComponent<Terrain>();
-        terrain.terrainData.size = new Vector3(_mapData.mapSize[0] / 80f, 0f, _mapData.mapSize[1] / 80f);
+        terrain.terrainData.size = new Vector3(_mapData.mapSize[0] / 80f, 
+                                               0f,
+                                               _mapData.mapSize[1] / 80f);
 
         var player = GameObject.FindGameObjectWithTag("Player");
-        player.transform.localPosition = new Vector3(_mapData.playerPosition[0] / 80f, 0f, _mapData.playerPosition[1] / 80f);
+        player.transform.position = new Vector3(_mapData.playerPosition[0] / 80f,
+                                                0f,
+                                                (_mapData.mapSize[1] - 80f - _mapData.playerPosition[1]) / 80f);
 
         var treasure = GameObject.FindGameObjectWithTag("Treasure");
-        treasure.transform.localPosition = new Vector3(_mapData.treasurePosition[0] / 80f, -0.4f, _mapData.treasurePosition[1] / 80f);
+        treasure.transform.position = new Vector3(_mapData.treasurePosition[0] / 80f, treasure.transform.position.y, (_mapData.mapSize[1] - 80f - _mapData.treasurePosition[1]) / 80f);
         // TODO: chest rotation
 
         var obstacles = _mapData.gameObjects.Where(x => !x.type.Contains("guard"));
@@ -64,10 +68,17 @@ public class MapDataController : MonoBehaviour
 
             var createdObject = Instantiate(prefabToBuild);
 
-            createdObject.transform.localScale = new Vector3(obstacle.size[0] / 80f, 3f, obstacle.size[1] / 80f);
-            createdObject.transform.localPosition = new Vector3((obstacle.position[0]) / 80f + createdObject.transform.localScale.x / 2f,
-                                                                createdObject.transform.localScale.y / 2f,
-                                                                (_mapData.mapSize[1] - 80f - obstacle.position[1]) / 80f + createdObject.transform.localScale.z / 2f);
+            //if (obstacle.type == "wall1")
+            //{
+            //    createdObject.transform.localScale = new Vector3(createdObject.transform.localScale.x, createdObject.transform.localScale.y, 2);
+            //    createdObject.transform.position = new Vector3((obstacle.position[0]) / 80f + 0.5f,
+            //                                                   2,
+            //                                                   (_mapData.mapSize[1] - 80f - obstacle.position[1]) / 80f + 0.5f);
+            //}
+            //else
+                createdObject.transform.position = new Vector3((obstacle.position[0]) / 80f + 0.5f,
+                                                                createdObject.transform.position.y,
+                                                                (_mapData.mapSize[1] - 80f - obstacle.position[1]) / 80f + 0.5f);
         }
 
         navMeshSurface.BuildNavMesh();
@@ -84,9 +95,9 @@ public class MapDataController : MonoBehaviour
 
             var createdObject = Instantiate(prefabToBuild);
 
-            createdObject.transform.localPosition = new Vector3((enemy.position[0]) / 80f,
-                                                                0,
-                                                                (_mapData.mapSize[1] - 80f - enemy.position[1]) / 80f);
+            createdObject.transform.position = new Vector3((enemy.position[0]) / 80f,
+                                                           0,
+                                                           (_mapData.mapSize[1] - 80f - enemy.position[1]) / 80f);
         }
         
     }
