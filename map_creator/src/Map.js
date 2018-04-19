@@ -3,19 +3,37 @@ import * as Konva from "konva";
 import * as FileSaver from 'file-saver';
 import './Map.css';
 
-export const getImages = () => {
-    const images = [
-        { path: require('./assets/box1.png'), type: 'box1' },
-        { path: require('./assets/box2.png'), type: 'box2' },
-        { path: require('./assets/piramid1.png'), type: 'piramid1' },
+export const getTerrains = () => {
+    const terrains = [
+        // { path: require('./assets/box1.png'), type: 'box1' },
+        // { path: require('./assets/box2.png'), type: 'box2' },
+        { path: require('./assets/card.png'), type: 'card' },
         { path: require('./assets/guard.png'), type: 'guard' },
+        { path: require('./assets/tree1.png'), type: 'tree1' },
+        { path: require('./assets/tree3.png'), type: 'tree3' },
+        { path: require('./assets/wall1.png'), type: 'wall1' },
         // require('./assets/box2.png'),
         // require('./assets/piramid1.png'),
         // require('./assets/guard.png')
     ];
-    return images;
+    return terrains;
 };
 
+export const getSingletons = () => {
+    const singletons = [
+        { path: require('./assets/case.png'), type: 'case' },
+        { path: require('./assets/player.png'), type: 'player' },
+    ];
+    return singletons;
+};
+
+export const getItems = () => {
+    const items = [
+        { path: require('./assets/mine.png'), type: 'mine' },
+        { path: require('./assets/movementPotion.png'), type: 'movementPotion' },
+    ];
+    return items;
+};
 export default class Map extends React.Component {
 
     constructor(props) {
@@ -30,9 +48,12 @@ export default class Map extends React.Component {
         this.width = 800;
         this.height = 480;
         this.bindMethods = this.bindMethods.bind(this);
-        this.images = getImages();
+        this.images = { terrains: [], items: [], singletons: [] };
+        this.images.terrains = getTerrains();
+        this.images.items = getItems();
+        this.images.singletons = getSingletons();
         this.freeSpots = [];
-        this.oldSize = {};
+        this.oldSize = { width: this.width, height: this.height };
         this.bindMethods();
         this.initFreeSpots();
         this.state = { width: parseInt(this.width / this.blockSize), height: this.height / this.blockSize, blockSize: this.blockSize };
@@ -156,25 +177,38 @@ export default class Map extends React.Component {
     // Click events
 
     generate() {
-        // this.readAssets();
-        // this.mapObject = { mapSize: [this.width, this.height], playerPosition: [0, 0], "box1": [], "box2": [], "piramid1": [], "guard": [] }; 
-        this.mapObject = { mapSize: [this.width, this.height], playerPosition: [0, 0], gameObjects: [] };
+        this.mapObject = { mapSize: [this.width, this.height], playerPosition: [0, 0], treasurePosition: [0, 0], gameObjects: [] };
         this.objects.forEach((entry) => {
-            this.mapObject["gameObjects"].push({ "size": [entry.width(), entry.height()], "position": [entry.x(), entry.y()], type: entry.type });
+            if (entry.type == "player") {
+                this.mapObject["playerPosition"] = [entry.x(), entry.y()];
+            } else if (entry.type == "case") {
+                this.mapObject["treasurePosition"] = [entry.x(), entry.y()];
+            } else {
+                this.mapObject["gameObjects"].push({ "size": [entry.width(), entry.height()], "position": [entry.x(), entry.y()], type: entry.type });
+            }
             var x = this.mapToJson(this.mapObject);
             console.log(x);
             console.log("Object " + entry.type + " X: " + entry.x() + ", Y: " + entry.y());
         });
         var x = this.mapToJson(this.mapObject);
-        var file = new File([x], "map.json", { type: "application/json" });
+        var file = new File([x], "gameData.json", { type: "application/json" });
         FileSaver.saveAs(file);
     }
 
     generateRandom() {
         this.objects = [];
-        // const items = [['./assets/box1.png', 'box1'], ['./assets/box2.png', 'box2'], ['./assets/piramid1.png', 'piramid1'], ['./assets/guard.png', 'guard']];
+        // Adding player and the treasure
+        this.addImage(this.images.singletons[0].path, this.images.singletons[0].type);
+        this.addImage(this.images.singletons[1].path, this.images.singletons[1].type);
+        // Adding items
+        for (let i = 0; i < 3; i++) {
+            const randomElement = this.images.items[Math.floor(Math.random() * this.images.items.length)];
+            if (this.addImage(randomElement.path, randomElement.type)) {
+                continue;
+            }
+        }
         for (let i = 0; i < 10; i++) {
-            const randomElement = this.images[Math.floor(Math.random() * this.images.length)];
+            const randomElement = this.images.terrains[Math.floor(Math.random() * this.images.terrains.length)];
             if (this.addImage(randomElement.path, randomElement.type)) {
                 continue;
             }
@@ -261,7 +295,7 @@ export default class Map extends React.Component {
         const target = event.target;
         const value = parseInt(event.target.value);
         const name = target.name;
-        console.log("Setting value",name,":", value);
+        console.log("Setting value", name, ":", value);
         this.setState({
             [name]: value
         });
@@ -271,14 +305,14 @@ export default class Map extends React.Component {
         const target = event.target;
         const value = event.target.value;
         const name = target.name;
-        console.log("Setting value",name,":", value);
+        console.log("Setting value", name, ":", value);
         this.stage.scale({
-                x: value,
-                y: value
-            });
-        this.stage.setHeight(this.height*value);
-        this.stage.setWidth(this.width*value);
-        this.stage.batchDraw();
+            x: value,
+            y: value
+        });
+        this.stage.setHeight(this.height * value);
+        this.stage.setWidth(this.width * value);
+        this.stage.draw();
     }
 
     handleSubmit() {
@@ -288,8 +322,9 @@ export default class Map extends React.Component {
         this.height = parseInt(this.state.height) * this.blockSize;
         this.initFreeSpots();
         console.log("Setting this.width and this.height to: ", this.width, this.height);
-        this.stage.setHeight(this.height);
-        this.stage.setWidth(this.width);
+        let scale = this.stage.scaleX();
+        this.stage.setHeight(this.height * scale);
+        this.stage.setWidth(this.width * scale);
         // this.setState({
         //     width: this.width,
         //     height: this.height
@@ -303,7 +338,6 @@ export default class Map extends React.Component {
         const scale = 1;
         var index = Math.floor(Math.random() * this.freeSpots.length);
         let freeSpot = this.freeSpots[index]
-        this.remove(this.freeSpots, index);
         const image = new Konva.Image({
             x: freeSpot.row * this.blockSize,
             y: freeSpot.col * this.blockSize,
@@ -374,8 +408,10 @@ export default class Map extends React.Component {
         this.objects.push(image);
         this.layer.add(image);
         this.stage.draw();
+        this.remove(this.freeSpots, index);
         return true;
     }
+
 
     addImage(path, type) {
 
@@ -504,12 +540,17 @@ export default class Map extends React.Component {
                     </form>
                 </p>
                 <div id='images'>
-                    <img src={this.images[0].path} alt="box" className="box" onClick={() => this.selectBox(this.images[0].path, this.images[0].type)} />
-                    <img src={this.images[1].path} alt="box" className="box" onClick={() => this.selectBox(this.images[1].path, this.images[1].type)} />
-                    <img src={this.images[2].path} alt="box" className="box" onClick={() => this.selectBox(this.images[2].path, this.images[2].type)} />
-                    <img src={this.images[3].path} alt="box" className="box" onClick={() => this.selectBox(this.images[3].path, this.images[3].type)} />
+                    <img src={this.images.terrains[0].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[0].path, this.images.terrains[0].type)} />
+                    <img src={this.images.terrains[1].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[1].path, this.images.terrains[1].type)} />
+                    <img src={this.images.terrains[2].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[2].path, this.images.terrains[2].type)} />
+                    <img src={this.images.terrains[3].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[3].path, this.images.terrains[3].type)} />
+                    <img src={this.images.terrains[4].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[4].path, this.images.terrains[4].type)} />
+                    <img src={this.images.items[0].path} alt="box" className="box" onClick={() => this.selectBox(this.images.items[0].path, this.images.items[0].type)} />
+                    <img src={this.images.items[1].path} alt="box" className="box" onClick={() => this.selectBox(this.images.items[1].path, this.images.items[1].type)} />
+                    <img src={this.images.singletons[0].path} alt="box" className="box" onClick={() => this.selectBox(this.images.singletons[0].path, this.images.singletons[0].type)} />
+                    <img src={this.images.singletons[1].path} alt="box" className="box" onClick={() => this.selectBox(this.images.singletons[1].path, this.images.singletons[1].type)} />
                 </div>
-                <input name="scale" type="range" defaultValue="1.0" min="0.1" max ="2.0" step="0.01" onChange={this.handleScale}/>
+                <input name="scale" type="range" defaultValue="1.0" min="0.1" max="2.0" step="0.01" onChange={this.handleScale} />
                 <div
                     className="container"
                     ref={ref => {
