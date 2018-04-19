@@ -46,8 +46,9 @@ python client.py maps
 #### Game
 Start the game:
 ```
-cd unity
-.\StealTheTreasure
+1. Move to Unity\Assets\Scenes directory
+2. Double-click on MainMenu.unity file
+3. Click the "Play" button at the top of the Unity Editor
 ```
 
 
