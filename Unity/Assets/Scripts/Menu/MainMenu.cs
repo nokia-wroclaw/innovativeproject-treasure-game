@@ -28,7 +28,7 @@ public class MainMenu : MonoBehaviour
 	public void ResumeGame()
 	{
 		Time.timeScale = 1.0f;
-		SceneManager.UnloadScene("MainMenu");
+		SceneManager.UnloadSceneAsync("MainMenu");
 	}
 
 	void Start()

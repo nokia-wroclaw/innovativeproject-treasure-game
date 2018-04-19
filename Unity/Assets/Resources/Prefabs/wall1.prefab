@@ -21,6 +21,8 @@ GameObject:
   - component: {fileID: 4071123875061910}
   - component: {fileID: 33924540900837732}
   - component: {fileID: 23369166275906002}
+  - component: {fileID: 64467688695379428}
+  - component: {fileID: 95278914477597226}
   m_Layer: 0
   m_Name: wall1
   m_TagString: Untagged
@@ -56,6 +58,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_Materials:
   - {fileID: 2100000, guid: 808c962ae35b4b3428ccb78f94f79131, type: 3}
+  - {fileID: 2100000, guid: 808c962ae35b4b3428ccb78f94f79131, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -82,3 +85,34 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1856250275296916}
   m_Mesh: {fileID: 4300000, guid: 808c962ae35b4b3428ccb78f94f79131, type: 3}
+--- !u!64 &64467688695379428
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1856250275296916}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300000, guid: 808c962ae35b4b3428ccb78f94f79131, type: 3}
+--- !u!95 &95278914477597226
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1856250275296916}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 808c962ae35b4b3428ccb78f94f79131, type: 3}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
