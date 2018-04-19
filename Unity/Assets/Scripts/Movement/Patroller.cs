@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
-using Random = System.Random;
 
 public class Patroller : MonoBehaviour 
 {
@@ -62,7 +61,6 @@ public class Patroller : MonoBehaviour
     {
         RaycastHit hit;
         var patrolTargets = new Vector3[4];
-        var random = new Random();
         var mapSize = Terrain.activeTerrain.terrainData.size;
         var counter = 0;
         for (int i = 0; i < 4; i++)
@@ -72,9 +70,9 @@ public class Patroller : MonoBehaviour
 
             do
             {
-                point = new Vector3(((float)random.Next(0, 101) / 100) * mapSize.x,
+                point = new Vector3(((float)Random.Range(0,101) / 100) * mapSize.x,
                                     1,
-                                    ((float)random.Next(0, 101) / 100) * mapSize.z);
+                                    ((float)Random.Range(0,101) / 100) * mapSize.z);
                 
                 if (Physics.Raycast(new Vector3(point.x, point.y + 10, point.z), Vector3.down, out hit))
                 {
