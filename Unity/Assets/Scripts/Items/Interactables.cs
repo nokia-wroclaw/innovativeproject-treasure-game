@@ -3,15 +3,15 @@ using UnityEngine;
 
 public abstract class Interactables : MonoBehaviour
 {
-    private bool interactable = false;
-
     protected abstract Func<bool> InteractCondition { get; }
 
     protected abstract void Interact();
 
+    private bool _interactable = false;
+
     private void Update()
     {
-        if(interactable && InteractCondition())
+        if(_interactable && InteractCondition())
         {
             Interact();
         }
@@ -21,7 +21,7 @@ public abstract class Interactables : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            interactable = true;
+            _interactable = true;
         }
     }
     protected virtual void OnTriggerExit(Collider other)
@@ -29,7 +29,7 @@ public abstract class Interactables : MonoBehaviour
 
         if (other.gameObject.tag == "Player")
         {
-            interactable = false;
+            _interactable = false;
         }
     }
     

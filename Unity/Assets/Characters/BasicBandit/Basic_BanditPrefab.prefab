@@ -88,6 +88,7 @@ GameObject:
   - component: {fileID: 136729574107461772}
   - component: {fileID: 114640351971088368}
   - component: {fileID: 114374813567711202}
+  - component: {fileID: 114562954240833288}
   m_Layer: 0
   m_Name: Basic_BanditPrefab
   m_TagString: Player
@@ -208,6 +209,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   space: 5
+  listOfItems: []
+--- !u!114 &114562954240833288
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000014232435074}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: befa9bf4404ebce418ac4909acca084e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPaused: 0
 --- !u!114 &114640351971088368
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -11,6 +11,8 @@ TagManager:
   - Treasure
   - Door
   - DroppedItem
+  - Canvas
+  - Tree
   layers:
   - Default
   - TransparentFX

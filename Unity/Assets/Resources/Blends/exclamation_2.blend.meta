@@ -1,25 +1,20 @@
 fileFormatVersion: 2
-guid: 717bf8292ffbc1d45966d345e30d953a
-timeCreated: 1523566680
+guid: cfa1ac4eccc70c549b5f01e9dad84aab
+timeCreated: 1524074999
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
     100000: //RootNode
     400000: //RootNode
-    2100000: wall
+    2100000: Material_002
+    2100002: Material_003
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Cube
-    6400000: //RootNode
+    4300000: Cylinder
     7400000: Default Take
     9500000: //RootNode
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: wall
-    second: {fileID: 2100000, guid: a50c6034ba2ee6243b7f21e8126bd37c, type: 2}
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
@@ -51,7 +46,7 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 1
+    addColliders: 0
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1

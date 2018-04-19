@@ -109,7 +109,7 @@ Animator:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1717773436709696}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 9000000, guid: c56fb4177d0cd064f9317e0a20c95a4e, type: 3}
   m_Controller: {fileID: 0}
   m_CullingMode: 0
@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae34ebb3a24b9b743aa2c64128ff6e4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemToPickup: {fileID: 11400000, guid: 731e90f0d90b9024a84ae6674c5a5b98, type: 2}
+  _itemToPickup: {fileID: 0}
 --- !u!136 &136171767071189206
 CapsuleCollider:
   m_ObjectHideFlags: 1

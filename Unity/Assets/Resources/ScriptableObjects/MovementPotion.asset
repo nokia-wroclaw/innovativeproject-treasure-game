@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Name: MovementPotion
   m_EditorClassIdentifier: 
   name: MovementPotion
-  icon: {fileID: 21300000, guid: c6958bfe0609ee04c95c0bf02ca0d9bb, type: 3}
+  icon: {fileID: 21300000, guid: cdc5ab6c5e5385c4d9aed4790f3978f1, type: 3}

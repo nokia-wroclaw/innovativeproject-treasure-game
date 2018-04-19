@@ -1,17 +1,16 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
-using Random = System.Random;
 
 public class Patroller : MonoBehaviour 
 {
     public bool usePredefinedPatrolTargets;
     public Vector3[] patrolTargets;
 
-    private NavMeshAgent agent;
-    private Animator anim;
-    private GameObject player;
-    private PlayerVisibility playerVisibility;
+    private NavMeshAgent _agent;
+    private Animator _anim;
+    private GameObject _player;
+    private PlayerVisibility _playerVisibility;
 
     private int destPoint;
     private bool arrived;
@@ -19,28 +18,28 @@ public class Patroller : MonoBehaviour
 
 	void Start () 
 	{
-		agent = GetComponent<NavMeshAgent>();
-		anim = GetComponent<Animator>();
-        playerVisibility = GetComponent<PlayerVisibility>();
-        player = GameObject.FindGameObjectWithTag("Player");
+		_agent = GetComponent<NavMeshAgent>();
+		_anim = GetComponent<Animator>();
+        _playerVisibility = GetComponent<PlayerVisibility>();
+        _player = GameObject.FindGameObjectWithTag("Player");
         if (!usePredefinedPatrolTargets)
             patrolTargets = GeneratePatrolTargets();
     }
 	
 	void FixedUpdate () 
 	{
-        if (agent.pathPending)
+        if (_agent.pathPending)
             return;
 
         if (patrolling)
         {
-            if (playerVisibility.Chasing)
+            if (_playerVisibility.Chasing)
             {
-                agent.destination = player.transform.localPosition;
+                _agent.destination = _player.transform.localPosition;
             }
             else
             {
-                if (agent.remainingDistance < agent.stoppingDistance)
+                if (_agent.remainingDistance < _agent.stoppingDistance)
                 {
                     if (!arrived)
                     {
@@ -55,14 +54,13 @@ public class Patroller : MonoBehaviour
         else
             StartCoroutine(GoToNextPoint());
 
-        anim.SetFloat("blendSpeed", agent.velocity.sqrMagnitude);
+        _anim.SetFloat("blendSpeed", _agent.velocity.sqrMagnitude);
 	}
 	
     private Vector3[] GeneratePatrolTargets()
     {
         RaycastHit hit;
         var patrolTargets = new Vector3[4];
-        var random = new Random();
         var mapSize = Terrain.activeTerrain.terrainData.size;
         var counter = 0;
         for (int i = 0; i < 4; i++)
@@ -72,9 +70,9 @@ public class Patroller : MonoBehaviour
 
             do
             {
-                point = new Vector3(((float)random.Next(0, 101) / 100) * mapSize.x,
+                point = new Vector3(((float)Random.Range(0,101) / 100) * mapSize.x,
                                     1,
-                                    ((float)random.Next(0, 101) / 100) * mapSize.z);
+                                    ((float)Random.Range(0,101) / 100) * mapSize.z);
                 
                 if (Physics.Raycast(new Vector3(point.x, point.y + 10, point.z), Vector3.down, out hit))
                 {
@@ -108,22 +106,22 @@ public class Patroller : MonoBehaviour
         patrolling = true;
         yield return new WaitForSeconds(2.0f);
         arrived = false;
-        agent.destination = patrolTargets[destPoint];
+        _agent.destination = patrolTargets[destPoint];
         destPoint = (destPoint + 1) % patrolTargets.Length;        
     }
 
     private IEnumerator Stun()
     {
         Debug.Log("Stunned");
-        agent.speed = 0;
+        _agent.speed = 0;
+        _playerVisibility.stunned = true;
         yield return new WaitForSeconds(10.0f);
-        agent.speed = 2;
+        _playerVisibility.stunned = false;
+        _agent.speed = 2;
     }
 
     public void StunEnemy()
     {
-        var visibility = GetComponent<PlayerVisibility>();
-        visibility.stunned = true;
         StartCoroutine(Stun());
     }
 
