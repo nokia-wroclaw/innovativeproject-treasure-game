@@ -145,6 +145,8 @@ export default class Map extends React.Component {
     }
 
     redraw() {
+        console.log("this.oldSize.width this.oldSize.height:", this.oldSize.width, this.oldSize.height);
+        console.log("this.width this.height:", this.width, this.height);
         this.layer.removeChildren();
         this.drawGrid();
         this.shadowRectangle.hide();
@@ -157,20 +159,32 @@ export default class Map extends React.Component {
             y: pos.y
         })
         this.layer.add(this.shadowRectangle);
-        console.log(this.width, this.height);
+        // console.log(this.width, this.height);
+        let objectsToDelete = [];
         this.objects.forEach((entry) => {
             const pos = { x: -1, y: -1 };
             entry.setHeight(this.blockSize);
             entry.setWidth(this.blockSize);
-            let newX = entry.x() / (this.oldSize.width / this.width);
-            let newY = entry.y() / (this.oldSize.height / this.height);
-            entry.setAttrs({ x: newX, y: newY })
-            this.checkPos(entry, pos);
-            entry.setAttrs({ x: pos.x, y: pos.y })
-            entry.currentX = entry.x();
-            entry.currentY = entry.y();
-            this.layer.add(entry);
+            let change = false;
+            if (this.oldSize.width != this.width || this.oldSize.height != this.height) {
+                change = true;
+            }
+            // let newX = entry.x() / (this.oldSize.width / this.width);
+            // let newY = entry.y() / (this.oldSize.height / this.height);
+            // entry.setAttrs({ x: newX, y: newY })
+            this.checkPos(entry, pos, change);
+            if (pos.x == -1 || pos.y == -1) {
+                objectsToDelete.push(entry);
+            } else {
+                entry.setAttrs({ x: pos.x, y: pos.y })
+                entry.currentX = entry.x();
+                entry.currentY = entry.y();
+                this.layer.add(entry);
+            }
         });
+        for (let i = 0; i < objectsToDelete.length; i++) {
+            delete this.objects[objectsToDelete[i].imageIndex];
+        }
         this.stage.draw();
     }
 
@@ -213,6 +227,7 @@ export default class Map extends React.Component {
                 continue;
             }
         }
+        this.oldSize = { width: this.width, height: this.height };
         this.redraw();
     }
 
@@ -272,7 +287,6 @@ export default class Map extends React.Component {
                 y: this.shadowRectangle.y()
             });
         } else {
-            console.log("WRACAM XD")
             image.position({
                 x: image.currentX,
                 y: image.currentY
@@ -283,7 +297,7 @@ export default class Map extends React.Component {
         //this.objects.push(image);
         this.stage.draw();
         this.shadowRectangle.hide();
-        console.log("Image X: " + image.x() + ", Image Y: " + image.y());
+        // console.log("Image X: " + image.x() + ", Image Y: " + image.y());
     }
 
     selectBox(path, type) {
@@ -356,11 +370,11 @@ export default class Map extends React.Component {
         });
         const pos = { x: -1, y: -1 };
 
-        this.checkPos(image, pos);
+        this.checkPos(image, pos, false);
         if (this.checkOverlap(image, image.x(), image.y())) {
             return false;
         }
-        console.log(pos.x, pos.y);
+        // console.log(pos.x, pos.y);
         image.position({ x: pos.x, y: pos.y });
 
         image.type = type;
@@ -384,7 +398,7 @@ export default class Map extends React.Component {
 
         image.on('dragmove', () => {
             const pos = { x: -1, y: -1 };
-            this.checkPos(image, pos);
+            this.checkPos(image, pos, false);
             console.log("Setting rectangle position to: ", pos.x, pos.y);
             console.log("this.width, this.height: ", this.width, this.height);
             this.shadowRectangle.position({
@@ -428,7 +442,7 @@ export default class Map extends React.Component {
         this.stage.batchDraw();
     }
 
-    checkPos(image, pos) {
+    checkPos(image, pos, change) {
         // Checking x position
         var x = parseFloat(image.x());
         var y = parseFloat(image.y());
@@ -436,7 +450,12 @@ export default class Map extends React.Component {
         if (x < 0) {
             pos.x = 0;
         } else if (x + image.width() > this.width) {
-            pos.x = this.width - image.width();
+            if (change) {
+                pos.x = -1;
+            } else {
+                pos.x = this.width - image.width();
+            }
+
         } else {
             pos.x = Math.round(x / this.blockSize) * this.blockSize;
         }
@@ -444,7 +463,11 @@ export default class Map extends React.Component {
         if (y < 0) {
             pos.y = 0;
         } else if (parseFloat(y) + image.height() > this.height) {
-            pos.y = this.height - image.height();
+            if (change) {
+                pos.y = -1;
+            } else {
+                pos.y = this.height - image.height();
+            }
         } else {
             pos.y = Math.round(y / this.blockSize) * this.blockSize;
         }
