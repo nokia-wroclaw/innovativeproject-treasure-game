@@ -2,19 +2,47 @@ import React from 'react';
 import * as Konva from "konva";
 import * as FileSaver from 'file-saver';
 import './Map.css';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'; // add
+import RaisedButton from 'material-ui/RaisedButton'; // add
+import FlatButton from 'material-ui/FlatButton'; // add
+import TextField from 'material-ui/TextField';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
+import FineUploaderTraditional from 'fine-uploader-wrappers'
+import Gallery from 'react-fine-uploader'
+
+// ...or load this specific CSS file using a <link> tag in your document
+import 'react-fine-uploader/gallery/gallery.css'
+
+const uploader = new FineUploaderTraditional({
+    options: {
+        width: 100,
+        height: 100,
+        chunking: {
+            enabled: true
+        },
+        deleteFile: {
+            enabled: true,
+            endpoint: '/uploads'
+        },
+        request: {
+            endpoint: '/uploads'
+        },
+        retry: {
+            enableAuto: true
+        }
+    }
+})
+// import Upload from 'material-ui-upload/Upload';
+
 
 export const getTerrains = () => {
     const terrains = [
-        // { path: require('./assets/box1.png'), type: 'box1' },
-        // { path: require('./assets/box2.png'), type: 'box2' },
         { path: require('./assets/card.png'), type: 'card' },
         { path: require('./assets/guard.png'), type: 'guard' },
         { path: require('./assets/tree1.png'), type: 'tree1' },
         { path: require('./assets/tree3.png'), type: 'tree3' },
         { path: require('./assets/wall1.png'), type: 'wall1' },
-        // require('./assets/box2.png'),
-        // require('./assets/piramid1.png'),
-        // require('./assets/guard.png')
     ];
     return terrains;
 };
@@ -527,60 +555,75 @@ export default class Map extends React.Component {
     }
 
     // Render
+    testUpload() {
+        this.upload.click();
+        let f = this.upload.value;
+        f = f.replace(/.*[\/\\]/, '');
+        console.log(f);
+    }
 
     render() {
         return (
-            <div>
-                <p>
-                    <button type="button" onClick={this.generate}>Generate map!</button>
-                </p>
-                <p>
-                    <button type="button" onClick={this.generateRandom}>Generate random map!</button>
-                </p>
-                <form onSubmit={this.handleSubmit}>
-                    <label>
-                        Box size:
-                         <input name="blockSize" type="number" value={this.state.blockSize} onChange={this.handleChange} />
-                    </label>
-                    <label>
-                        Width:
-                         <input name="width" type="number" value={this.state.width} onChange={this.handleChange} step="1" />
-                    </label>
-                    <label>
-                        Height:
-                         <input name="height" type="number" value={this.state.height} onChange={this.handleChange} step="1" />
-                    </label>
+            <MuiThemeProvider /*muiTheme={getMuiTheme(darkBaseTheme)}*/>
+                <div>
+                    <p>
+                        <RaisedButton className="strange-button" label="Generate map" primary={true} onClick={this.generate}></RaisedButton>
+                    </p>
+                    <p>
+                        <RaisedButton className="strange-button" label="Generate random map" primary={true} onClick={this.generateRandom}></RaisedButton>
+                    </p>
+                    <p>
+                        <RaisedButton className="strange-button" label="List maps" primary={true} onClick={this.listMaps}></RaisedButton>
+                    </p>
+                    <form onSubmit={this.handleSubmit}>
+                        <label>
+                            Box size:
+                            <TextField className="text-field-sizes" hintText="Box size" name="blockSize" value={this.state.blockSize} onChange={this.handleChange}></TextField>
+                        </label>
+                        <label>
+                            Width:
+                            <TextField className="text-field-sizes" hintText="Width" name="width" value={this.state.blockSize} onChange={this.handleChange}></TextField>
+                        </label>
+                        <label>
+                            Height:
+                            <TextField className="text-field-sizes" hintText="Height" name="height" value={this.state.blockSize} onChange={this.handleChange}></TextField>
+                        </label>
 
-                    <input type="button" onClick={this.handleSubmit} value="Change" />
-                </form>
-                <iframe name='XD' width="0" height="0" borde="0" style={{ visibility: "hidden" }}></iframe>
-                <p>
-                    Upload map to a server
-                          <form action="http://localhost:5000/uploader" method="POST"
-                        encType="multipart/form-data" target='XD'>
-                        <input type="file" name="file" />
-                        <input type="submit" />
+                        <RaisedButton className="strange-button" label="Change" secondary={true} onClick={this.handleSubmit} />
                     </form>
-                </p>
-                <div id='images'>
-                    <img src={this.images.terrains[0].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[0].path, this.images.terrains[0].type)} />
-                    <img src={this.images.terrains[1].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[1].path, this.images.terrains[1].type)} />
-                    <img src={this.images.terrains[2].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[2].path, this.images.terrains[2].type)} />
-                    <img src={this.images.terrains[3].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[3].path, this.images.terrains[3].type)} />
-                    <img src={this.images.terrains[4].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[4].path, this.images.terrains[4].type)} />
-                    <img src={this.images.items[0].path} alt="box" className="box" onClick={() => this.selectBox(this.images.items[0].path, this.images.items[0].type)} />
-                    <img src={this.images.items[1].path} alt="box" className="box" onClick={() => this.selectBox(this.images.items[1].path, this.images.items[1].type)} />
-                    <img src={this.images.singletons[0].path} alt="box" className="box" onClick={() => this.selectBox(this.images.singletons[0].path, this.images.singletons[0].type)} />
-                    <img src={this.images.singletons[1].path} alt="box" className="box" onClick={() => this.selectBox(this.images.singletons[1].path, this.images.singletons[1].type)} />
-                </div>
-                <input name="scale" type="range" defaultValue="1.0" min="0.1" max="2.0" step="0.01" onChange={this.handleScale} />
-                <div
-                    className="container"
-                    ref={ref => {
-                        this.containerRef = ref;
-                    }}
-                />
-            </div >
+                    <iframe name='XD' width="0" height="0" borde="0" style={{ visibility: "hidden" }}></iframe>
+                    <p>
+                        <Gallery uploader={uploader} />
+                        Upload map to a server
+                        <form action="http://localhost:5000/uploader" method="POST"
+                            encType="multipart/form-data" target='XD'>
+                            <RaisedButton className="strange-button" label="Browse" primary={true} onClick={(e) => this.testUpload()}></RaisedButton>
+                            <TextField readOnly={true}></TextField>
+                            <input type="file" name="file" style={{ display: "none" }} ref={(ref) => this.upload = ref} />
+                            <RaisedButton className="strange-button" label="Submit" primary={true} type="submit" />
+                        </form>
+                    </p>
+                    <div id='images'>
+                        <img src={this.images.terrains[0].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[0].path, this.images.terrains[0].type)} />
+                        <img src={this.images.terrains[1].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[1].path, this.images.terrains[1].type)} />
+                        <img src={this.images.terrains[2].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[2].path, this.images.terrains[2].type)} />
+                        <img src={this.images.terrains[3].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[3].path, this.images.terrains[3].type)} />
+                        <img src={this.images.terrains[4].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[4].path, this.images.terrains[4].type)} />
+                        <img src={this.images.items[0].path} alt="box" className="box" onClick={() => this.selectBox(this.images.items[0].path, this.images.items[0].type)} />
+                        <img src={this.images.items[1].path} alt="box" className="box" onClick={() => this.selectBox(this.images.items[1].path, this.images.items[1].type)} />
+                        <img src={this.images.singletons[0].path} alt="box" className="box" onClick={() => this.selectBox(this.images.singletons[0].path, this.images.singletons[0].type)} />
+                        <img src={this.images.singletons[1].path} alt="box" className="box" onClick={() => this.selectBox(this.images.singletons[1].path, this.images.singletons[1].type)} />
+                    </div>
+                    <input name="scale" type="range" defaultValue="1.0" min="0.1" max="2.0" step="0.01" onChange={this.handleScale} />
+                    <div
+                        className="container"
+                        text-align="center"
+                        ref={ref => {
+                            this.containerRef = ref;
+                        }}
+                    />
+                </div >
+            </MuiThemeProvider>
         );
     }
 }

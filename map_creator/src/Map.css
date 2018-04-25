@@ -13,3 +13,12 @@
   width: 100px;
   height: 100px;
 }
+
+.strange-button {
+  margin: 0px;
+  text-align: center;
+}
+
+.text-field-sizes {
+  margin: 10px;
+}
