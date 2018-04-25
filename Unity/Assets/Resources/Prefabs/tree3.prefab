@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 64642472158501974}
   m_Layer: 0
   m_Name: tree3
-  m_TagString: Tree
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -35,9 +35,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1355077686890122}
-  m_LocalRotation: {x: -0.7071068, y: 0.000000029802322, z: 0.000000029802322, w: 0.7071068}
-  m_LocalPosition: {x: -61.54999, y: 2.5, z: 15.919976}
-  m_LocalScale: {x: 0.5000001, y: 0.5000002, z: 2.0000002}
+  m_LocalRotation: {x: -0.70710677, y: 0.00000005960463, z: 0.00000005960463, w: 0.70710677}
+  m_LocalPosition: {x: -13.899928, y: 2.5, z: 7.73001}
+  m_LocalScale: {x: 0.5000005, y: 0.5000004, z: 2.0000012}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0

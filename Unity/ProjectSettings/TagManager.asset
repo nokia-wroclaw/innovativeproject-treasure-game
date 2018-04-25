@@ -13,6 +13,8 @@ TagManager:
   - DroppedItem
   - Canvas
   - Tree
+  - Collectibles
+  - Obstacle
   layers:
   - Default
   - TransparentFX

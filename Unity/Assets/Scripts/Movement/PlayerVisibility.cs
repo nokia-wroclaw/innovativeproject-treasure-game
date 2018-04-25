@@ -50,9 +50,9 @@ public class PlayerVisibility : MonoBehaviour
         StartCoroutine(PlayerVisibilityCheck());
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-        _playerSpottedObject.transform.localPosition = gameObject.transform.position + new Vector3(0, 4, 0);
+        _playerSpottedObject.transform.position = gameObject.transform.position + new Vector3(0, 4, 0);
     }
 
     private IEnumerator PlayerVisibilityCheck()

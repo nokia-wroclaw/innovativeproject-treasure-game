@@ -1,0 +1,159 @@
+{
+    "mapSize": [
+        2400,
+        1200
+    ],
+    "playerPosition": [
+        2320,
+        0
+    ],
+    "treasurePosition": [
+        80,
+        320
+    ],
+    "gameObjects": [
+        {
+            "size": [
+                80,
+                80
+            ],
+            "position": [
+                2320,
+                1120
+            ],
+            "type": "movementPotion"
+        },
+        {
+            "size": [
+                80,
+                80
+            ],
+            "position": [
+                1520,
+                960
+            ],
+            "type": "mine"
+        },
+        {
+            "size": [
+                80,
+                80
+            ],
+            "position": [
+                560,
+                0
+            ],
+            "type": "movementPotion"
+        },
+        {
+            "size": [
+                80,
+                80
+            ],
+            "position": [
+                0,
+                1120
+            ],
+            "type": "card"
+        },
+        {
+            "size": [
+                80,
+                80
+            ],
+            "position": [
+                640,
+                160
+            ],
+            "type": "wall1"
+        },
+        {
+            "size": [
+                80,
+                80
+            ],
+            "position": [
+                160,
+                640
+            ],
+            "type": "tree3"
+        },
+        {
+            "size": [
+                80,
+                80
+            ],
+            "position": [
+                720,
+                640
+            ],
+            "type": "wall1"
+        },
+        {
+            "size": [
+                80,
+                80
+            ],
+            "position": [
+                1920,
+                880
+            ],
+            "type": "wall1"
+        },
+        {
+            "size": [
+                80,
+                80
+            ],
+            "position": [
+                2000,
+                640
+            ],
+            "type": "wall1"
+        },
+        {
+            "size": [
+                80,
+                80
+            ],
+            "position": [
+                1360,
+                800
+            ],
+            "type": "guard"
+        },
+        {
+            "size": [
+                80,
+                80
+            ],
+            "position": [
+                2000,
+                1040
+            ],
+            "type": "tree1"
+        },
+        {
+            "size": [
+                80,
+                80
+            ],
+            "position": [
+                320,
+                560
+            ],
+            "type": "tree1"
+        },
+        {
+            "size": [
+                80,
+                80
+            ],
+            "position": [
+                1840,
+                880
+            ],
+            "type": "tree3"
+        }
+    ]
+}
