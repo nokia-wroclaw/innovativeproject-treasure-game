@@ -14,7 +14,12 @@ ModelImporter:
     6400000: //RootNode
     7400000: Default Take
     9500000: //RootNode
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: wall
+    second: {fileID: 2100000, guid: 680075bd331c8134c8efae5e43d4b003, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

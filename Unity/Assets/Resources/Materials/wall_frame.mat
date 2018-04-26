@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: wall
+  m_Name: wall_frame
   m_Shader: {fileID: 4800000, guid: d03e72b09f223884a8e2b7ebdcbc7d42, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4

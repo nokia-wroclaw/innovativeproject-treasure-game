@@ -9,14 +9,6 @@ public class EnemyMovement : Movement
 
     private Vector3 _direction;
 
-    /*protected override float Smoothing
-    {
-        get
-        {   
-            return 5.5f;
-        }
-    }*/
-
     protected override void Start()
     {
         base.Start();
@@ -26,7 +18,7 @@ public class EnemyMovement : Movement
             _direction = pointB.transform.position - transform.position;
     }
 
-    protected override void Update()
+    protected void Update()
     {
         MovementController();
         Animating();

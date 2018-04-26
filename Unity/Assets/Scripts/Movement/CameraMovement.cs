@@ -62,6 +62,7 @@ public class CameraMovement : MonoBehaviour
                     if (collidedObject == null)
                     {
                         _hit.transform.gameObject.GetComponent<Renderer>().material.ChangeAlpha(0.5f);
+
                         var collisionSource = new CollidedObject { gameObject = _hit.transform.gameObject, collisionCounter = 2 };
                         collidedObjects.Add(collisionSource);
                     }
