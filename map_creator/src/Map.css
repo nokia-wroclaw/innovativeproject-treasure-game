@@ -31,3 +31,9 @@
     max-width: 50%;
     left: 25%;
 }
+
+.slider {
+  width: 50%;
+  padding-left: 25%;
+  text-align: center;
+}

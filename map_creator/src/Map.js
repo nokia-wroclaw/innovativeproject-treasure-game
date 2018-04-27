@@ -3,6 +3,7 @@ import * as Konva from "konva";
 import * as FileSaver from 'file-saver';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
+import Slider from 'material-ui/Slider';
 import TextField from 'material-ui/TextField';
 import FineUploader from 'fine-uploader-wrappers';
 import Gallery from 'react-fine-uploader'
@@ -76,7 +77,7 @@ export default class Map extends React.Component {
         this.oldSize = { width: this.width, height: this.height };
         this.bindMethods();
         this.initFreeSpots();
-        this.state = { width: parseInt(this.width / this.blockSize, 10), height: this.height / this.blockSize, blockSize: this.blockSize };
+        this.state = { width: parseInt(this.width / this.blockSize, 10), height: this.height / this.blockSize, blockSize: this.blockSize, scale: 1.0 };
     }
     componentDidMount() {
         const tween = null;
@@ -136,7 +137,7 @@ export default class Map extends React.Component {
         this.generateRandom = this.generateRandom.bind(this);
         this.checkPos = this.checkPos.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        this.handleScale = this.handleScale.bind(this);
+        this.handleSlider = this.handleSlider.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.strMapToObj = this.strMapToObj.bind(this);
         this.readAssets = this.readAssets.bind(this);
@@ -333,20 +334,6 @@ export default class Map extends React.Component {
         this.setState({
             [name]: value
         });
-    }
-
-    handleScale(event) {
-        const target = event.target;
-        const value = event.target.value;
-        const name = target.name;
-        console.log("Setting value", name, ":", value);
-        this.stage.scale({
-            x: value,
-            y: value
-        });
-        this.stage.setHeight(this.height * value);
-        this.stage.setWidth(this.width * value);
-        this.stage.draw();
     }
 
     handleSubmit() {
@@ -549,6 +536,18 @@ export default class Map extends React.Component {
         console.log(f);
     }
 
+    handleSlider(event, value) {
+        console.log(value);
+        this.setState({ scale: value });
+        this.stage.scale({
+            x: value,
+            y: value
+        });
+        this.stage.setHeight(this.height * value);
+        this.stage.setWidth(this.width * value);
+        this.stage.draw();
+    }
+
     render() {
         return (
             <MuiThemeProvider /*muiTheme={getMuiTheme(darkBaseTheme)}*/>
@@ -595,7 +594,9 @@ export default class Map extends React.Component {
                         <img src={this.images.singletons[0].path} alt="box" className="box" onClick={() => this.selectBox(this.images.singletons[0].path, this.images.singletons[0].type)} />
                         <img src={this.images.singletons[1].path} alt="box" className="box" onClick={() => this.selectBox(this.images.singletons[1].path, this.images.singletons[1].type)} />
                     </p>{/* </div> */}
-                    <input name="scale" type="range" defaultValue="1.0" min="0.1" max="2.0" step="0.01" onChange={this.handleScale} />
+                    <div>
+                        <Slider min={0.1} max={2.0} defaultValue={1.0} value={this.state.scale} onChange={this.handleSlider} className="slider" />
+                    </div>
                     <div
                         className="container"
                         text-align="center"
