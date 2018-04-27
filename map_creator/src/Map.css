@@ -7,6 +7,10 @@
 .konvajs-content {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
+/* 
+.main-div {
+  background-color: rgb(48, 48, 48);
+} */
 
 .box {
   padding: 10px;
@@ -15,10 +19,15 @@
 }
 
 .strange-button {
-  margin: 0px;
+  margin: 10px;
   text-align: center;
 }
 
 .text-field-sizes {
   margin: 10px;
+}
+
+.react-fine-uploader-gallery-dropzone {
+    max-width: 50%;
+    left: 25%;
 }

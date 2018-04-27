@@ -11,8 +11,6 @@ class App extends Component {
                     <h1 className="App-title">Steal the treasure game - Map editor</h1>
                 </header>
                 <p className="App-intro">
-                    Click on objects to place them on the map.
-                    Click <code>Generate map!</code> to create a map in .json format.
                 </p>
                 <Map />
             </div>

@@ -1,38 +1,14 @@
 import React from 'react';
 import * as Konva from "konva";
 import * as FileSaver from 'file-saver';
-import './Map.css';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'; // add
-import RaisedButton from 'material-ui/RaisedButton'; // add
-import FlatButton from 'material-ui/FlatButton'; // add
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
-import FineUploaderTraditional from 'fine-uploader-wrappers'
+import FineUploader from 'fine-uploader-wrappers';
 import Gallery from 'react-fine-uploader'
-
-// ...or load this specific CSS file using a <link> tag in your document
 import 'react-fine-uploader/gallery/gallery.css'
+import './Map.css';
 
-const uploader = new FineUploaderTraditional({
-    options: {
-        width: 100,
-        height: 100,
-        chunking: {
-            enabled: true
-        },
-        deleteFile: {
-            enabled: true,
-            endpoint: '/uploads'
-        },
-        request: {
-            endpoint: '/uploads'
-        },
-        retry: {
-            enableAuto: true
-        }
-    }
-})
 // import Upload from 'material-ui-upload/Upload';
 
 
@@ -62,6 +38,22 @@ export const getItems = () => {
     ];
     return items;
 };
+
+const uploader = new FineUploader({
+    options: {
+        request: {
+            endpoint: 'http://localhost:5000/uploader',
+            method: "POST"
+        }
+    },
+    cors: {
+        //all requests are expected to be cross-domain requests
+        expected: false,
+
+        //if you want cookies to be sent along with the request
+    }
+});
+
 export default class Map extends React.Component {
 
     constructor(props) {
@@ -84,7 +76,7 @@ export default class Map extends React.Component {
         this.oldSize = { width: this.width, height: this.height };
         this.bindMethods();
         this.initFreeSpots();
-        this.state = { width: parseInt(this.width / this.blockSize), height: this.height / this.blockSize, blockSize: this.blockSize };
+        this.state = { width: parseInt(this.width / this.blockSize, 10), height: this.height / this.blockSize, blockSize: this.blockSize };
     }
     componentDidMount() {
         const tween = null;
@@ -194,14 +186,14 @@ export default class Map extends React.Component {
             entry.setHeight(this.blockSize);
             entry.setWidth(this.blockSize);
             let change = false;
-            if (this.oldSize.width != this.width || this.oldSize.height != this.height) {
+            if (this.oldSize.width !== this.width || this.oldSize.height !== this.height) {
                 change = true;
             }
             // let newX = entry.x() / (this.oldSize.width / this.width);
             // let newY = entry.y() / (this.oldSize.height / this.height);
             // entry.setAttrs({ x: newX, y: newY })
             this.checkPos(entry, pos, change);
-            if (pos.x == -1 || pos.y == -1) {
+            if (pos.x === -1 || pos.y === -1) {
                 objectsToDelete.push(entry);
             } else {
                 entry.setAttrs({ x: pos.x, y: pos.y })
@@ -221,9 +213,9 @@ export default class Map extends React.Component {
     generate() {
         this.mapObject = { mapSize: [this.width, this.height], playerPosition: [0, 0], treasurePosition: [0, 0], gameObjects: [] };
         this.objects.forEach((entry) => {
-            if (entry.type == "player") {
+            if (entry.type === "player") {
                 this.mapObject["playerPosition"] = [entry.x(), entry.y()];
-            } else if (entry.type == "case") {
+            } else if (entry.type === "case") {
                 this.mapObject["treasurePosition"] = [entry.x(), entry.y()];
             } else {
                 this.mapObject["gameObjects"].push({ "size": [entry.width(), entry.height()], "position": [entry.x(), entry.y()], type: entry.type });
@@ -335,7 +327,7 @@ export default class Map extends React.Component {
     handleChange(event) {
 
         const target = event.target;
-        const value = parseInt(event.target.value);
+        const value = parseInt(event.target.value, 10);
         const name = target.name;
         console.log("Setting value", name, ":", value);
         this.setState({
@@ -359,9 +351,9 @@ export default class Map extends React.Component {
 
     handleSubmit() {
         this.oldSize = { width: this.width, height: this.height };
-        this.blockSize = parseInt(this.state.blockSize);
-        this.width = parseInt(this.state.width) * this.blockSize;
-        this.height = parseInt(this.state.height) * this.blockSize;
+        this.blockSize = parseInt(this.state.blockSize, 10);
+        this.width = parseInt(this.state.width, 10) * this.blockSize;
+        this.height = parseInt(this.state.height, 10) * this.blockSize;
         this.initFreeSpots();
         console.log("Setting this.width and this.height to: ", this.width, this.height);
         let scale = this.stage.scaleX();
@@ -502,7 +494,6 @@ export default class Map extends React.Component {
     }
 
     checkOverlap(image, x, y) {
-        let counter = 0;
         let X = x
         let Y = y
         let A = x + image.width();
@@ -514,13 +505,9 @@ export default class Map extends React.Component {
                 let A1 = entry.x() + entry.width();
                 let Y1 = entry.y()
                 let B1 = entry.y() + entry.height();
-                if (A <= X1 || A1 <= X || B <= Y1 || B1 <= Y) {
-                    r = r;
-                } else {
+                if (!(A <= X1 || A1 <= X || B <= Y1 || B1 <= Y)) {
                     r = true;
                 }
-            } else {
-                counter++;
             }
         });
         return r;
@@ -544,8 +531,8 @@ export default class Map extends React.Component {
 
     initFreeSpots() {
         this.freeSpots = [];
-        let rows = parseInt(this.width / this.blockSize);
-        let cols = parseInt(this.height / this.blockSize);
+        let rows = parseInt(this.width / this.blockSize, 10);
+        let cols = parseInt(this.height / this.blockSize, 10);
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < cols; j++) {
                 this.freeSpots.push({ row: i, col: j });
@@ -558,23 +545,19 @@ export default class Map extends React.Component {
     testUpload() {
         this.upload.click();
         let f = this.upload.value;
-        f = f.replace(/.*[\/\\]/, '');
+        f = f.replace(/.*[/\\]/, '');
         console.log(f);
     }
 
     render() {
         return (
             <MuiThemeProvider /*muiTheme={getMuiTheme(darkBaseTheme)}*/>
-                <div>
-                    <p>
-                        <RaisedButton className="strange-button" label="Generate map" primary={true} onClick={this.generate}></RaisedButton>
-                    </p>
-                    <p>
-                        <RaisedButton className="strange-button" label="Generate random map" primary={true} onClick={this.generateRandom}></RaisedButton>
-                    </p>
-                    <p>
-                        <RaisedButton className="strange-button" label="List maps" primary={true} onClick={this.listMaps}></RaisedButton>
-                    </p>
+                <div className="main-div">
+                    <RaisedButton className="strange-button" label="Generate map" primary={true} onClick={this.generate}></RaisedButton>
+                    <br />
+                    <RaisedButton className="strange-button" label="Generate random map" primary={true} onClick={this.generateRandom}></RaisedButton>
+                    <br />
+                    <RaisedButton className="strange-button" label="List maps" primary={true} onClick={this.listMaps}></RaisedButton>
                     <form onSubmit={this.handleSubmit}>
                         <label>
                             Box size:
@@ -591,19 +574,17 @@ export default class Map extends React.Component {
 
                         <RaisedButton className="strange-button" label="Change" secondary={true} onClick={this.handleSubmit} />
                     </form>
-                    <iframe name='XD' width="0" height="0" borde="0" style={{ visibility: "hidden" }}></iframe>
-                    <p>
-                        <Gallery uploader={uploader} />
-                        Upload map to a server
-                        <form action="http://localhost:5000/uploader" method="POST"
-                            encType="multipart/form-data" target='XD'>
+                    <iframe name='hiddenframe' title='hiddenframe' width="0" height="0" border="0" style={{ visibility: "hidden" }}></iframe>
+                    {/* Upload map to a server */}
+                    <Gallery uploader={uploader} width="100" height="200" />
+                    {/* <form action="http://localhost:5000/uploader" method="POST"
+                            encType="multipart/form-data" target='hiddenframe'>
                             <RaisedButton className="strange-button" label="Browse" primary={true} onClick={(e) => this.testUpload()}></RaisedButton>
                             <TextField readOnly={true}></TextField>
                             <input type="file" name="file" style={{ display: "none" }} ref={(ref) => this.upload = ref} />
                             <RaisedButton className="strange-button" label="Submit" primary={true} type="submit" />
-                        </form>
-                    </p>
-                    <div id='images'>
+                    </form> */}
+                    <p>{/* <div id='images'> */}
                         <img src={this.images.terrains[0].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[0].path, this.images.terrains[0].type)} />
                         <img src={this.images.terrains[1].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[1].path, this.images.terrains[1].type)} />
                         <img src={this.images.terrains[2].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[2].path, this.images.terrains[2].type)} />
@@ -613,7 +594,7 @@ export default class Map extends React.Component {
                         <img src={this.images.items[1].path} alt="box" className="box" onClick={() => this.selectBox(this.images.items[1].path, this.images.items[1].type)} />
                         <img src={this.images.singletons[0].path} alt="box" className="box" onClick={() => this.selectBox(this.images.singletons[0].path, this.images.singletons[0].type)} />
                         <img src={this.images.singletons[1].path} alt="box" className="box" onClick={() => this.selectBox(this.images.singletons[1].path, this.images.singletons[1].type)} />
-                    </div>
+                    </p>{/* </div> */}
                     <input name="scale" type="range" defaultValue="1.0" min="0.1" max="2.0" step="0.01" onChange={this.handleScale} />
                     <div
                         className="container"

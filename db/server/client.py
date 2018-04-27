@@ -6,8 +6,20 @@ def readMaps():
     c = http.client.HTTPConnection('localhost', 5000)
     try:
         c.request('GET', '/maps', '{}')
-        doc = c.getresponse().read()
-        print(doc)
+        doc = c.getresponse()
+        print(doc.read())
+    except ConnectionRefusedError:
+        print('Server not available')
+
+
+def uploader():
+    c = http.client.HTTPConnection('localhost', 5000)
+    try:
+        c.request('OPTIONS', '/uploader', '{}')
+        doc = c.getresponse()
+        print(doc.read())
+        print(doc.headers)
+        print(doc.status)
     except ConnectionRefusedError:
         print('Server not available')
 
@@ -31,5 +43,7 @@ if args[0] == 'maps':
     readMaps()
 elif args[0] == 'map':
     readMap()
+elif args[0] == 'up':
+    uploader()
 else:
     pass
