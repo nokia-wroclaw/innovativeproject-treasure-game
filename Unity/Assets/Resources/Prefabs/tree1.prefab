@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33082695162692292}
   - component: {fileID: 23471798906798534}
   - component: {fileID: 64078355617414058}
+  - component: {fileID: 65134184997004108}
   m_Layer: 0
   m_Name: tree1
   m_TagString: Obstacle
@@ -36,7 +37,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1417248352249978}
   m_LocalRotation: {x: -0.70710677, y: 0.00000005960463, z: 0.00000005960463, w: 0.70710677}
-  m_LocalPosition: {x: -17.139965, y: 2.5, z: 5.520013}
+  m_LocalPosition: {x: 4.31, y: 2.5, z: 5.52}
   m_LocalScale: {x: 0.5000005, y: 0.5000004, z: 2.0000012}
   m_Children: []
   m_Father: {fileID: 0}
@@ -98,3 +99,15 @@ MeshCollider:
   m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: b7315cd73595b4d4b9d35f2396c8420f, type: 3}
+--- !u!65 &65134184997004108
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1417248352249978}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Size: {x: 4.627065, y: 4.6270638, z: 2.3259428}
+  m_Center: {x: -0.08971548, y: 2.8152275e-15, z: -0.10838853}

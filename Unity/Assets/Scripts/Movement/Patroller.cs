@@ -12,9 +12,9 @@ public class Patroller : MonoBehaviour
     private GameObject _player;
     private PlayerVisibility _playerVisibility;
 
-    private int destPoint;
-    private bool arrived;
-    private bool patrolling;
+    private int _destPoint;
+    private bool _arrived;
+    private bool _patrolling;
 
 	void Start () 
 	{
@@ -31,7 +31,7 @@ public class Patroller : MonoBehaviour
         if (_agent.pathPending)
             return;
 
-        if (patrolling)
+        if (_patrolling)
         {
             if (_playerVisibility.Chasing)
             {
@@ -41,14 +41,14 @@ public class Patroller : MonoBehaviour
             {
                 if (_agent.remainingDistance < _agent.stoppingDistance)
                 {
-                    if (!arrived)
+                    if (!_arrived)
                     {
-                        arrived = true;
+                        _arrived = true;
                         StartCoroutine(GoToNextPoint());
                     }
                 }
                 else
-                    arrived = false;
+                    _arrived = false;
             }       
         }
         else
@@ -103,11 +103,11 @@ public class Patroller : MonoBehaviour
         {
             yield break;
         }
-        patrolling = true;
+        _patrolling = true;
         yield return new WaitForSeconds(2.0f);
-        arrived = false;
-        _agent.destination = patrolTargets[destPoint];
-        destPoint = (destPoint + 1) % patrolTargets.Length;        
+        _arrived = false;
+        _agent.destination = patrolTargets[_destPoint];
+        _destPoint = (_destPoint + 1) % patrolTargets.Length;        
     }
 
     private IEnumerator Stun()
