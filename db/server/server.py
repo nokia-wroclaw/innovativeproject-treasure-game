@@ -19,10 +19,16 @@ resp = Response(response=dumps({}), status=200, mimetype="application/json")
 resp.headers['Access-Control-Allow-Origin'] = '*'
 resp.headers[
     'Access-Control-Allow-Headers'] = '''Content-Type, Cache-Control, X-Requested-With'''
+resp.headers[
+    'Access-Control-Request-Headers'] = '''Content-Type, Cache-Control, X-Requested-With'''
 
 
-@app.route('/maps', methods=['GET'])
+@app.route('/maps', methods=['GET', 'OPTIONS'])
 def process():
+    global resp
+    if request.method == "OPTIONS":
+        print(resp.headers)
+        return resp
     cursor = db.maps.find({}, {'_id': False})
     maps = {'maps': []}
     for doc in cursor:
@@ -30,7 +36,8 @@ def process():
             maps['maps'].append(doc['filename'])
         except Exception:
             pass
-    return dumps(maps)
+    resp.set_data(dumps(maps))
+    return resp
 
 
 @app.route('/', methods=['GET'])

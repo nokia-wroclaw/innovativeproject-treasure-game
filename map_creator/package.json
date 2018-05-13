@@ -17,6 +17,7 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+    "axios": "^0.18.0",
     "browser-filesaver": "^1.1.1",
     "browserify-fs": "^1.0.0",
     "eslint": "^4.19.1",

@@ -5,12 +5,25 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import Slider from 'material-ui/Slider';
 import TextField from 'material-ui/TextField';
+import Paper from 'material-ui/Paper';
+import { List, ListItem } from 'material-ui/List';
 import FineUploader from 'fine-uploader-wrappers';
-import Gallery from 'react-fine-uploader'
+import Gallery from 'react-fine-uploader';
+import axios from 'axios';
 import 'react-fine-uploader/gallery/gallery.css'
 import './Map.css';
 
 // import Upload from 'material-ui-upload/Upload';
+const styles = {
+    root: {
+        display: 'flex',
+    },
+    list: {
+        width: "50%",
+        height: 350,
+        overflowY: 'auto',
+    },
+};
 
 
 export const getTerrains = () => {
@@ -77,7 +90,7 @@ export default class Map extends React.Component {
         this.oldSize = { width: this.width, height: this.height };
         this.bindMethods();
         this.initFreeSpots();
-        this.state = { width: parseInt(this.width / this.blockSize, 10), height: this.height / this.blockSize, blockSize: this.blockSize, scale: 1.0 };
+        this.state = { width: parseInt(this.width / this.blockSize, 10), height: this.height / this.blockSize, blockSize: this.blockSize, scale: 1.0, maps: null };
     }
     componentDidMount() {
         const tween = null;
@@ -121,7 +134,8 @@ export default class Map extends React.Component {
 
         this.stage.on("dragend", (e) => {
             this.dragend(e);
-        })
+        });
+
     }
 
     // Misc
@@ -143,6 +157,9 @@ export default class Map extends React.Component {
         this.readAssets = this.readAssets.bind(this);
         this.checkOverlap = this.checkOverlap.bind(this);
         this.initFreeSpots = this.initFreeSpots.bind(this);
+        this.getMaps = this.getMaps.bind(this);
+        this.makeList = this.makeList.bind(this);
+        this.mapList = [];
     }
 
     // Stage stuff
@@ -250,6 +267,23 @@ export default class Map extends React.Component {
         }
         this.oldSize = { width: this.width, height: this.height };
         this.redraw();
+    }
+
+    getMaps() {
+        const getter = axios.create({
+            baseURL: `http://localhost:5000/maps`
+        });
+        getter.get().then(res => res.data).then(data => {
+            this.setState({ maps: data["maps"] }, () => { this.makeList() });
+        });
+    }
+
+    makeList() {
+        var maps = this.state.maps;
+        for (let i = 0; i < maps.length; i++) {
+            this.mapList.push(<ListItem primaryText={maps[i]} key={i} />);
+        }
+        this.forceUpdate();
     }
 
     remove(array, index) {
@@ -556,7 +590,7 @@ export default class Map extends React.Component {
                     <br />
                     <RaisedButton className="strange-button" label="Generate random map" primary={true} onClick={this.generateRandom}></RaisedButton>
                     <br />
-                    <RaisedButton className="strange-button" label="List maps" primary={true} onClick={this.listMaps}></RaisedButton>
+                    <RaisedButton className="strange-button" label="List maps" primary={true} onClick={this.getMaps}></RaisedButton>
                     <form onSubmit={this.handleSubmit}>
                         <label>
                             Box size:
@@ -573,9 +607,16 @@ export default class Map extends React.Component {
 
                         <RaisedButton className="strange-button" label="Change" secondary={true} onClick={this.handleSubmit} />
                     </form>
-                    <iframe name='hiddenframe' title='hiddenframe' width="0" height="0" border="0" style={{ visibility: "hidden" }}></iframe>
+                    <div style={styles.root}>
+                        <Gallery uploader={uploader} />
+                        <List style={styles.list} id="mapsList" name="mapsList">
+                            {this.mapList}
+                        </List>
+                    </div>
+
+                    {/* <iframe name='hiddenframe' title='hiddenframe' width="0" height="0" border="0" style={{ visibility: "hidden" }}></iframe> */}
                     {/* Upload map to a server */}
-                    <Gallery uploader={uploader} width="100" height="200" />
+                    {/* <Gallery uploader={uploader} width="100" height="200" /> */}
                     {/* <form action="http://localhost:5000/uploader" method="POST"
                             encType="multipart/form-data" target='hiddenframe'>
                             <RaisedButton className="strange-button" label="Browse" primary={true} onClick={(e) => this.testUpload()}></RaisedButton>

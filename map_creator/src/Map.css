@@ -29,7 +29,8 @@
 
 .react-fine-uploader-gallery-dropzone {
     max-width: 50%;
-    left: 25%;
+    width: 50%;
+    left: 0%;
 }
 
 .slider {
