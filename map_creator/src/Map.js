@@ -26,31 +26,19 @@ const styles = {
 };
 
 
-export const getTerrains = () => {
-    const terrains = [
-        { path: require('./assets/card.png'), type: 'card' },
-        { path: require('./assets/guard.png'), type: 'guard' },
-        { path: require('./assets/tree1.png'), type: 'tree1' },
-        { path: require('./assets/tree3.png'), type: 'tree3' },
-        { path: require('./assets/wall1.png'), type: 'wall1' },
+export const getImages = () => {
+    const images = [
+        { path: require('./assets/card.png'), name: 'card', type: 'terrain', exist: false },
+        { path: require('./assets/guard.png'), name: 'guard', type: 'terrain', exist: false },
+        { path: require('./assets/tree1.png'), name: 'tree1', type: 'terrain', exist: false },
+        { path: require('./assets/tree3.png'), name: 'tree3', type: 'terrain', exist: false },
+        { path: require('./assets/wall1.png'), name: 'wall1', type: 'terrain', exist: false },
+        { path: require('./assets/mine.png'), name: 'mine', type: 'item', exist: false },
+        { path: require('./assets/movementPotion.png'), name: 'movementPotion', type: 'item', exist: false },
+        { path: require('./assets/case.png'), name: 'case', type: 'singleton', exist: false },
+        { path: require('./assets/player.png'), name: 'player', type: 'singleton', exist: false },
     ];
-    return terrains;
-};
-
-export const getSingletons = () => {
-    const singletons = [
-        { path: require('./assets/case.png'), type: 'case' },
-        { path: require('./assets/player.png'), type: 'player' },
-    ];
-    return singletons;
-};
-
-export const getItems = () => {
-    const items = [
-        { path: require('./assets/mine.png'), type: 'mine' },
-        { path: require('./assets/movementPotion.png'), type: 'movementPotion' },
-    ];
-    return items;
+    return images;
 };
 
 const uploader = new FineUploader({
@@ -82,10 +70,7 @@ export default class Map extends React.Component {
         this.width = 800;
         this.height = 480;
         this.bindMethods = this.bindMethods.bind(this);
-        this.images = { terrains: [], items: [], singletons: [] };
-        this.images.terrains = getTerrains();
-        this.images.items = getItems();
-        this.images.singletons = getSingletons();
+        this.images = getImages();
         this.freeSpots = [];
         this.oldSize = { width: this.width, height: this.height };
         this.bindMethods();
@@ -141,7 +126,6 @@ export default class Map extends React.Component {
     // Misc
 
     bindMethods() {
-        this.selectBox = this.selectBox.bind(this);
         this.dragstart = this.dragstart.bind(this);
         this.dragend = this.dragend.bind(this);
         this.imageOnLoad = this.imageOnLoad.bind(this);
@@ -231,16 +215,16 @@ export default class Map extends React.Component {
     generate() {
         this.mapObject = { mapSize: [this.width, this.height], playerPosition: [0, 0], treasurePosition: [0, 0], gameObjects: [] };
         this.objects.forEach((entry) => {
-            if (entry.type === "player") {
+            if (entry.name === "player") {
                 this.mapObject["playerPosition"] = [entry.x(), entry.y()];
-            } else if (entry.type === "case") {
+            } else if (entry.name === "case") {
                 this.mapObject["treasurePosition"] = [entry.x(), entry.y()];
             } else {
-                this.mapObject["gameObjects"].push({ "size": [entry.width(), entry.height()], "position": [entry.x(), entry.y()], type: entry.type });
+                this.mapObject["gameObjects"].push({ "size": [entry.width(), entry.height()], "position": [entry.x(), entry.y()], name: entry.name });
             }
             var x = this.mapToJson(this.mapObject);
             console.log(x);
-            console.log("Object " + entry.type + " X: " + entry.x() + ", Y: " + entry.y());
+            console.log("Object " + entry.name + " X: " + entry.x() + ", Y: " + entry.y());
         });
         var x = this.mapToJson(this.mapObject);
         var file = new File([x], "gameData.json", { type: "application/json" });
@@ -249,19 +233,17 @@ export default class Map extends React.Component {
 
     generateRandom() {
         this.objects = [];
-        // Adding player and the treasure
-        this.addImage(this.images.singletons[0].path, this.images.singletons[0].type);
-        this.addImage(this.images.singletons[1].path, this.images.singletons[1].type);
-        // Adding items
-        for (let i = 0; i < 3; i++) {
-            const randomElement = this.images.items[Math.floor(Math.random() * this.images.items.length)];
-            if (this.addImage(randomElement.path, randomElement.type)) {
-                continue;
+
+        for (let i = 0; i < this.images.length; i++) {
+            if(this.images[i].type=='singleton'){
+                this.images[i].exist = false;
+                this.addImage(this.images[i]);
             }
         }
-        for (let i = 0; i < 10; i++) {
-            const randomElement = this.images.terrains[Math.floor(Math.random() * this.images.terrains.length)];
-            if (this.addImage(randomElement.path, randomElement.type)) {
+
+        for (let i = 0; i < 12; i++) {
+            const randomElement = this.images[Math.floor(Math.random() * this.images.length)];
+            if (this.addImage(randomElement)) {
                 continue;
             }
         }
@@ -355,10 +337,6 @@ export default class Map extends React.Component {
         // console.log("Image X: " + image.x() + ", Image Y: " + image.y());
     }
 
-    selectBox(path, type) {
-        this.addImage(path, type)
-    }
-
     handleChange(event) {
 
         const target = event.target;
@@ -389,7 +367,7 @@ export default class Map extends React.Component {
 
     // Image stuff 
 
-    imageOnLoad(imageObj, type) {
+    imageOnLoad(imageObj, name) {
         const scale = 1;
         var index = Math.floor(Math.random() * this.freeSpots.length);
         let freeSpot = this.freeSpots[index]
@@ -418,7 +396,7 @@ export default class Map extends React.Component {
         // console.log(pos.x, pos.y);
         image.position({ x: pos.x, y: pos.y });
 
-        image.type = type;
+        image.name = name;
         image.src = imageObj.src;
         image.imageIndex = this.imageIndex;
         image.currentX = pos.x;
@@ -468,14 +446,16 @@ export default class Map extends React.Component {
     }
 
 
-    addImage(path, type) {
-
-        const imageObj = new Image();
-        imageObj.src = path
-        imageObj.misc = { stage: this.stage, layer: this.layer };
-        imageObj.onload = () => {
-            return this.imageOnLoad(imageObj, type);
-        };
+    addImage(image) {
+        if (!(image.type=='singleton' && image.exist)){
+            image.exist = true;
+            const imageObj = new Image();
+            imageObj.src = image.path;
+            imageObj.misc = { stage: this.stage, layer: this.layer };
+            imageObj.onload = () => {
+                return this.imageOnLoad(imageObj, image.name);
+            };
+        }
     }
 
     reloadImage(image) {
@@ -586,7 +566,7 @@ export default class Map extends React.Component {
         return (
             <MuiThemeProvider /*muiTheme={getMuiTheme(darkBaseTheme)}*/>
                 <div className="main-div">
-                    <RaisedButton className="strange-button" label="Generate map" primary={true} onClick={this.generate}></RaisedButton>
+                    <RaisedButton className="strange-button" label="Save map" primary={true} onClick={this.generate}></RaisedButton>
                     <br />
                     <RaisedButton className="strange-button" label="Generate random map" primary={true} onClick={this.generateRandom}></RaisedButton>
                     <br />
@@ -598,11 +578,11 @@ export default class Map extends React.Component {
                         </label>
                         <label>
                             Width:
-                            <TextField className="text-field-sizes" hintText="Width" name="width" value={this.state.blockSize} onChange={this.handleChange}></TextField>
+                            <TextField className="text-field-sizes" hintText="Width" name="width" value={this.state.width} onChange={this.handleChange}></TextField>
                         </label>
                         <label>
                             Height:
-                            <TextField className="text-field-sizes" hintText="Height" name="height" value={this.state.blockSize} onChange={this.handleChange}></TextField>
+                            <TextField className="text-field-sizes" hintText="Height" name="height" value={this.state.height} onChange={this.handleChange}></TextField>
                         </label>
 
                         <RaisedButton className="strange-button" label="Change" secondary={true} onClick={this.handleSubmit} />
@@ -625,15 +605,15 @@ export default class Map extends React.Component {
                             <RaisedButton className="strange-button" label="Submit" primary={true} type="submit" />
                     </form> */}
                     <p>{/* <div id='images'> */}
-                        <img src={this.images.terrains[0].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[0].path, this.images.terrains[0].type)} />
-                        <img src={this.images.terrains[1].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[1].path, this.images.terrains[1].type)} />
-                        <img src={this.images.terrains[2].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[2].path, this.images.terrains[2].type)} />
-                        <img src={this.images.terrains[3].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[3].path, this.images.terrains[3].type)} />
-                        <img src={this.images.terrains[4].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[4].path, this.images.terrains[4].type)} />
-                        <img src={this.images.items[0].path} alt="box" className="box" onClick={() => this.selectBox(this.images.items[0].path, this.images.items[0].type)} />
-                        <img src={this.images.items[1].path} alt="box" className="box" onClick={() => this.selectBox(this.images.items[1].path, this.images.items[1].type)} />
-                        <img src={this.images.singletons[0].path} alt="box" className="box" onClick={() => this.selectBox(this.images.singletons[0].path, this.images.singletons[0].type)} />
-                        <img src={this.images.singletons[1].path} alt="box" className="box" onClick={() => this.selectBox(this.images.singletons[1].path, this.images.singletons[1].type)} />
+                        <img src={this.images[0].path} alt="box" className="box" onClick={() => this.addImage(this.images[0])} />
+                        <img src={this.images[1].path} alt="box" className="box" onClick={() => this.addImage(this.images[1])} />
+                        <img src={this.images[2].path} alt="box" className="box" onClick={() => this.addImage(this.images[2])} />
+                        <img src={this.images[3].path} alt="box" className="box" onClick={() => this.addImage(this.images[3])} />
+                        <img src={this.images[4].path} alt="box" className="box" onClick={() => this.addImage(this.images[4])} />
+                        <img src={this.images[5].path} alt="box" className="box" onClick={() => this.addImage(this.images[5])} />
+                        <img src={this.images[6].path} alt="box" className="box" onClick={() => this.addImage(this.images[6])} />
+                        <img src={this.images[7].path} alt="box" className="box" onClick={() => this.addImage(this.images[7])} />
+                        <img src={this.images[8].path} alt="box" className="box" onClick={() => this.addImage(this.images[8])} />
                     </p>{/* </div> */}
                     <div>
                         <Slider min={0.1} max={2.0} defaultValue={1.0} value={this.state.scale} onChange={this.handleSlider} className="slider" />
