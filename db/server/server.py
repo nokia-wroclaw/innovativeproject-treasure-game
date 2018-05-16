@@ -45,10 +45,22 @@ def id():
     return dumps({"success": True})
 
 
-@app.route('/map/<map_name>', methods=['GET'])
+@app.route('/map/<map_name>', methods=['GET', 'OPTIONS'])
 def get_map(map_name):
+    global resp
+    if request.method == "OPTIONS":
+        print(resp.headers)
+        return resp
     doc = db.maps.find_one({'filename': map_name}, {'_id': False})
-    return dumps(doc)
+    resp.set_data(dumps(doc))
+    return resp
+
+
+@app.route('/delete_all', methods=['GET', 'OPTIONS'])
+def delete():
+    db.maps.remove()
+    resp.set_data(dumps({"success": True}))
+    return resp
 
 
 @app.route('/uploader', methods=['GET', 'POST', 'OPTIONS'])
@@ -58,8 +70,7 @@ def upload_file():
         return resp
     f = request.files['qqfile']
     parsed = loads(f.read())
-    filename = ''.join(f.filename.split('.')[:-1]) + str(index) + '.json'
-    parsed['filename'] = filename
+    parsed['filename'] = f.filename
     try:
         db.maps.insert_one(parsed)
         resp.set_data(dumps({"success": True}))
@@ -83,6 +94,4 @@ def upload_file():
 
 
 if __name__ == '__main__':
-    global index
-    index = len(os.listdir('maps')) + 1
     app.run(debug=True)

@@ -34,6 +34,16 @@ def readMap():
         print('Server not available')
 
 
+def deleteMaps():
+    c = http.client.HTTPConnection('localhost', 5000)
+    try:
+        c.request('GET', '/delete_all', '{}')
+        doc = c.getresponse().read()
+        print(doc)
+    except ConnectionRefusedError:
+        print('Server not available')
+
+
 args = []
 
 if len(sys.argv) > 1:
@@ -45,5 +55,7 @@ elif args[0] == 'map':
     readMap()
 elif args[0] == 'up':
     uploader()
+elif args[0] == 'delete':
+    deleteMaps()
 else:
     pass
