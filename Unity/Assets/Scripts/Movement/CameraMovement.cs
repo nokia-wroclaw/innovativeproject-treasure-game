@@ -48,7 +48,7 @@ public class CameraMovement : MonoBehaviour
 
         while(true)
         {
-            Debug.Log(collidedObjects.Count);
+            //Debug.Log(collidedObjects.Count);
             _rayDirection = _player.transform.position - transform.position + new Vector3(0, 1, 0);
             Debug.DrawRay(transform.position, _rayDirection, Color.yellow);
 
@@ -83,7 +83,7 @@ public class CameraMovement : MonoBehaviour
 
             yield return new WaitForSeconds(0.1f);
         }
-
-
     }
+
+
 }

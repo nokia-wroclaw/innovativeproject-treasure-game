@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.AI;
 
 public class PlayerVisibility : MonoBehaviour
 {   
+    public bool canAlarm = false;
+    public bool respond = true;
     public float fieldOfViewDegrees;
     public float visibilityDistance;
     public float endGameDistance;
     public bool stunned = false;
+    private NavMeshAgent _agent;
+    private List<GameObject> _guardsList = new List<GameObject>();
 
     public bool Chasing
     {
@@ -42,7 +48,8 @@ public class PlayerVisibility : MonoBehaviour
     void Start()
     {
         Player = GameObject.FindGameObjectWithTag("Player");
-
+        _guardsList = GameObject.FindGameObjectsWithTag("Enemy").ToList();
+        _agent = GetComponent<NavMeshAgent>();
         _playerSpottedObject = Instantiate((GameObject)Resources.Load("Prefabs/ExclamationMark"));
        // _playerSpottedObject.transform.localPosition = gameObject.transform.position + new Vector3(0, 4, 0);
         //_playerSpottedObject.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
@@ -73,11 +80,20 @@ public class PlayerVisibility : MonoBehaviour
                 {
                     if (hit.transform.CompareTag("Player"))
                     {
-                        if (hit.distance <= endGameDistance)
+                        if (hit.distance - _agent.baseOffset <= endGameDistance && !canAlarm)
                             break;
 
-                        if (hit.distance <= visibilityDistance)
+                        if (hit.distance - _agent.baseOffset <= visibilityDistance)
+                        {
                             Chasing = true;
+                            if(canAlarm && respond)
+                            {
+                                var guard = GetNearestGuard();
+                                var patroller = guard.GetComponent<Patroller>();
+                                //Debug.Log("Calling " + guard.name);
+                                StartCoroutine(patroller.Alarm(transform.position, this));                                
+                            }
+                        }
                     }
                 }
             }
@@ -85,6 +101,22 @@ public class PlayerVisibility : MonoBehaviour
             yield return new WaitForSeconds(0.2f);
         }
         SwitchScene();
+    }
+
+    private GameObject GetNearestGuard()
+    {
+        var guard = _guardsList[0];
+        var distance = Vector3.Distance(transform.position, guard.transform.position);
+        foreach(var tempGuard in _guardsList)
+        {
+            var tempDistance = Vector3.Distance(transform.position, tempGuard.transform.position); 
+            if(tempDistance < distance)
+            {
+                distance = tempDistance;
+                guard = tempGuard;
+            }
+        }
+        return guard;
     }
 
     private void SwitchScene()

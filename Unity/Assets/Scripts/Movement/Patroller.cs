@@ -6,7 +6,8 @@ public class Patroller : MonoBehaviour
 {
     public bool usePredefinedPatrolTargets;
     public Vector3[] patrolTargets;
-
+    public float patrolSpeed = 2f;
+    public float chasingSpeed = 3.5f;
     private NavMeshAgent _agent;
     private Animator _anim;
     private GameObject _player;
@@ -30,20 +31,23 @@ public class Patroller : MonoBehaviour
 	{
         if (_agent.pathPending)
             return;
-
         if (_patrolling)
         {
+            //Debug.Log("Patroling " + _agent.name );
             if (_playerVisibility.Chasing)
             {
                 _agent.destination = _player.transform.localPosition;
+                _agent.speed = chasingSpeed;
             }
             else
             {
-                if (_agent.remainingDistance < _agent.stoppingDistance)
+                if ((_agent.remainingDistance  - _agent.baseOffset)< _agent.stoppingDistance)
                 {
                     if (!_arrived)
                     {
+                        
                         _arrived = true;
+                        _agent.speed = patrolSpeed;
                         StartCoroutine(GoToNextPoint());
                     }
                 }
@@ -125,4 +129,15 @@ public class Patroller : MonoBehaviour
         StartCoroutine(Stun());
     }
 
+    public IEnumerator Alarm(Vector3 position, PlayerVisibility drone)
+    {
+        _agent.destination = position;
+        _agent.speed = chasingSpeed;   
+        var visibility = drone.GetComponent<PlayerVisibility>();
+        drone.respond = false;
+        Debug.Log("False");
+        yield return new WaitForSeconds(5.0f);     
+        Debug.Log("True");
+        drone.respond = true;
+    }
 }
