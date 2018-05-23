@@ -16,6 +16,9 @@ public class PlayerVisibility : MonoBehaviour
     public bool stunned = false;
     private NavMeshAgent _agent;
     private List<GameObject> _guardsList = new List<GameObject>();
+    private Light _light;
+    private GameObject _playerSpottedObject;
+    private bool _chasing;
 
     public bool Chasing
     {
@@ -30,21 +33,23 @@ public class PlayerVisibility : MonoBehaviour
             if (_chasing && !_playerSpottedObject.GetComponent<Renderer>().enabled)
             {
                 _playerSpottedObject.GetComponent<Renderer>().enabled = true;
+ //-----        TO MOVE           
+                if (canAlarm)
+                    _light.color = new Color(1, 0, 0);
             }
 
             if (!_chasing && _playerSpottedObject.GetComponent<Renderer>().enabled)
             {
                 _playerSpottedObject.GetComponent<Renderer>().enabled = false;
+                if (canAlarm)
+                    _light.color = new Color(0, 1, 0);
             }
         }
     }
   
     public GameObject Player { get; private set; }
 
-    private GameObject _playerSpottedObject;
-
-    private bool _chasing;
-
+   
     void Start()
     {
         Player = GameObject.FindGameObjectWithTag("Player");
@@ -54,6 +59,10 @@ public class PlayerVisibility : MonoBehaviour
        // _playerSpottedObject.transform.localPosition = gameObject.transform.position + new Vector3(0, 4, 0);
         //_playerSpottedObject.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         _playerSpottedObject.GetComponent<Renderer>().enabled = false;
+
+ //----- TO MOVE
+        _light = GetComponentInChildren<Light>();
+
         StartCoroutine(PlayerVisibilityCheck());
     }
 
@@ -73,9 +82,11 @@ public class PlayerVisibility : MonoBehaviour
             Debug.DrawRay(transform.position, rayDirection, Color.red);
 
             Chasing = false;
-
+            if(canAlarm)
+             Debug.Log(Vector3.Angle(rayDirection, transform.forward));
             if (!stunned && Vector3.Angle(rayDirection, transform.forward) <= fieldOfViewDegrees * 0.5f)
             {
+               
                 if (Physics.Raycast(transform.position, rayDirection, out hit))
                 {
                     if (hit.transform.CompareTag("Player"))
