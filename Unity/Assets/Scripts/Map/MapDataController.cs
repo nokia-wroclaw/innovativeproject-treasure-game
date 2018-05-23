@@ -115,7 +115,7 @@ public class MapDataController : MonoBehaviour
             RaycastHit[] hit = new RaycastHit[4];
 
             var field = forestArea.size[0]/80 * forestArea.size[1]/80;
-            var density = 0.5f;
+            var density = 0.3f;
             var numberOfTrees = (int)(field * 0.37f * density); // 0.37 ≈ 1/pi -> pi - the area every tree takes(pi/r^2, r ≈ 1)
 
             var counter = 0;
