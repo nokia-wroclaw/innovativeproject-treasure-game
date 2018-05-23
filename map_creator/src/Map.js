@@ -1,31 +1,44 @@
 import React from 'react';
 import * as Konva from "konva";
 import * as FileSaver from 'file-saver';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import RaisedButton from 'material-ui/RaisedButton';
-import Slider from 'material-ui/Slider';
-import TextField from 'material-ui/TextField';
-import { List, ListItem } from 'materisal-ui/List';
+import './Map.css';
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import Button from '@material-ui/core/Button';
+// import Slider from '@material-ui/core/Slider';
+import TextField from '@material-ui/core/TextField';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import FineUploader from 'fine-uploader-wrappers';
-import Gallery from 'react-fine-uploader';
 import axios from 'axios';
 import 'react-fine-uploader/gallery/gallery.css'
-import './Map.css';
 
 // import Upload from 'material-ui-upload/Upload';
 const styles = {
     root: {
         display: 'flex',
     },
+    button: {
+        margin: "20px",
+    },
     list: {
         width: "50%",
-        height: 350,
+        height: 200,
         overflowY: 'auto',
+        display: 'block'
+    },
+    listItem: {
+        textAlign: 'center'
+    },
+    sizesForm: {
+        textAlign: 'center',
+        width: "50%",
+        left: "50%"
     },
 };
 
 
-export const getTerrains = () => {
+const getTerrains = () => {
     const terrains = [
         { path: require('./assets/card.png'), type: 'card' },
         { path: require('./assets/guard.png'), type: 'guard' },
@@ -36,7 +49,7 @@ export const getTerrains = () => {
     return terrains;
 };
 
-export const getSingletons = () => {
+const getSingletons = () => {
     const singletons = [
         { path: require('./assets/case.png'), type: 'case' },
         { path: require('./assets/player.png'), type: 'player' },
@@ -44,7 +57,7 @@ export const getSingletons = () => {
     return singletons;
 };
 
-export const getItems = () => {
+const getItems = () => {
     const items = [
         { path: require('./assets/mine.png'), type: 'mine' },
         { path: require('./assets/movementPotion.png'), type: 'movementPotion' },
@@ -52,20 +65,20 @@ export const getItems = () => {
     return items;
 };
 
-const uploader = new FineUploader({
-    options: {
-        request: {
-            endpoint: 'http://localhost:5000/uploader',
-            method: "POST"
-        }
-    },
-    cors: {
-        //all requests are expected to be cross-domain requests
-        expected: false,
+// const uploader = new FineUploader({
+//     options: {
+//         request: {
+//             endpoint: 'http://localhost:5000/uploader',
+//             method: "POST"
+//         }
+//     },
+//     cors: {
+//         //all requests are expected to be cross-domain requests
+//         expected: false,
 
-        //if you want cookies to be sent along with the request
-    }
-});
+//         //if you want cookies to be sent along with the request
+//     }
+// });
 
 export default class Map extends React.Component {
 
@@ -146,7 +159,8 @@ export default class Map extends React.Component {
         this.imageOnLoad = this.imageOnLoad.bind(this);
         this.drawGrid = this.drawGrid.bind(this);
         this.redraw = this.redraw.bind(this);
-        this.generate = this.generate.bind(this);
+        this.generateMap = this.generateMap.bind(this);
+        this.downloadMap = this.downloadMap.bind(this);
         this.generateRandom = this.generateRandom.bind(this);
         this.checkPos = this.checkPos.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -161,6 +175,7 @@ export default class Map extends React.Component {
         this.mapFromListElement = this.mapFromListElement.bind(this);
         this.mapListClick = this.mapListClick.bind(this);
         this.setMapSize = this.setMapSize.bind(this);
+        this.uploadMap = this.uploadMap.bind(this);
         this.mapList = [];
     }
 
@@ -229,8 +244,13 @@ export default class Map extends React.Component {
     }
 
     // Click events
+    downloadMap() {
+        const map = this.generateMap();
+        const file = new File([map], "gameData.json", { type: "application/json" });
+        FileSaver.saveAs(file);
+    }
 
-    generate() {
+    generateMap() {
         this.mapObject = { mapSize: [this.width, this.height], playerPosition: [0, 0], treasurePosition: [0, 0], gameObjects: [] };
         this.objects.forEach((entry) => {
             if (entry.type === "player") {
@@ -244,9 +264,12 @@ export default class Map extends React.Component {
             console.log(x);
             console.log("Object " + entry.type + " X: " + entry.x() + ", Y: " + entry.y());
         });
-        var x = this.mapToJson(this.mapObject);
-        var file = new File([x], "gameData.json", { type: "application/json" });
-        FileSaver.saveAs(file);
+        var d = new Date();
+        var date = d.toLocaleString("en-gb");
+        console.log(date);
+        this.mapObject["createTime"] = date;
+        const json = this.mapToJson(this.mapObject);
+        return json;
     }
 
     generateRandom() {
@@ -280,10 +303,18 @@ export default class Map extends React.Component {
         });
     }
 
+    uploadMap() {
+        const map = this.generateMap();
+        console.log(map);
+        axios.post('http://localhost:5000/uploader_json', map).then(res => res.data).then(data => {
+            console.log(data);
+        });
+    }
+
     makeList() {
         var maps = this.state.maps;
         for (let i = 0; i < maps.length; i++) {
-            this.mapList.push(<ListItem primaryText={maps[i]} key={i} text={maps[i]} onClick={(event) => this.mapListClick(event, maps[i])} />);
+            this.mapList.push(<ListItem button key={i} style={styles.listItem} onClick={(event) => this.mapListClick(event, maps[i])} ><ListItemText primary={maps[i]} /></ListItem>);
         }
         this.forceUpdate();
     }
@@ -648,47 +679,38 @@ export default class Map extends React.Component {
 
     render() {
         return (
-            <MuiThemeProvider /*muiTheme={getMuiTheme(darkBaseTheme)}*/>
+            <MuiThemeProvider>
                 <div className="main-div">
-                    <RaisedButton className="strange-button" label="Generate map" primary={true} onClick={this.generate}></RaisedButton>
-                    <br />
-                    <RaisedButton className="strange-button" label="Generate random map" primary={true} onClick={this.generateRandom}></RaisedButton>
-                    <br />
-                    <RaisedButton className="strange-button" label="List maps" primary={true} onClick={this.getMaps}></RaisedButton>
-                    <form onSubmit={this.handleSubmit}>
-                        <label>
-                            Box size:
-                            <TextField className="text-field-sizes" hintText="Box size" name="blockSize" value={this.state.blockSize} onChange={this.handleChange}></TextField>
-                        </label>
-                        <label>
-                            Width:
-                            <TextField className="text-field-sizes" hintText="Width" name="width" value={this.state.width} onChange={this.handleChange}></TextField>
-                        </label>
-                        <label>
-                            Height:
-                            <TextField className="text-field-sizes" hintText="Height" name="height" value={this.state.height} onChange={this.handleChange}></TextField>
-                        </label>
-
-                        <RaisedButton className="strange-button" label="Change" secondary={true} onClick={this.handleSubmit} />
-                    </form>
+                    <div style={{ textAlign: "center" }}>
+                        <Button style={styles.button} variant="raised" color="primary" onClick={this.generateRandom}>Create random map</Button>
+                        <Button style={styles.button} variant="raised" color="primary" onClick={this.downloadMap}>Download map</Button>
+                        <Button style={styles.button} variant="raised" color="primary" onClick={this.uploadMap}>Upload map</Button>
+                        <Button style={styles.button} variant="raised" color="primary" onClick={this.getMaps}>List maps</Button>
+                    </div>
                     <div style={styles.root}>
-                        <Gallery uploader={uploader} />
+                        <form onSubmit={this.handleSubmit} style={styles.sizesForm}>
+                            <label>
+                                Box size:
+                            <TextField style={{ margin: "10px", width: "30px" }} hintText="Box size" name="blockSize" value={this.state.blockSize} onChange={this.handleChange}></TextField>
+                            </label>
+                            <br />
+                            <label>
+                                Width:
+                            <TextField style={{ margin: "10px", width: "30px" }} hintText="Width" name="width" value={this.state.width} onChange={this.handleChange}></TextField>
+                            </label>
+                            <br />
+                            <label>
+                                Height:
+                            <TextField style={{ margin: "10px", width: "30px" }} hintText="Height" name="height" value={this.state.height} onChange={this.handleChange}></TextField>
+                            </label>
+                            <br />
+                            <Button style={{ margin: "10px" }} variant="raised" color="secondary" onClick={this.getMaps}>Change</Button>
+                        </form>
                         <List style={styles.list} id="mapsList" name="mapsList">
                             {this.mapList}
                         </List>
                     </div>
-
-                    {/* <iframe name='hiddenframe' title='hiddenframe' width="0" height="0" border="0" style={{ visibility: "hidden" }}></iframe> */}
-                    {/* Upload map to a server */}
-                    {/* <Gallery uploader={uploader} width="100" height="200" /> */}
-                    {/* <form action="http://localhost:5000/uploader" method="POST"
-                            encType="multipart/form-data" target='hiddenframe'>
-                            <RaisedButton className="strange-button" label="Browse" primary={true} onClick={(e) => this.testUpload()}></RaisedButton>
-                            <TextField readOnly={true}></TextField>
-                            <input type="file" name="file" style={{ display: "none" }} ref={(ref) => this.upload = ref} />
-                            <RaisedButton className="strange-button" label="Submit" primary={true} type="submit" />
-                    </form> */}
-                    <p>{/* <div id='images'> */}
+                    <p style={{ textAlign: "center" }}>
                         <img src={this.images.terrains[0].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[0].path, this.images.terrains[0].type)} />
                         <img src={this.images.terrains[1].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[1].path, this.images.terrains[1].type)} />
                         <img src={this.images.terrains[2].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[2].path, this.images.terrains[2].type)} />
@@ -698,9 +720,9 @@ export default class Map extends React.Component {
                         <img src={this.images.items[1].path} alt="box" className="box" onClick={() => this.selectBox(this.images.items[1].path, this.images.items[1].type)} />
                         <img src={this.images.singletons[0].path} alt="box" className="box" onClick={() => this.selectBox(this.images.singletons[0].path, this.images.singletons[0].type)} />
                         <img src={this.images.singletons[1].path} alt="box" className="box" onClick={() => this.selectBox(this.images.singletons[1].path, this.images.singletons[1].type)} />
-                    </p>{/* </div> */}
+                    </p>
                     <div>
-                        <Slider min={0.1} max={2.0} defaultValue={1.0} value={this.state.scale} onChange={this.handleSlider} className="slider" />
+                        {/* <Slider min={0.1} max={2.0} defaultValue={1.0} value={this.state.scale} onChange={this.handleSlider} className="slider" /> */}
                     </div>
                     <div
                         className="container"
@@ -708,7 +730,10 @@ export default class Map extends React.Component {
                         ref={ref => {
                             this.containerRef = ref;
                         }}
-                    />
+                        style={{ display: "flex" }}
+                    >
+                    </div>
+
                 </div >
             </MuiThemeProvider>
         );

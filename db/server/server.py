@@ -2,6 +2,7 @@ from flask import Flask, request, Response
 from pymongo import MongoClient
 import os
 from json import dumps, loads
+from datetime import datetime
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -91,6 +92,26 @@ def upload_file():
     #     except Exception as e:
     #         return dumps({"success": True})
     # return dumps({"success": False})
+
+
+@app.route('/uploader_json', methods=['GET', 'POST', 'OPTIONS'])
+def upload_json():
+    global resp
+    if request.method == "OPTIONS":
+        return resp
+    parsed = loads(request.get_data())
+    time = datetime.strptime(parsed["createTime"], "%d/%m/%Y, %H:%M:%S")
+    unique_file_name = "gameData" + str(time.day) + str(time.month) + str(
+        time.year) + str(time.hour) + str(time.minute) + str(
+            time.second) + ".json"
+    parsed['filename'] = unique_file_name
+    try:
+        db.maps.insert_one(parsed)
+        resp.set_data(dumps({"success": True}))
+        return resp
+    except Exception:
+        resp.set_data(dumps({"success": False}))
+        return resp
 
 
 if __name__ == '__main__':

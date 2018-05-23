@@ -15,7 +15,7 @@
 .box {
   padding: 10px;
   width: 100px;
-  height: 100px;
+  height: 80px;
 }
 
 .strange-button {
@@ -24,7 +24,7 @@
 }
 
 .text-field-sizes {
-  margin: 10px;
+  margin: 20px;
 }
 
 .react-fine-uploader-gallery-dropzone {
