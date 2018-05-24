@@ -13,6 +13,6 @@ public class PopUpControl : MonoBehaviour
 	{
 		Time.timeScale = 1.0f;
 		var menu = GetComponent<Canvas>();
-		GameObject.Destroy(menu);
+		menu.enabled = false;
 	}
 }

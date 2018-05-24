@@ -6,84 +6,56 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.AI;
 
-public class PlayerVisibility : MonoBehaviour
+public class PlayerVisibility : Visibility
 {   
+    public float fieldOfViewDegrees;
     public bool canAlarm = false;
     public bool respond = true;
-    public float fieldOfViewDegrees;
     public float visibilityDistance;
-    public float endGameDistance;
-    public bool stunned = false;
-    private NavMeshAgent _agent;
-    private List<GameObject> _guardsList = new List<GameObject>();
-    private Light _light;
+    public float endGameDistance;    
     private GameObject _playerSpottedObject;
-    private bool _chasing;
-
-    public bool Chasing
-    {
-        get
-        {
-            return _chasing;
-        }
-        private set
-        {
-            _chasing = value;
-
-            if (_chasing && !_playerSpottedObject.GetComponent<Renderer>().enabled)
-            {
-                _playerSpottedObject.GetComponent<Renderer>().enabled = true;
- //-----        TO MOVE           
-                if (canAlarm)
-                    _light.color = new Color(1, 0, 0);
-            }
-
-            if (!_chasing && _playerSpottedObject.GetComponent<Renderer>().enabled)
-            {
-                _playerSpottedObject.GetComponent<Renderer>().enabled = false;
-                if (canAlarm)
-                    _light.color = new Color(0, 1, 0);
-            }
-        }
-    }
-  
-    public GameObject Player { get; private set; }
-
-   
-    void Start()
-    {
-        Player = GameObject.FindGameObjectWithTag("Player");
-        _guardsList = GameObject.FindGameObjectsWithTag("Enemy").ToList();
-        _agent = GetComponent<NavMeshAgent>();
-        _playerSpottedObject = Instantiate((GameObject)Resources.Load("Prefabs/ExclamationMark"));
-       // _playerSpottedObject.transform.localPosition = gameObject.transform.position + new Vector3(0, 4, 0);
-        //_playerSpottedObject.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-        _playerSpottedObject.GetComponent<Renderer>().enabled = false;
-
- //----- TO MOVE
-        _light = GetComponentInChildren<Light>();
-
-        StartCoroutine(PlayerVisibilityCheck());
-    }
 
     private void Update()
     {
         _playerSpottedObject.transform.position = gameObject.transform.position + new Vector3(0, 4, 0);
+    }   
+
+    private void SwitchScene()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 
-    private IEnumerator PlayerVisibilityCheck()
+    protected override void SignalStateChange()
+    {
+        if (_chasing && !_playerSpottedObject.GetComponent<Renderer>().enabled)
+        {
+            _playerSpottedObject.GetComponent<Renderer>().enabled = true;
+
+        }
+
+        if (!_chasing && _playerSpottedObject.GetComponent<Renderer>().enabled)
+        {
+            _playerSpottedObject.GetComponent<Renderer>().enabled = false;
+
+        }
+    }
+
+    protected override void InitComponents()
+    {
+        _playerSpottedObject = Instantiate((GameObject)Resources.Load("Prefabs/ExclamationMark"));
+        _playerSpottedObject.GetComponent<Renderer>().enabled = false;
+    }
+
+    protected override IEnumerator PlayerVisibilityCheck()
     {
         RaycastHit hit;
         Vector3 rayDirection;
-
         while (true)
         {
             rayDirection = Player.transform.position - transform.position;
             Debug.DrawRay(transform.position, rayDirection, Color.red);
 
             Chasing = false;
-            if(canAlarm)
-             Debug.Log(Vector3.Angle(rayDirection, transform.forward));
             if (!stunned && Vector3.Angle(rayDirection, transform.forward) <= fieldOfViewDegrees * 0.5f)
             {
                
@@ -95,16 +67,7 @@ public class PlayerVisibility : MonoBehaviour
                             break;
 
                         if (hit.distance - _agent.baseOffset <= visibilityDistance)
-                        {
                             Chasing = true;
-                            if(canAlarm && respond)
-                            {
-                                var guard = GetNearestGuard();
-                                var patroller = guard.GetComponent<Patroller>();
-                                //Debug.Log("Calling " + guard.name);
-                                StartCoroutine(patroller.Alarm(transform.position, this));                                
-                            }
-                        }
                     }
                 }
             }
@@ -112,27 +75,6 @@ public class PlayerVisibility : MonoBehaviour
             yield return new WaitForSeconds(0.2f);
         }
         SwitchScene();
-    }
-
-    private GameObject GetNearestGuard()
-    {
-        var guard = _guardsList[0];
-        var distance = Vector3.Distance(transform.position, guard.transform.position);
-        foreach(var tempGuard in _guardsList)
-        {
-            var tempDistance = Vector3.Distance(transform.position, tempGuard.transform.position); 
-            if(tempDistance < distance)
-            {
-                distance = tempDistance;
-                guard = tempGuard;
-            }
-        }
-        return guard;
-    }
-
-    private void SwitchScene()
-    {
-        SceneManager.LoadScene("MainMenu");
     }
 }
 

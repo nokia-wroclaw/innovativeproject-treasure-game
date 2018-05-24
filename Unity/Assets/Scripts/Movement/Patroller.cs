@@ -11,7 +11,7 @@ public class Patroller : MonoBehaviour
     private NavMeshAgent _agent;
     private Animator _anim;
     private GameObject _player;
-    private PlayerVisibility _playerVisibility;
+    private Visibility _playerVisibility;
 
     private int _destPoint;
     private bool _arrived;
@@ -21,7 +21,7 @@ public class Patroller : MonoBehaviour
 	{
 		_agent = GetComponent<NavMeshAgent>();
 		_anim = GetComponent<Animator>();
-        _playerVisibility = GetComponent<PlayerVisibility>();
+        _playerVisibility = GetComponent<Visibility>();
         _player = GameObject.FindGameObjectWithTag("Player");
         if (!usePredefinedPatrolTargets)
             patrolTargets = GeneratePatrolTargets();
@@ -94,9 +94,9 @@ public class Patroller : MonoBehaviour
             } while (!found);
             
             patrolTargets[i] = point;
-            Debug.LogFormat("Point {0}: {1}", i, point);
+            //Debug.LogFormat("Point {0}: {1}", i, point);
         }
-        Debug.LogFormat("Number of hits: {0}", counter);
+        //Debug.LogFormat("Number of hits: {0}", counter);
 
         return patrolTargets;
     }
@@ -129,15 +129,14 @@ public class Patroller : MonoBehaviour
         StartCoroutine(Stun());
     }
 
-    public IEnumerator Alarm(Vector3 position, PlayerVisibility drone)
+    public IEnumerator Alarm(Vector3 position, DroneVision drone)
     {
         _agent.destination = position;
         _agent.speed = chasingSpeed;   
-        var visibility = drone.GetComponent<PlayerVisibility>();
-        drone.respond = false;
+        drone.canRespond = false;
         Debug.Log("False");
         yield return new WaitForSeconds(5.0f);     
         Debug.Log("True");
-        drone.respond = true;
+        drone.canRespond = true;
     }
 }

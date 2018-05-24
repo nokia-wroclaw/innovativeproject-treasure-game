@@ -8207,15 +8207,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 309161295}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a9ffee4cbd322d4490dd93db7ee597f, type: 3}
+  m_Script: {fileID: 11500000, guid: d087bb3780860ad4593c035307fbc54d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canAlarm: 1
-  respond: 1
-  fieldOfViewDegrees: 140
-  visibilityDistance: 4
-  endGameDistance: 2
   stunned: 0
+  visibilityDistance: 10
+  canRespond: 1
 --- !u!4 &310550020 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4483809726403628, guid: 8638a81acd6fbb6479033dccd6767573,
