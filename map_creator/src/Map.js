@@ -9,7 +9,6 @@ import TextField from '@material-ui/core/TextField';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import FineUploader from 'fine-uploader-wrappers';
 import axios from 'axios';
 import 'react-fine-uploader/gallery/gallery.css'
 
@@ -65,20 +64,6 @@ const getItems = () => {
     return items;
 };
 
-// const uploader = new FineUploader({
-//     options: {
-//         request: {
-//             endpoint: 'http://localhost:5000/uploader',
-//             method: "POST"
-//         }
-//     },
-//     cors: {
-//         //all requests are expected to be cross-domain requests
-//         expected: false,
-
-//         //if you want cookies to be sent along with the request
-//     }
-// });
 
 export default class Map extends React.Component {
 
@@ -157,6 +142,8 @@ export default class Map extends React.Component {
         this.dragstart = this.dragstart.bind(this);
         this.dragend = this.dragend.bind(this);
         this.imageOnLoad = this.imageOnLoad.bind(this);
+        this.addImage = this.addImage.bind(this);
+        this.addImages = this.addImages.bind(this);
         this.drawGrid = this.drawGrid.bind(this);
         this.redraw = this.redraw.bind(this);
         this.generateMap = this.generateMap.bind(this);
@@ -176,6 +163,9 @@ export default class Map extends React.Component {
         this.mapListClick = this.mapListClick.bind(this);
         this.setMapSize = this.setMapSize.bind(this);
         this.uploadMap = this.uploadMap.bind(this);
+        this.clearMap = this.clearMap.bind(this);
+        this.clearObjectsArray = this.clearObjectsArray.bind(this);
+        this.claimFreeSpot = this.claimFreeSpot.bind(this);
         this.mapList = [];
     }
 
@@ -199,9 +189,22 @@ export default class Map extends React.Component {
         }
     }
 
-    redraw() {
+    clearObjectsArray() {
+        this.objects = [];
+        this.imageIndex = 0;
+        this.initFreeSpots();
+    }
+
+    clearMap() {
         this.layer.removeChildren();
         this.drawGrid();
+    }
+
+    redraw() {
+        this.clearMap();
+        var tempObjects = this.objects.slice();
+        this.clearObjectsArray();
+        // this.initFreeSpots();
         this.shadowRectangle.hide();
         const pos = { x: -1, y: -1 };
         this.shadowRectangle.setWidth(this.blockSize);
@@ -213,31 +216,31 @@ export default class Map extends React.Component {
         })
         this.layer.add(this.shadowRectangle);
         let objectsToDelete = [];
-        this.objects.forEach((entry) => {
-            const pos = { x: -1, y: -1 };
-            entry.setHeight(this.blockSize);
-            entry.setWidth(this.blockSize);
-            let change = false;
-            if (this.oldSize.width !== this.width || this.oldSize.height !== this.height) {
-                change = true;
-            }
-            // let newX = entry.x() / (this.oldSize.width / this.width);
-            // let newY = entry.y() / (this.oldSize.height / this.height);
-            // entry.setAttrs({ x: newX, y: newY })
-            this.checkPos(entry, pos, change);
-            if (pos.x === -1 || pos.y === -1) {
-                objectsToDelete.push(entry);
-            } else {
-                entry.setAttrs({ x: pos.x, y: pos.y })
-                entry.currentX = entry.x();
-                entry.currentY = entry.y();
-                this.layer.add(entry);
-            }
-        });
+        this.addImages(tempObjects);
+        // tempObjects.forEach((entry) => {
+        //     // const pos = { x: -1, y: -1 };
+        //     // entry.setHeight(this.blockSize);
+        //     // entry.setWidth(this.blockSize);
+        //     // let change = false;
+        //     // if (this.oldSize.width !== this.width || this.oldSize.height !== this.height) {
+        //     //     change = true;
+        //     // }
+        //     // this.checkPos(entry, pos, change);
+        //     // if (pos.x === -1 || pos.y === -1) {
+        //     //     objectsToDelete.push(entry);
+        //     // } else {
+        //     //     entry.setAttrs({ x: pos.x, y: pos.y })
+        //     //     entry.currentX = entry.x();
+        //     //     entry.currentY = entry.y();
+        //     //     this.layer.add(entry);
+        //     // }
+        //     console.log(entry.src, entry.type, { x: entry.x(), y: entry.y() });
+        //     this.addImages(entry);
+        // });
         for (let i = 0; i < objectsToDelete.length; i++) {
             delete this.objects[objectsToDelete[i].imageIndex];
         }
-        this.stage.draw();
+        // this.stage.draw();
     }
 
     // Click events
@@ -257,7 +260,6 @@ export default class Map extends React.Component {
             } else {
                 this.mapObject["gameObjects"].push({ "size": [entry.width(), entry.height()], "position": [entry.x(), entry.y()], type: entry.type });
             }
-            var x = this.mapToJson(this.mapObject);
         });
         var d = new Date();
         var date = d.toLocaleString("en-gb");
@@ -267,7 +269,8 @@ export default class Map extends React.Component {
     }
 
     generateRandom() {
-        this.objects = [];
+        this.clearMap();
+        this.clearObjectsArray();
         // Adding player and the treasure
         this.addImage(this.images.singletons[0].path, this.images.singletons[0].type);
         this.addImage(this.images.singletons[1].path, this.images.singletons[1].type);
@@ -285,7 +288,6 @@ export default class Map extends React.Component {
             }
         }
         this.oldSize = { width: this.width, height: this.height };
-        this.redraw();
     }
 
     getMaps() {
@@ -320,9 +322,9 @@ export default class Map extends React.Component {
             baseURL: `http://localhost:5000/map/` + mapName
         });
         getter.get().then(res => res.data).then(data => {
+            this.clearMap();
+            this.clearObjectsArray();
             let gameObjects = data["gameObjects"];
-            this.objects = [];
-            // this.initFreeSpots();
             for (let i = 0; i < gameObjects.length; i++) {
                 let entry = gameObjects[i];
                 let object = this.images.terrains.find(function (v) { return v["type"] === entry.type });
@@ -346,7 +348,7 @@ export default class Map extends React.Component {
             this.addImage(require('./assets/case.png'), "case", position);
             let mapSize = data["mapSize"];
             this.setMapSize(mapSize[0], mapSize[1], true);
-            this.redraw();
+            // this.redraw();
         });
     }
 
@@ -436,7 +438,6 @@ export default class Map extends React.Component {
     handleSubmit() {
         this.setMapSize(this.state.width, this.state.height);
         this.blockSize = parseInt(this.state.blockSize, 10);
-        this.initFreeSpots();
         this.redraw();
     }
 
@@ -468,10 +469,13 @@ export default class Map extends React.Component {
         else {
             pos = { x: -1, y: -1 };
         }
-        const scale = 1;
+        var scale = 1;
         var index = Math.floor(Math.random() * this.freeSpots.length);
-        let freeSpot = this.freeSpots[index]
-        const image = new Konva.Image({
+        var freeSpot = this.freeSpots[index];
+        if (freeSpot === undefined) {
+            return;
+        }
+        var image = new Konva.Image({
             x: freeSpot.row * this.blockSize,
             y: freeSpot.col * this.blockSize,
             scale: {
@@ -499,6 +503,7 @@ export default class Map extends React.Component {
         image.type = type;
         image.src = imageObj.src;
         image.imageIndex = this.imageIndex;
+
         image.currentX = pos.x;
         image.currentY = pos.y;
         this.imageIndex++;
@@ -514,7 +519,6 @@ export default class Map extends React.Component {
             delete this.objects[image.imageIndex];
             this.redraw();
         });
-
         image.on('dragmove', () => {
             const pos = { x: -1, y: -1 };
             this.checkPos(image, pos, false);
@@ -537,19 +541,28 @@ export default class Map extends React.Component {
         });
         this.objects.push(image);
         this.layer.add(image);
-        this.stage.draw();
         this.remove(this.freeSpots, index);
         return true;
     }
 
+    addImages(images) {
+        images.forEach(function (image) {
+            const imageObj = new Image();
+            imageObj.src = image.src
+            imageObj.misc = { stage: this.stage, layer: this.layer };
+            this.imageOnLoad(imageObj, image.type, { x: image.x(), y: image.y() });
+        }, this);
+        this.stage.draw();
+    }
 
     addImage(path, type, position) {
-
         const imageObj = new Image();
         imageObj.src = path
         imageObj.misc = { stage: this.stage, layer: this.layer };
         imageObj.onload = () => {
-            return this.imageOnLoad(imageObj, type, position);
+            const ret = this.imageOnLoad(imageObj, type, position);
+            this.stage.draw();
+            return ret;
         };
     }
 
@@ -625,6 +638,10 @@ export default class Map extends React.Component {
         return JSON.stringify(map);
     }
 
+    claimFreeSpot(index) {
+        this.remove(this.freeSpots, index);
+    }
+
     initFreeSpots() {
         this.freeSpots = [];
         let rows = parseInt(this.width / this.blockSize, 10);
@@ -634,14 +651,6 @@ export default class Map extends React.Component {
                 this.freeSpots.push({ row: i, col: j });
             }
         }
-
-    }
-
-    // Render
-    testUpload() {
-        this.upload.click();
-        let f = this.upload.value;
-        f = f.replace(/.*[/\\]/, '');
     }
 
     handleSlider(event, value) {
@@ -682,7 +691,7 @@ export default class Map extends React.Component {
                             <TextField style={{ margin: "10px", width: "30px" }} hintText="Height" name="height" value={this.state.height} onChange={this.handleChange}></TextField>
                             </label>
                             <br />
-                            <Button style={{ margin: "10px" }} variant="raised" color="secondary" onClick={this.getMaps}>Change</Button>
+                            <Button style={{ margin: "10px" }} variant="raised" color="secondary" onClick={this.handleSubmit}>Change</Button>
                         </form>
                         <List style={styles.list} id="mapsList" name="mapsList">
                             {this.mapList}
