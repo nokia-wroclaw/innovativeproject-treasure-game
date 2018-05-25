@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 135146941434587306}
   - component: {fileID: 114623236622245494}
   m_Layer: 0
-  m_Name: movementPotion
+  m_Name: dronePilot
   m_TagString: Collectibles
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -59,8 +59,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: aef41ced75c6207438d6802bd8e95f8a, type: 3}
-  - {fileID: 2100002, guid: aef41ced75c6207438d6802bd8e95f8a, type: 3}
+  - {fileID: 2100000, guid: 08d7f7b6280240e4fb73c05b157c4b57, type: 2}
+  - {fileID: 2100000, guid: 08d7f7b6280240e4fb73c05b157c4b57, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -112,7 +112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91ad8942cbc04974f890b214acf8e357, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _itemToPickup: {fileID: 11400000, guid: ad5ab879a2abd9c4a9db6f38ff886a9d, type: 2}
+  _itemToPickup: {fileID: 11400000, guid: ec6d204a29da7674cacbe3dcda32b82a, type: 2}
 --- !u!135 &135146941434587306
 SphereCollider:
   m_ObjectHideFlags: 1

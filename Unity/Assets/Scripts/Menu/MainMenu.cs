@@ -20,10 +20,8 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene("LoadedScene");
     }
 
-	public void QuitGame()
-	{
-		Application.Quit();
-	}
+	public void QuitGame() => 
+        Application.Quit();
 
 	public void ResumeGame()
 	{

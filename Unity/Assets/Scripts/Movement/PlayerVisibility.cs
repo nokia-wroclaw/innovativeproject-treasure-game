@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.AI;
 
 public class PlayerVisibility : Visibility
 {   
@@ -20,17 +16,11 @@ public class PlayerVisibility : Visibility
         _playerSpottedObject.transform.position = gameObject.transform.position + new Vector3(0, 4, 0);
     }   
 
-    private void SwitchScene()
-    {
-        SceneManager.LoadScene("MainMenu");
-    }
-
     protected override void SignalStateChange()
     {
         if (_chasing && !_playerSpottedObject.GetComponent<Renderer>().enabled)
         {
             _playerSpottedObject.GetComponent<Renderer>().enabled = true;
-
         }
 
         if (!_chasing && _playerSpottedObject.GetComponent<Renderer>().enabled)
@@ -50,6 +40,7 @@ public class PlayerVisibility : Visibility
     {
         RaycastHit hit;
         Vector3 rayDirection;
+
         while (true)
         {
             rayDirection = Player.transform.position - transform.position;
@@ -76,5 +67,9 @@ public class PlayerVisibility : Visibility
         }
         SwitchScene();
     }
+
+    private void SwitchScene() => 
+        SceneManager.LoadScene("MainMenu");
+
 }
 

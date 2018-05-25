@@ -37,7 +37,6 @@ public class KeyInput : MonoBehaviour
 		Time.timeScale = 0.0f;
 		isPaused = true;
 		SceneManager.LoadScene("MainMenu", LoadSceneMode.Additive);
-		//Time.timeScale = 1.0f;
 	}
 
 }

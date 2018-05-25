@@ -52,8 +52,6 @@ public abstract class Movement : MonoBehaviour
         rb.velocity = moveVelocity;
     }
 
-    protected void Animating()
-    {
+    protected void Animating() =>
         anim.SetFloat("blendSpeed", rb.velocity.magnitude);
-    }
 }

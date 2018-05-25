@@ -15,6 +15,7 @@ TagManager:
   - Tree
   - Collectibles
   - Obstacle
+  - Drone
   layers:
   - Default
   - TransparentFX

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.AI;
 
 public abstract class Visibility : MonoBehaviour
@@ -27,7 +23,6 @@ public abstract class Visibility : MonoBehaviour
     }    
 
     protected GameObject Player { get; private set; }
-
 
     void Start()
     {
