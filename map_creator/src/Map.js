@@ -200,8 +200,6 @@ export default class Map extends React.Component {
     }
 
     redraw() {
-        console.log("this.oldSize.width this.oldSize.height:", this.oldSize.width, this.oldSize.height);
-        console.log("this.width this.height:", this.width, this.height);
         this.layer.removeChildren();
         this.drawGrid();
         this.shadowRectangle.hide();
@@ -214,7 +212,6 @@ export default class Map extends React.Component {
             y: pos.y
         })
         this.layer.add(this.shadowRectangle);
-        // console.log(this.width, this.height);
         let objectsToDelete = [];
         this.objects.forEach((entry) => {
             const pos = { x: -1, y: -1 };
@@ -261,12 +258,9 @@ export default class Map extends React.Component {
                 this.mapObject["gameObjects"].push({ "size": [entry.width(), entry.height()], "position": [entry.x(), entry.y()], type: entry.type });
             }
             var x = this.mapToJson(this.mapObject);
-            console.log(x);
-            console.log("Object " + entry.type + " X: " + entry.x() + ", Y: " + entry.y());
         });
         var d = new Date();
         var date = d.toLocaleString("en-gb");
-        console.log(date);
         this.mapObject["createTime"] = date;
         const json = this.mapToJson(this.mapObject);
         return json;
@@ -305,9 +299,7 @@ export default class Map extends React.Component {
 
     uploadMap() {
         const map = this.generateMap();
-        console.log(map);
         axios.post('http://localhost:5000/uploader_json', map).then(res => res.data).then(data => {
-            console.log(data);
         });
     }
 
@@ -333,7 +325,6 @@ export default class Map extends React.Component {
             // this.initFreeSpots();
             for (let i = 0; i < gameObjects.length; i++) {
                 let entry = gameObjects[i];
-                console.log(entry.type);
                 let object = this.images.terrains.find(function (v) { return v["type"] === entry.type });
                 if (!(object == null)) {
                     let position = { x: entry.position[0], y: entry.position[1] };
@@ -354,7 +345,6 @@ export default class Map extends React.Component {
             position = { x: treasurePostion[0], y: treasurePostion[1] };
             this.addImage(require('./assets/case.png'), "case", position);
             let mapSize = data["mapSize"];
-            console.log("MAPSIZE:", mapSize);
             this.setMapSize(mapSize[0], mapSize[1], true);
             this.redraw();
         });
@@ -426,7 +416,6 @@ export default class Map extends React.Component {
         //this.objects.push(image);
         this.stage.draw();
         this.shadowRectangle.hide();
-        // console.log("Image X: " + image.x() + ", Image Y: " + image.y());
     }
 
     selectBox(path, type) {
@@ -437,7 +426,6 @@ export default class Map extends React.Component {
         const target = event.target;
         const value = parseInt(event.target.value, 10);
         const name = target.name;
-        console.log("Setting value", name, ":", value);
         this.setState({
             [name]: value
         });
@@ -449,7 +437,6 @@ export default class Map extends React.Component {
         this.setMapSize(this.state.width, this.state.height);
         this.blockSize = parseInt(this.state.blockSize, 10);
         this.initFreeSpots();
-        console.log("Setting this.width and this.height to: ", this.width, this.height);
         this.redraw();
     }
 
@@ -474,7 +461,6 @@ export default class Map extends React.Component {
     imageOnLoad(imageObj, type, position) {
         let loadedFromFile = false;
         let pos = {};
-        console.log("POSITION:", position);
         if (position != null) {
             pos = { x: position.x, y: position.y };
             loadedFromFile = true;
@@ -482,7 +468,6 @@ export default class Map extends React.Component {
         else {
             pos = { x: -1, y: -1 };
         }
-        console.log("POS:", pos)
         const scale = 1;
         var index = Math.floor(Math.random() * this.freeSpots.length);
         let freeSpot = this.freeSpots[index]
@@ -509,7 +494,6 @@ export default class Map extends React.Component {
                 return false;
             }
         }
-        // console.log(pos.x, pos.y);
         image.position({ x: pos.x, y: pos.y });
 
         image.type = type;
@@ -534,14 +518,11 @@ export default class Map extends React.Component {
         image.on('dragmove', () => {
             const pos = { x: -1, y: -1 };
             this.checkPos(image, pos, false);
-            console.log("Setting rectangle position to: ", pos.x, pos.y);
-            console.log("this.width, this.height: ", this.width, this.height);
             this.shadowRectangle.position({
                 x: pos.x,
                 y: pos.y
             });
             if (this.checkOverlap(image, this.shadowRectangle.x(), this.shadowRectangle.y())) {
-                console.log("DRAGMOVE OVERLAPS");
                 this.shadowRectangle.setAttrs({
                     fill: '#ff0000',
                     stroke: '#b30000'
@@ -581,7 +562,6 @@ export default class Map extends React.Component {
         // Checking x position
         var x = parseFloat(image.x());
         var y = parseFloat(image.y());
-        console.log("IMAGE X, Y:", x, y);
 
         if (x < 0) {
             pos.x = 0;
@@ -662,11 +642,9 @@ export default class Map extends React.Component {
         this.upload.click();
         let f = this.upload.value;
         f = f.replace(/.*[/\\]/, '');
-        console.log(f);
     }
 
     handleSlider(event, value) {
-        console.log(value);
         this.setState({ scale: value });
         this.stage.scale({
             x: value,
