@@ -1,23 +1,16 @@
 fileFormatVersion: 2
-guid: 27d390619a279054aa08fdd5ec265255
-timeCreated: 1527885286
+guid: f38c6b1d365c6934888bc755f4d8bcfb
+timeCreated: 1527886898
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: top
-    100002: //RootNode
-    100004: trunk
-    400000: top
-    400002: //RootNode
-    400004: trunk
+    100000: //RootNode
+    400000: //RootNode
     2100000: unnamed
-    2300000: top
-    2300002: trunk
-    3300000: top
-    3300002: trunk
-    4300000: top
-    4300002: trunk
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: body
     7400000: Default Take
     9500000: //RootNode
   externalObjects: {}

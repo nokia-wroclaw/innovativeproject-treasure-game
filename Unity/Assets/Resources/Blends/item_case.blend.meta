@@ -1,23 +1,33 @@
 fileFormatVersion: 2
-guid: 27d390619a279054aa08fdd5ec265255
-timeCreated: 1527885286
+guid: 3fd2e2d0244024743ae2c9ca06d934db
+timeCreated: 1527886895
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: top
-    100002: //RootNode
-    100004: trunk
-    400000: top
-    400002: //RootNode
-    400004: trunk
+    100000: body
+    100002: clamp_1
+    100004: clamp_2
+    100006: handle
+    100008: //RootNode
+    400000: body
+    400002: clamp_1
+    400004: clamp_2
+    400006: handle
+    400008: //RootNode
     2100000: unnamed
-    2300000: top
-    2300002: trunk
-    3300000: top
-    3300002: trunk
-    4300000: top
-    4300002: trunk
+    2300000: body
+    2300002: clamp_1
+    2300004: clamp_2
+    2300006: handle
+    3300000: body
+    3300002: clamp_1
+    3300004: clamp_2
+    3300006: handle
+    4300000: body
+    4300002: handle
+    4300004: clamp_2
+    4300006: clamp_1
     7400000: Default Take
     9500000: //RootNode
   externalObjects: {}
