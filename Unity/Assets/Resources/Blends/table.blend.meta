@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 39367f402a258414fac7336f9d95af06
-timeCreated: 1527888255
+timeCreated: 1528033015
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
@@ -18,6 +18,8 @@ ModelImporter:
     3300002: top
     4300000: frame
     4300002: top
+    6400000: frame
+    6400002: top
     7400000: Default Take
     9500000: //RootNode
   externalObjects: {}
@@ -52,7 +54,7 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 0
+    addColliders: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
