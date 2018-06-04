@@ -23,7 +23,7 @@ public class MapDataController : MonoBehaviour
     }
 
     private void LoadAllPrefabs() =>
-        _prefabs = Resources.LoadAll("Prefabs").Cast<GameObject>().ToList();
+        _prefabs = Resources.LoadAll("Prefabs/Old").Cast<GameObject>().ToList();
 
 
     private void LoadDataFromJson()
