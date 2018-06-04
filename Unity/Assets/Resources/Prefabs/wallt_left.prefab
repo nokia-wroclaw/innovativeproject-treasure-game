@@ -22,9 +22,10 @@ GameObject:
   - component: {fileID: 33673945170544064}
   - component: {fileID: 23814823181924660}
   - component: {fileID: 95340720551785088}
+  - component: {fileID: 65950036181972652}
   m_Layer: 0
   m_Name: wallt_left
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -55,6 +56,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: e6b5250520403b040afa372738a98165, type: 2}
   m_StaticBatchInfo:
@@ -83,6 +85,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1425509543555078}
   m_Mesh: {fileID: 4300000, guid: 19430b8442ef49243b99310fa3173372, type: 3}
+--- !u!65 &65950036181972652
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1425509543555078}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.882, y: 3.109303, z: 0.60542}
+  m_Center: {x: -0.058999985, y: 1.5546515, z: 0}
 --- !u!95 &95340720551785088
 Animator:
   serializedVersion: 3
@@ -100,3 +114,4 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

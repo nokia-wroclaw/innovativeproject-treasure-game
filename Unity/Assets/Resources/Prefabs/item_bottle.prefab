@@ -37,9 +37,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4048574989773360}
   - component: {fileID: 95497581333624386}
+  - component: {fileID: 65586809088171252}
   m_Layer: 0
   m_Name: item_bottle
-  m_TagString: Untagged
+  m_TagString: Collectibles
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -68,7 +69,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1759294017886202}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 51.415962, y: 0, z: 2.6191823}
+  m_LocalPosition: {x: 51.415962, y: 0.125, z: 2.6191823}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4629997254171604}
@@ -115,6 +116,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: 45ec1b713063a1c4faffbb8354ff5998, type: 2}
   m_StaticBatchInfo:
@@ -149,6 +151,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: 0cd7676cefa9ad945893f0aa806e1d7a, type: 2}
   m_StaticBatchInfo:
@@ -184,6 +187,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1777005114435326}
   m_Mesh: {fileID: 4300002, guid: 36db8badbba35e34cb5b28303b9c78eb, type: 3}
+--- !u!65 &65586809088171252
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1759294017886202}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 0.11189, z: 2}
+  m_Center: {x: 0, y: 0.294055, z: 0}
 --- !u!95 &95497581333624386
 Animator:
   serializedVersion: 3
@@ -201,3 +216,4 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

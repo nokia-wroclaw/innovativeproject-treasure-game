@@ -22,9 +22,10 @@ GameObject:
   - component: {fileID: 33213679970506402}
   - component: {fileID: 23562968586955596}
   - component: {fileID: 95330882548181632}
+  - component: {fileID: 65829079024292142}
   m_Layer: 0
   m_Name: wallt
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -35,13 +36,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1644682481134358}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 25.465267, y: 0, z: 16.153122}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: -0, w: -0.7071068}
+  m_LocalPosition: {x: 0.27, y: 0, z: 8.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 270, z: 0}
 --- !u!23 &23562968586955596
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -55,6 +56,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: e6b5250520403b040afa372738a98165, type: 2}
   m_StaticBatchInfo:
@@ -83,6 +85,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1644682481134358}
   m_Mesh: {fileID: 4300000, guid: 946f906fb31bebe4a8f7e85807a676db, type: 3}
+--- !u!65 &65829079024292142
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1644682481134358}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.7640005, y: 3.109303, z: 0.47526512}
+  m_Center: {x: 0, y: 1.5546515, z: -0.057632506}
 --- !u!95 &95330882548181632
 Animator:
   serializedVersion: 3
@@ -100,3 +114,4 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

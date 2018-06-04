@@ -129,12 +129,16 @@ public class Patroller : MonoBehaviour
 
     public IEnumerator Alarm(Vector3 position, DroneVision drone)
     {
-        _agent.destination = position;
-        _agent.speed = chasingSpeed;   
-        drone.canRespond = false;
+        if (_agent != null)
+        {
+            _agent.destination = position;
+            _agent.speed = chasingSpeed;
+            drone.canRespond = false;
 
-        yield return new WaitForSeconds(5.0f); 
+            yield return new WaitForSeconds(5.0f);
+
+            drone.canRespond = true;
+        }
         
-        drone.canRespond = true;
     }
 }

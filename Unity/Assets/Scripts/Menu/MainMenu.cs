@@ -10,7 +10,7 @@ public class MainMenu : MonoBehaviour
 	{
 		if(_isPaused)
 			Time.timeScale = 1.0f;
-		SceneManager.LoadScene("SecondScene");
+		SceneManager.LoadScene("TrainingScene");
 	}
 
     public void LoadGame()

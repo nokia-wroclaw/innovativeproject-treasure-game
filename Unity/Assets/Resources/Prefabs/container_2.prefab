@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 95988640418875206}
   m_Layer: 0
   m_Name: container_2
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -208,6 +208,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: db177a2358258d347996e72ea70691d1, type: 2}
   m_StaticBatchInfo:
@@ -242,6 +243,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: 0cd7676cefa9ad945893f0aa806e1d7a, type: 2}
   m_StaticBatchInfo:
@@ -276,6 +278,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: ad4e52f72f416314ca97a9ff473e682f, type: 2}
   m_StaticBatchInfo:
@@ -310,6 +313,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: 1a1280ff02ff6a04bb9e4bd7b279a1d2, type: 2}
   m_StaticBatchInfo:
@@ -344,6 +348,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: 1a1280ff02ff6a04bb9e4bd7b279a1d2, type: 2}
   m_StaticBatchInfo:
@@ -417,3 +422,4 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
