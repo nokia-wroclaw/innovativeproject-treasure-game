@@ -113,7 +113,7 @@ NavMeshSettings:
     accuratePlacement: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 23800000, guid: 74ef05d6ef04e5148bf3fc7e337117a2, type: 2}
+  m_NavMeshData: {fileID: 0}
 --- !u!1001 &294679
 Prefab:
   m_ObjectHideFlags: 0
@@ -7084,6 +7084,31 @@ Prefab:
     - target: {fileID: 1957268807377842, guid: 585e7b0f1a9c6484c96f1ebdda51a1e5, type: 2}
       propertyPath: m_Name
       value: card (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 65248434073049394, guid: 585e7b0f1a9c6484c96f1ebdda51a1e5,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 65248434073049394, guid: 585e7b0f1a9c6484c96f1ebdda51a1e5,
+        type: 2}
+      propertyPath: m_Size.z
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 65011071424919130, guid: 585e7b0f1a9c6484c96f1ebdda51a1e5,
+        type: 2}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 65011071424919130, guid: 585e7b0f1a9c6484c96f1ebdda51a1e5,
+        type: 2}
+      propertyPath: m_Size.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 65011071424919130, guid: 585e7b0f1a9c6484c96f1ebdda51a1e5,
+        type: 2}
+      propertyPath: m_Center.z
+      value: -1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 585e7b0f1a9c6484c96f1ebdda51a1e5, type: 2}
@@ -25525,7 +25550,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4482449815316726, guid: 688fe57de24741d47838e2cba4323589, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 6.09
+      value: 12.627
       objectReference: {fileID: 0}
     - target: {fileID: 4482449815316726, guid: 688fe57de24741d47838e2cba4323589, type: 2}
       propertyPath: m_LocalRotation.x
@@ -46503,7 +46528,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4299161719935282, guid: dcee00b0301abb14b822084af84311cd, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0.15
+      value: 0.224
       objectReference: {fileID: 0}
     - target: {fileID: 4299161719935282, guid: dcee00b0301abb14b822084af84311cd, type: 2}
       propertyPath: m_LocalPosition.z

@@ -39,7 +39,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1957268807377842}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 53.927197, y: 0.65, z: 85.268}
+  m_LocalPosition: {x: 58.22, y: 0.447, z: 45.971203}
   m_LocalScale: {x: 0.04, y: 0.4, z: 0.2}
   m_Children: []
   m_Father: {fileID: 0}
@@ -58,6 +58,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: b4167d11e9fa2d9438f6593ad045bfe8, type: 3}
   m_StaticBatchInfo:
@@ -96,8 +97,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 70, y: 7, z: 20}
-  m_Center: {x: 0, y: 0, z: 5}
+  m_Size: {x: 70, y: 7, z: 1}
+  m_Center: {x: 0, y: 0, z: -1}
 --- !u!65 &65248434073049394
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -108,7 +109,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 15, y: 2, z: 5}
+  m_Size: {x: 15, y: 2, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!95 &95672829449349910
 Animator:
@@ -127,6 +128,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &114308585155905044
 MonoBehaviour:
   m_ObjectHideFlags: 1

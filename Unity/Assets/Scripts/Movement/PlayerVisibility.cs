@@ -32,7 +32,7 @@ public class PlayerVisibility : Visibility
 
     protected override void InitComponents()
     {
-        _playerSpottedObject = Instantiate((GameObject)Resources.Load("Prefabs/ExclamationMark"));
+        _playerSpottedObject = Instantiate((GameObject)Resources.Load("Prefabs/Old/ExclamationMark"));
         _playerSpottedObject.GetComponent<Renderer>().enabled = false;
     }
 
