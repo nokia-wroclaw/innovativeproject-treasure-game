@@ -69,6 +69,7 @@ export default class Map extends React.Component {
 
     constructor(props) {
         super(props);
+        console.log(this.props.firstLoad);
         this.stage = null;
         this.layer = null;
         this.shadowRectangle = null;
@@ -85,6 +86,8 @@ export default class Map extends React.Component {
         this.images.singletons = getSingletons();
         this.freeSpots = [];
         this.oldSize = { width: this.width, height: this.height };
+        this.playerOnMap = false;
+        this.treasureOnMap = false;
         this.bindMethods();
         this.initFreeSpots();
         this.state = { width: parseInt(this.width / this.blockSize, 10), height: this.height / this.blockSize, blockSize: this.blockSize, scale: 1.0, maps: null };
@@ -517,6 +520,11 @@ export default class Map extends React.Component {
 
         image.on("dblclick", () => {
             delete this.objects[image.imageIndex];
+            if (image.type === "case") {
+                this.treasureOnMap = false;
+            } else if (image.type === "player") {
+                this.playerOnMap = false;
+            }
             this.redraw();
         });
         image.on('dragmove', () => {
@@ -556,6 +564,20 @@ export default class Map extends React.Component {
     }
 
     addImage(path, type, position) {
+        if (type === "case") {
+            if (this.treasureOnMap) {
+                return;
+            } else {
+                this.treasureOnMap = true;
+            }
+        } else if (type === "player") {
+            if (this.playerOnMap) {
+                return;
+            } else {
+                this.playerOnMap = true;
+            }
+        }
+
         const imageObj = new Image();
         imageObj.src = path
         imageObj.misc = { stage: this.stage, layer: this.layer };

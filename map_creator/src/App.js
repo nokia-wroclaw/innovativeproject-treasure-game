@@ -9,6 +9,11 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
 class App extends Component {
+    constructor(props) {
+        super(props);
+        this.changeTab = this.changeTab.bind(this);
+        this.firstLoad = true;
+    }
 
     render() {
         var styles = {
@@ -31,11 +36,14 @@ class App extends Component {
                             </Tabs>
                         </AppBar>
                     </MuiThemeProvider>
-                    <Route exact path="/" component={Map} />
-                    <Route path="/misc" component={Misc} />
+                    <Route exact path="/" component={(props) => <Map {...props} firstLoad={this.firstLoad} />} info={this.firstLoad} />
+                    <Route path="/misc" component={(props) => <Misc {...props} firstLoad={this.firstLoad} />} />
                 </div>
             </Router >
         );
+    }
+    changeTab() {
+        this.firstLoad = false;
     }
 }
 export default App;
