@@ -154,7 +154,6 @@ export default class Map extends React.Component {
         this.generateRandom = this.generateRandom.bind(this);
         this.checkPos = this.checkPos.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        this.handleSlider = this.handleSlider.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.strMapToObj = this.strMapToObj.bind(this);
         this.readAssets = this.readAssets.bind(this);
@@ -207,7 +206,6 @@ export default class Map extends React.Component {
         this.clearMap();
         var tempObjects = this.objects.slice();
         this.clearObjectsArray();
-        // this.initFreeSpots();
         this.shadowRectangle.hide();
         const pos = { x: -1, y: -1 };
         this.shadowRectangle.setWidth(this.blockSize);
@@ -220,30 +218,9 @@ export default class Map extends React.Component {
         this.layer.add(this.shadowRectangle);
         let objectsToDelete = [];
         this.addImages(tempObjects);
-        // tempObjects.forEach((entry) => {
-        //     // const pos = { x: -1, y: -1 };
-        //     // entry.setHeight(this.blockSize);
-        //     // entry.setWidth(this.blockSize);
-        //     // let change = false;
-        //     // if (this.oldSize.width !== this.width || this.oldSize.height !== this.height) {
-        //     //     change = true;
-        //     // }
-        //     // this.checkPos(entry, pos, change);
-        //     // if (pos.x === -1 || pos.y === -1) {
-        //     //     objectsToDelete.push(entry);
-        //     // } else {
-        //     //     entry.setAttrs({ x: pos.x, y: pos.y })
-        //     //     entry.currentX = entry.x();
-        //     //     entry.currentY = entry.y();
-        //     //     this.layer.add(entry);
-        //     // }
-        //     console.log(entry.src, entry.type, { x: entry.x(), y: entry.y() });
-        //     this.addImages(entry);
-        // });
         for (let i = 0; i < objectsToDelete.length; i++) {
             delete this.objects[objectsToDelete[i].imageIndex];
         }
-        // this.stage.draw();
     }
 
     // Click events
@@ -351,7 +328,6 @@ export default class Map extends React.Component {
             this.addImage(require('./assets/case.png'), "case", position);
             let mapSize = data["mapSize"];
             this.setMapSize(mapSize[0], mapSize[1], true);
-            // this.redraw();
         });
     }
 
@@ -373,7 +349,6 @@ export default class Map extends React.Component {
         this.shadowRectangle.moveToTop();
 
         image.moveToTop();
-        // moving to another layer will improve dragging performance
         image.moveTo(dragLayer);
         this.stage.draw();
 
@@ -418,7 +393,6 @@ export default class Map extends React.Component {
         }
         image.currentX = image.x();
         image.currentY = image.y();
-        //this.objects.push(image);
         this.stage.draw();
         this.shadowRectangle.hide();
     }
@@ -675,17 +649,6 @@ export default class Map extends React.Component {
         }
     }
 
-    handleSlider(event, value) {
-        this.setState({ scale: value });
-        this.stage.scale({
-            x: value,
-            y: value
-        });
-        this.stage.setHeight(this.height * value);
-        this.stage.setWidth(this.width * value);
-        this.stage.draw();
-    }
-
     render() {
         return (
             <MuiThemeProvider>
@@ -720,19 +683,16 @@ export default class Map extends React.Component {
                         </List>
                     </div>
                     <p style={{ textAlign: "center" }}>
-                        <img src={this.images.terrains[0].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[0].path, this.images.terrains[0].type)} />
-                        <img src={this.images.terrains[1].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[1].path, this.images.terrains[1].type)} />
-                        <img src={this.images.terrains[2].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[2].path, this.images.terrains[2].type)} />
-                        <img src={this.images.terrains[3].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[3].path, this.images.terrains[3].type)} />
-                        <img src={this.images.terrains[4].path} alt="box" className="box" onClick={() => this.selectBox(this.images.terrains[4].path, this.images.terrains[4].type)} />
-                        <img src={this.images.items[0].path} alt="box" className="box" onClick={() => this.selectBox(this.images.items[0].path, this.images.items[0].type)} />
-                        <img src={this.images.items[1].path} alt="box" className="box" onClick={() => this.selectBox(this.images.items[1].path, this.images.items[1].type)} />
-                        <img src={this.images.singletons[0].path} alt="box" className="box" onClick={() => this.selectBox(this.images.singletons[0].path, this.images.singletons[0].type)} />
-                        <img src={this.images.singletons[1].path} alt="box" className="box" onClick={() => this.selectBox(this.images.singletons[1].path, this.images.singletons[1].type)} />
+                        {this.images.terrains.map((element, index) =>
+                            <img src={element.path} alt="box" className="box" onClick={() => this.selectBox(element.path, element.type)} />
+                        )}
+                        {this.images.items.map((element, index) =>
+                            <img src={element.path} alt="box" className="box" onClick={() => this.selectBox(element.path, element.type)} />
+                        )}
+                        {this.images.singletons.map((element, index) =>
+                            <img src={element.path} alt="box" className="box" onClick={() => this.selectBox(element.path, element.type)} />
+                        )}
                     </p>
-                    <div>
-                        {/* <Slider min={0.1} max={2.0} defaultValue={1.0} value={this.state.scale} onChange={this.handleSlider} className="slider" /> */}
-                    </div>
                     <div
                         className="container"
                         text-align="center"
