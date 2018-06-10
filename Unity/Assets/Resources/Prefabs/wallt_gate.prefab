@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 65039601985447404}
   m_Layer: 0
   m_Name: wallt_gate
-  m_TagString: Obstacle
+  m_TagString: Door
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -42,7 +42,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!23 &23571785334075636
 MeshRenderer:
   m_ObjectHideFlags: 1

@@ -44,10 +44,10 @@ public class DronePilot : Item
             yield return new WaitForSeconds(10f);
 
             Destroy(closestObject);
-            yield return null;
+            yield break;
         }
             
         result(false);
-        yield return null;
+        yield break;
     }
 }

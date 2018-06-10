@@ -20,7 +20,6 @@ public class Key : Item
             {
                 shortestDistance = distance;
                 closestObject = door;
-                yield return null;
             }
         }
 
@@ -28,11 +27,11 @@ public class Key : Item
         {
             Destroy(closestObject);
             result(true);
-            yield return null;
+            yield break;
         }
 
 
         result(false);
-        yield return null;
+        yield break;
     }
 }

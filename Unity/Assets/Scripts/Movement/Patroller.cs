@@ -37,7 +37,8 @@ public class Patroller : MonoBehaviour
             if (_playerVisibility.Chasing)
             {
                 _agent.destination = _player.transform.localPosition;
-                _agent.speed = chasingSpeed;
+                if (!_playerVisibility.stunned)
+                    _agent.speed = chasingSpeed;
             }
             else
             {
@@ -46,7 +47,8 @@ public class Patroller : MonoBehaviour
                     if (!_arrived)
                     {
                         _arrived = true;
-                        _agent.speed = patrolSpeed;
+                        if (!_playerVisibility.stunned)
+                            _agent.speed = patrolSpeed;
                         StartCoroutine(GoToNextPoint());
                     }
                 }
@@ -129,7 +131,7 @@ public class Patroller : MonoBehaviour
 
     public IEnumerator Alarm(Vector3 position, DroneVision drone)
     {
-        if (_agent != null)
+        if (_agent != null && !_playerVisibility.stunned)
         {
             _agent.destination = position;
             _agent.speed = chasingSpeed;

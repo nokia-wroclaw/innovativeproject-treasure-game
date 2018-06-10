@@ -13,6 +13,6 @@ public class Trap : Item
         var playerObject = GameObject.FindGameObjectWithTag("Player");
         Instantiate(_itemToDrop, playerObject.transform.position, _itemToDrop.transform.rotation);
         result(true);
-        yield return null;
+        yield break;
     }
 }
