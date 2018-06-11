@@ -9,7 +9,7 @@ public abstract class Movement : MonoBehaviour
     protected Vector3 moveVelocity;
     protected Vector3 lookToward;
 
-    protected virtual float Smoothing
+    protected float Smoothing
     {
         get
         {
@@ -31,14 +31,6 @@ public abstract class Movement : MonoBehaviour
         lookToward = transform.forward;
     }
 
-    protected abstract void Update();
-
-
-    protected void FixedUpdate()
-    {
-        rb.velocity = moveVelocity;
-    }
-
     protected virtual void Move(float xDir, float zDir, Vector3 forward)
     {
         var inputDirection = new Vector3(xDir, 0f, zDir);
@@ -56,10 +48,10 @@ public abstract class Movement : MonoBehaviour
 
         var rawMoveVelocity = transform.forward * maxMoveSpeed * inputDirection.magnitude;
         moveVelocity = Vector3.ClampMagnitude(rawMoveVelocity, maxMoveSpeed);
+
+        rb.velocity = moveVelocity;
     }
 
-    protected void Animating()
-    {
+    protected void Animating() =>
         anim.SetFloat("blendSpeed", rb.velocity.magnitude);
-    }
 }

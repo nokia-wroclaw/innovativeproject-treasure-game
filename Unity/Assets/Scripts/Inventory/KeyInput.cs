@@ -3,15 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KeyInput : MonoBehaviour {
-	private InventorySlot[] _itemSlots;
-	public bool isPaused = false;
-	void Start () {
+public class KeyInput : MonoBehaviour
+{
+    public bool isPaused = false;
+
+    private InventorySlot[] _itemSlots;
+
+	void Start()
+    {
 		var inventory = GameObject.Find("ItemsParent");
 		_itemSlots = inventory.GetComponentsInChildren<InventorySlot>();
 	}
 
-	void Update () {
+	void Update()
+    {
 		if(Input.GetKeyDown(KeyCode.Alpha1))
 			_itemSlots[0].UseItem();
 		if(Input.GetKeyDown(KeyCode.Alpha2))
@@ -32,7 +37,6 @@ public class KeyInput : MonoBehaviour {
 		Time.timeScale = 0.0f;
 		isPaused = true;
 		SceneManager.LoadScene("MainMenu", LoadSceneMode.Additive);
-		//Time.timeScale = 1.0f;
 	}
 
 }

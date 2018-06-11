@@ -2,7 +2,7 @@
 
 public class PlayerMovement : Movement
 {
-    protected override void Update()
+    protected void FixedUpdate()
     {
         float lh = Input.GetAxis("Horizontal");
         float lv = Input.GetAxis("Vertical");

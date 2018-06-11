@@ -13,6 +13,10 @@ TagManager:
   - DroppedItem
   - Canvas
   - Tree
+  - Collectibles
+  - Obstacle
+  - Drone
+  - navMeshSurface
   layers:
   - Default
   - TransparentFX

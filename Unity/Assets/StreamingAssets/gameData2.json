@@ -1,0 +1,38 @@
+{
+    "mapSize": [
+        12000,
+        6000
+    ],
+    "playerPosition": [
+        0,
+        0
+    ],
+    "treasurePosition": [
+        80,
+        320
+    ],
+    "gameObjects": [
+        {
+            "size": [
+                4800,
+                2400
+            ],
+            "position": [
+                0,
+                0
+            ],
+            "type": "forestArea"
+        },
+        {
+            "size": [
+                80,
+                80
+            ],
+            "position": [
+                720,
+                400
+            ],
+            "type": "guard"
+        }
+    ]
+}

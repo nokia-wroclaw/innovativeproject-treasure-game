@@ -6,21 +6,23 @@ public class Patroller : MonoBehaviour
 {
     public bool usePredefinedPatrolTargets;
     public Vector3[] patrolTargets;
+    public float patrolSpeed = 2f;
+    public float chasingSpeed = 3.5f;
 
     private NavMeshAgent _agent;
     private Animator _anim;
     private GameObject _player;
-    private PlayerVisibility _playerVisibility;
+    private Visibility _playerVisibility;
 
-    private int destPoint;
-    private bool arrived;
-    private bool patrolling;
+    private int _destPoint;
+    private bool _arrived;
+    private bool _patrolling;
 
 	void Start () 
 	{
 		_agent = GetComponent<NavMeshAgent>();
 		_anim = GetComponent<Animator>();
-        _playerVisibility = GetComponent<PlayerVisibility>();
+        _playerVisibility = GetComponent<Visibility>();
         _player = GameObject.FindGameObjectWithTag("Player");
         if (!usePredefinedPatrolTargets)
             patrolTargets = GeneratePatrolTargets();
@@ -30,25 +32,28 @@ public class Patroller : MonoBehaviour
 	{
         if (_agent.pathPending)
             return;
-
-        if (patrolling)
+        if (_patrolling)
         {
             if (_playerVisibility.Chasing)
             {
                 _agent.destination = _player.transform.localPosition;
+                if (!_playerVisibility.stunned)
+                    _agent.speed = chasingSpeed;
             }
             else
             {
-                if (_agent.remainingDistance < _agent.stoppingDistance)
+                if ((_agent.remainingDistance  - _agent.baseOffset) < _agent.stoppingDistance)
                 {
-                    if (!arrived)
+                    if (!_arrived)
                     {
-                        arrived = true;
+                        _arrived = true;
+                        if (!_playerVisibility.stunned)
+                            _agent.speed = patrolSpeed;
                         StartCoroutine(GoToNextPoint());
                     }
                 }
                 else
-                    arrived = false;
+                    _arrived = false;
             }       
         }
         else
@@ -56,7 +61,10 @@ public class Patroller : MonoBehaviour
 
         _anim.SetFloat("blendSpeed", _agent.velocity.sqrMagnitude);
 	}
-	
+
+    public void StunEnemy() => 
+        StartCoroutine(Stun());
+
     private Vector3[] GeneratePatrolTargets()
     {
         RaycastHit hit;
@@ -90,9 +98,7 @@ public class Patroller : MonoBehaviour
             } while (!found);
             
             patrolTargets[i] = point;
-            Debug.LogFormat("Point {0}: {1}", i, point);
         }
-        Debug.LogFormat("Number of hits: {0}", counter);
 
         return patrolTargets;
     }
@@ -103,26 +109,38 @@ public class Patroller : MonoBehaviour
         {
             yield break;
         }
-        patrolling = true;
+        _patrolling = true;
+
         yield return new WaitForSeconds(2.0f);
-        arrived = false;
-        _agent.destination = patrolTargets[destPoint];
-        destPoint = (destPoint + 1) % patrolTargets.Length;        
+
+        _arrived = false;
+        _agent.destination = patrolTargets[_destPoint];
+        _destPoint = (_destPoint + 1) % patrolTargets.Length;        
     }
 
     private IEnumerator Stun()
     {
-        Debug.Log("Stunned");
         _agent.speed = 0;
         _playerVisibility.stunned = true;
+
         yield return new WaitForSeconds(10.0f);
+
         _playerVisibility.stunned = false;
         _agent.speed = 2;
     }
 
-    public void StunEnemy()
+    public IEnumerator Alarm(Vector3 position, DroneVision drone)
     {
-        StartCoroutine(Stun());
-    }
+        if (_agent != null && !_playerVisibility.stunned)
+        {
+            _agent.destination = position;
+            _agent.speed = chasingSpeed;
+            drone.canRespond = false;
 
+            yield return new WaitForSeconds(5.0f);
+
+            drone.canRespond = true;
+        }
+        
+    }
 }
