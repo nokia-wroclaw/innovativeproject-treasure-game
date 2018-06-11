@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
@@ -14,6 +17,12 @@ public class CameraMovement : MonoBehaviour
     private Vector3 _rayDirection;
     private RaycastHit _hit;
 
+    private class CollidedObject
+    {
+        public GameObject gameObject;
+        public short collisionCounter;
+    }
+
     void Start()
     { 
         _player = GameObject.FindGameObjectWithTag("Player");
@@ -24,30 +33,57 @@ public class CameraMovement : MonoBehaviour
         transform.position = _temp;
         _offset = transform.position - _player.transform.position;
         transform.LookAt(_player.transform);
+        StartCoroutine(CheckCollisions());
     }
     
     void FixedUpdate()
     {
         _targetCamPosition = _player.transform.position + _offset;
         transform.position = Vector3.Lerp (transform.position, _targetCamPosition, smoothing*Time.deltaTime);
-        //CheckCollisions();
     }
 
-    private void CheckCollisions()
+    private IEnumerator CheckCollisions()
     {
-        _rayDirection = _player.transform.position - transform.position + new Vector3(0, 1, 0);
-        Debug.DrawRay(transform.position, _rayDirection, Color.red);
+        var collidedObjects = new List<CollidedObject>();
 
-        if (Physics.Raycast(transform.position, _rayDirection, out _hit))
+        while(true)
         {
-            if (!_hit.transform.CompareTag("Player") && !_hit.transform.CompareTag("Canvas"))
+            //Debug.Log(collidedObjects.Count);
+            _rayDirection = _player.transform.position - transform.position + new Vector3(0, 1, 0);
+            Debug.DrawRay(transform.position, _rayDirection, Color.yellow);
+
+            collidedObjects.ForEach(c => c.collisionCounter--);
+
+            if (Physics.Raycast(transform.position, _rayDirection, out _hit))
             {
-                //TODO:
-                //Change material alpha value 
-                _hit.transform.GetComponent<Renderer>().enabled = false;
-                Debug.LogFormat("sth blocks the view {0}", _hit.transform.tag);   
+                if (_hit.transform.CompareTag("Obstacle"))
+                {
+                    var collidedObject = collidedObjects.FirstOrDefault(g => ReferenceEquals(g.gameObject, _hit.transform.gameObject));
+                    if (collidedObject == null)
+                    {
+                        _hit.transform.gameObject.GetComponent<Renderer>().material.ChangeAlpha(0.5f);
+
+                        var collisionSource = new CollidedObject { gameObject = _hit.transform.gameObject, collisionCounter = 2 };
+                        collidedObjects.Add(collisionSource);
+                    }
+                    else
+                        collidedObject.collisionCounter++;
+                }
             }
+
+            collidedObjects.RemoveAll(c => {
+                if (c.collisionCounter == 0)
+                {
+                    c.gameObject.GetComponent<Renderer>().material.ChangeAlpha(1f);
+                    return true;
+                }
+                else
+                    return false;
+            });
+
+            yield return new WaitForSeconds(0.1f);
         }
-  
     }
+
+
 }

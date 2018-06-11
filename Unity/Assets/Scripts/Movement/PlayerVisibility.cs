@@ -1,61 +1,42 @@
-﻿using System;
-using System.Collections;
-using System.Linq;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PlayerVisibility : MonoBehaviour
+public class PlayerVisibility : Visibility
 {   
     public float fieldOfViewDegrees;
+    public bool canAlarm = false;
+    public bool respond = true;
     public float visibilityDistance;
-    public float endGameDistance;
-    public bool stunned = false;
-
-    public bool Chasing
-    {
-        get
-        {
-            return _chasing;
-        }
-        private set
-        {
-            _chasing = value;
-
-            if (_chasing && !_playerSpottedObject.GetComponent<Renderer>().enabled)
-            {
-                _playerSpottedObject.GetComponent<Renderer>().enabled = true;
-            }
-
-            if (!_chasing && _playerSpottedObject.GetComponent<Renderer>().enabled)
-            {
-                _playerSpottedObject.GetComponent<Renderer>().enabled = false;
-            }
-        }
-    }
-  
-    public GameObject Player { get; private set; }
-
+    public float endGameDistance;    
     private GameObject _playerSpottedObject;
 
-    private bool _chasing;
-
-    void Start()
+    private void Update()
     {
-        Player = GameObject.FindGameObjectWithTag("Player");
+        _playerSpottedObject.transform.position = gameObject.transform.position + new Vector3(0, 4, 0);
+    }   
 
-        _playerSpottedObject = Instantiate((GameObject)Resources.Load("Prefabs/ExclamationMark"));
-       // _playerSpottedObject.transform.localPosition = gameObject.transform.position + new Vector3(0, 4, 0);
-        //_playerSpottedObject.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+    protected override void SignalStateChange()
+    {
+        if (_chasing && !_playerSpottedObject.GetComponent<Renderer>().enabled)
+        {
+            _playerSpottedObject.GetComponent<Renderer>().enabled = true;
+        }
+
+        if (!_chasing && _playerSpottedObject.GetComponent<Renderer>().enabled)
+        {
+            _playerSpottedObject.GetComponent<Renderer>().enabled = false;
+
+        }
+    }
+
+    protected override void InitComponents()
+    {
+        _playerSpottedObject = Instantiate((GameObject)Resources.Load("Prefabs/Old/ExclamationMark"));
         _playerSpottedObject.GetComponent<Renderer>().enabled = false;
-        StartCoroutine(PlayerVisibilityCheck());
     }
 
-    private void FixedUpdate()
-    {
-        _playerSpottedObject.transform.localPosition = gameObject.transform.position + new Vector3(0, 4, 0);
-    }
-
-    private IEnumerator PlayerVisibilityCheck()
+    protected override IEnumerator PlayerVisibilityCheck()
     {
         RaycastHit hit;
         Vector3 rayDirection;
@@ -66,14 +47,14 @@ public class PlayerVisibility : MonoBehaviour
             Debug.DrawRay(transform.position, rayDirection, Color.red);
 
             Chasing = false;
-
             if (!stunned && Vector3.Angle(rayDirection, transform.forward) <= fieldOfViewDegrees * 0.5f)
             {
+               
                 if (Physics.Raycast(transform.position, rayDirection, out hit))
                 {
                     if (hit.transform.CompareTag("Player"))
                     {
-                        if (hit.distance <= endGameDistance)
+                        if (hit.distance - _agent.baseOffset <= endGameDistance && !canAlarm)
                             break;
 
                         if (hit.distance <= visibilityDistance)
@@ -87,9 +68,8 @@ public class PlayerVisibility : MonoBehaviour
         SwitchScene();
     }
 
-    private void SwitchScene()
-    {
+    private void SwitchScene() => 
         SceneManager.LoadScene("MainMenu");
-    }
+
 }
 

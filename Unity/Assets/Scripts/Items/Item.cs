@@ -8,5 +8,4 @@ public abstract class Item : ScriptableObject
     public Sprite icon;
 
     public abstract IEnumerator Use(Action<bool> result);
-
 }

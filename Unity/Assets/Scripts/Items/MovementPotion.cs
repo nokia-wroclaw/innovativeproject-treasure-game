@@ -19,9 +19,12 @@ public class MovementPotion : Item
 
             movementScript.maxMoveSpeed -= 7;
         }
-
-        result(false);
-        yield return null;
+        else
+        {
+            result(false);
+            yield break;
+        }
+       
     }
 
 }

@@ -26,7 +26,6 @@ public abstract class Interactables : MonoBehaviour
     }
     protected virtual void OnTriggerExit(Collider other)
     {
-
         if (other.gameObject.tag == "Player")
         {
             _interactable = false;

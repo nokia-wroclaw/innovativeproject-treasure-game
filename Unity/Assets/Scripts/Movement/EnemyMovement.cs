@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EnemyMovement : Movement
 {
@@ -8,14 +6,6 @@ public class EnemyMovement : Movement
     public GameObject pointB;
 
     private Vector3 _direction;
-
-    /*protected override float Smoothing
-    {
-        get
-        {   
-            return 5.5f;
-        }
-    }*/
 
     protected override void Start()
     {
@@ -26,7 +16,7 @@ public class EnemyMovement : Movement
             _direction = pointB.transform.position - transform.position;
     }
 
-    protected override void Update()
+    protected void Update()
     {
         MovementController();
         Animating();

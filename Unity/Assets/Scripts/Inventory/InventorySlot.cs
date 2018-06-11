@@ -24,10 +24,7 @@ public class InventorySlot : MonoBehaviour
 		removeButton.interactable = false;
 	}
 
-	public void OnRemoveButton()
-	{
-		Inventory.instance.RemoveItem(_item);
-	}
+	public void OnRemoveButton() => Inventory.instance.RemoveItem(_item);
 
 	public void UseItem()
 	{

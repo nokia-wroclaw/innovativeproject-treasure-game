@@ -6,10 +6,9 @@ public class Inventory : MonoBehaviour
 	#region Singleton
 	public static Inventory instance;
 	
-	void Awake()
-	{
+	void Awake() =>
 		instance = this;
-	}
+
 	#endregion
 
 	public int space = 5;
