@@ -16,6 +16,7 @@ TagManager:
   - Collectibles
   - Obstacle
   - Drone
+  - navMeshSurface
   layers:
   - Default
   - TransparentFX

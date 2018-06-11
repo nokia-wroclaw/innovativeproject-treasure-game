@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 
 [CreateAssetMenu(fileName = "New Item", menuName = "Inventory/Key")]
 public class Key : Item
@@ -27,6 +28,12 @@ public class Key : Item
         {
             Destroy(closestObject);
             result(true);
+
+            yield return new WaitForSeconds(0.5f);
+            //performance todo
+            var navMesh = GameObject.FindGameObjectWithTag("Terrain").GetComponent<NavMeshSurface>();
+            navMesh.BuildNavMesh();
+
             yield break;
         }
 

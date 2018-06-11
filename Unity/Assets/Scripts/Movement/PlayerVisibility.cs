@@ -57,7 +57,7 @@ public class PlayerVisibility : Visibility
                         if (hit.distance - _agent.baseOffset <= endGameDistance && !canAlarm)
                             break;
 
-                        if (hit.distance - _agent.baseOffset <= visibilityDistance)
+                        if (hit.distance <= visibilityDistance)
                             Chasing = true;
                     }
                 }

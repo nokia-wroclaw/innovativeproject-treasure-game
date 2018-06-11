@@ -8,12 +8,15 @@ using UnityEngine.AI;
 
 public class MapDataController : MonoBehaviour
 {
-    public NavMeshSurface navMeshSurface;
+    private NavMeshSurface _navMeshSurface;
 
     private List<GameObject> _prefabs;
     private MapData _mapData;
     private string _fileName = "gameData.json";
-
+    private void Awake()
+    {
+        _navMeshSurface = GetComponent<NavMeshSurface>();
+    }
     void Start()
     {
         LoadAllPrefabs();
@@ -49,7 +52,7 @@ public class MapDataController : MonoBehaviour
 
             InstantiateObstacles();
 
-            navMeshSurface.BuildNavMesh();
+            _navMeshSurface.BuildNavMesh();
 
             InstantiateEnemies();
         }
@@ -187,7 +190,7 @@ public class MapDataController : MonoBehaviour
             if (caller == "LoadEnemies")
             {
                 createdObject.transform.position = new Vector3(mapElement.position[0] / 80f,
-                                                               0,
+                                                               0.3f,
                                                                (_mapData.mapSize[1] - 80f - mapElement.position[1]) / 80f);
             }
             else
