@@ -12,7 +12,7 @@ public class PopUpControl : MonoBehaviour
 	public void Continue()
 	{
 		Time.timeScale = 1.0f;
-		var menu = GetComponent<Canvas>();
+		var menu = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
 		menu.enabled = false;
 	}
 }
