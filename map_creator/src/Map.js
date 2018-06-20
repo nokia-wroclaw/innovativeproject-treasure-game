@@ -10,9 +10,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import axios from 'axios';
-import 'react-fine-uploader/gallery/gallery.css'
 
-// import Upload from 'material-ui-upload/Upload';
 const styles = {
     root: {
         display: 'flex',
@@ -39,10 +37,8 @@ const styles = {
 
 const getTerrains = () => {
     const terrains = [
-        { path: require('./assets/card.png'), type: 'card' },
         { path: require('./assets/guard.png'), type: 'guard' },
-        { path: require('./assets/tree1.png'), type: 'tree1' },
-        { path: require('./assets/tree3.png'), type: 'tree3' },
+        { path: require('./assets/trees.png'), type: 'tree1' },
         { path: require('./assets/wall1.png'), type: 'wall1' },
     ];
     return terrains;
@@ -58,8 +54,10 @@ const getSingletons = () => {
 
 const getItems = () => {
     const items = [
+        { path: require('./assets/card.png'), type: 'card' },
         { path: require('./assets/mine.png'), type: 'mine' },
         { path: require('./assets/movementPotion.png'), type: 'movementPotion' },
+        { path: require('./assets/droneDisabler.png'), type: 'droneDisabler' },
     ];
     return items;
 };
@@ -168,6 +166,7 @@ export default class Map extends React.Component {
         this.clearMap = this.clearMap.bind(this);
         this.clearObjectsArray = this.clearObjectsArray.bind(this);
         this.claimFreeSpot = this.claimFreeSpot.bind(this);
+        this.addShadowRectangle = this.addShadowRectangle.bind(this);
         this.mapList = [];
     }
 
@@ -223,6 +222,24 @@ export default class Map extends React.Component {
         }
     }
 
+    addShadowRectangle() {
+        this.shadowRectangle = new Konva.Rect({
+            x: 0,
+            y: 0,
+            width: this.blockSize,
+            height: this.blockSize,
+            scale: {
+                x: 1,
+                y: 1
+            },
+            fill: '#07fc1b',
+            opacity: 0.6,
+            stroke: '#03bc12',
+            strokeWidth: 3
+        });
+        this.layer.add(this.shadowRectangle);
+        this.shadowRectangle.hide();
+    }
     // Click events
     downloadMap() {
         const map = this.generateMap();
@@ -251,6 +268,7 @@ export default class Map extends React.Component {
     generateRandom() {
         this.clearMap();
         this.clearObjectsArray();
+        this.addShadowRectangle();
         // Adding player and the treasure
         this.addImage(this.images.singletons[0].path, this.images.singletons[0].type);
         this.addImage(this.images.singletons[1].path, this.images.singletons[1].type);
@@ -410,14 +428,11 @@ export default class Map extends React.Component {
         });
     }
 
-
-
     handleSubmit() {
         this.setMapSize(this.state.width, this.state.height);
         this.blockSize = parseInt(this.state.blockSize, 10);
         this.redraw();
     }
-
 
     setMapSize(width, height, fromFile) {
         if (fromFile != null) {
@@ -504,6 +519,7 @@ export default class Map extends React.Component {
         image.on('dragmove', () => {
             const pos = { x: -1, y: -1 };
             this.checkPos(image, pos, false);
+            this.shadowRectangle.show();
             this.shadowRectangle.position({
                 x: pos.x,
                 y: pos.y
