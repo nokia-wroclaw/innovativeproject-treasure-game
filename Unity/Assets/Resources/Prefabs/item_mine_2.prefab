@@ -37,9 +37,11 @@ GameObject:
   m_Component:
   - component: {fileID: 4036910290127976}
   - component: {fileID: 95378624260517412}
+  - component: {fileID: 114574600415809172}
+  - component: {fileID: 136823860545115586}
   m_Layer: 0
   m_Name: item_mine_2
-  m_TagString: Untagged
+  m_TagString: DroppedItem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -68,7 +70,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1615300787418946}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.421904, y: 0, z: 5.6658897}
+  m_LocalPosition: {x: 15.597128, y: -1.4210855e-14, z: 3.4959178}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4427295083328182}
@@ -115,6 +117,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: 1a1280ff02ff6a04bb9e4bd7b279a1d2, type: 2}
   m_StaticBatchInfo:
@@ -149,6 +152,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: 743666adcb52e484a80c9c4c0f13426c, type: 2}
   m_StaticBatchInfo:
@@ -201,3 +205,29 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &114574600415809172
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1615300787418946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae34ebb3a24b9b743aa2c64128ff6e4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _itemToPickup: {fileID: 0}
+--- !u!136 &136823860545115586
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1615300787418946}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.6
+  m_Height: 1.46587
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.5, z: 0}

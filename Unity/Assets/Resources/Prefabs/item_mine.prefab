@@ -37,9 +37,11 @@ GameObject:
   m_Component:
   - component: {fileID: 4723985097514228}
   - component: {fileID: 95454087110347792}
+  - component: {fileID: 136387276363973058}
+  - component: {fileID: 114497798021561546}
   m_Layer: 0
   m_Name: item_mine
-  m_TagString: Untagged
+  m_TagString: Collectibles
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -94,7 +96,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1113280346976044}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 53.007217, y: 0, z: 1.2961422}
+  m_LocalPosition: {x: 14.626279, y: 0, z: 3.2433753}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4493294808591118}
@@ -115,6 +117,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: cedece8c6f2fb4e46bbbc446e4410fc0, type: 2}
   m_StaticBatchInfo:
@@ -149,6 +152,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: 1a1280ff02ff6a04bb9e4bd7b279a1d2, type: 2}
   m_StaticBatchInfo:
@@ -201,3 +205,29 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &114497798021561546
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1113280346976044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae34ebb3a24b9b743aa2c64128ff6e4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _itemToPickup: {fileID: 11400000, guid: 731e90f0d90b9024a84ae6674c5a5b98, type: 2}
+--- !u!136 &136387276363973058
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1113280346976044}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.6
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.5, z: 0}
