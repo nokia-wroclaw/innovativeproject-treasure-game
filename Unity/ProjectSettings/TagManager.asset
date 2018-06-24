@@ -17,6 +17,7 @@ TagManager:
   - Obstacle
   - Drone
   - navMeshSurface
+  - GameplayManager
   layers:
   - Default
   - TransparentFX

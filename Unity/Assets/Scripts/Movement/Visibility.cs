@@ -7,6 +7,7 @@ public abstract class Visibility : MonoBehaviour
     public bool stunned = false;
     protected NavMeshAgent _agent;
     protected bool _chasing;
+    protected GameplayManager _gameplayManager;
 
     public bool Chasing
     {
@@ -26,6 +27,8 @@ public abstract class Visibility : MonoBehaviour
 
     void Start()
     {
+        _gameplayManager = GameObject.FindGameObjectWithTag("GameplayManager").GetComponent<GameplayManager>();
+
         Player = GameObject.FindGameObjectWithTag("Player");
 
         _agent = GetComponent<NavMeshAgent>();

@@ -8,7 +8,7 @@ public class PlayerVisibility : Visibility
     public bool canAlarm = false;
     public bool respond = true;
     public float visibilityDistance;
-    public float endGameDistance;    
+    public float endGameDistance;   
     private GameObject _playerSpottedObject;
 
     private void Update()
@@ -69,7 +69,7 @@ public class PlayerVisibility : Visibility
     }
 
     private void SwitchScene() => 
-        SceneManager.LoadScene("MainMenu");
+        _gameplayManager.Lose();
 
 }
 

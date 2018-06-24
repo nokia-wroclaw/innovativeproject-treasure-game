@@ -6,13 +6,14 @@ using UnityEngine;
 public class KeyInput : MonoBehaviour
 {
     public bool isPaused = false;
-
+	private GameplayManager _gameplayManager;
     private InventorySlot[] _itemSlots;
 
 	void Start()
     {
 		var inventory = GameObject.Find("ItemsParent");
 		_itemSlots = inventory.GetComponentsInChildren<InventorySlot>();
+		_gameplayManager = GameObject.FindGameObjectWithTag("GameplayManager").GetComponent<GameplayManager>();
 	}
 
 	void Update()
@@ -29,6 +30,8 @@ public class KeyInput : MonoBehaviour
 			_itemSlots[4].UseItem();	
 		if(Input.GetKeyDown(KeyCode.Escape))
 			PauseScene();
+		if(Input.GetKeyDown(KeyCode.Space))
+			_gameplayManager.Continue();
 				
 	}
 

@@ -26,7 +26,7 @@ public class MapDataController : MonoBehaviour
     }
 
     private void LoadAllPrefabs() =>
-        _prefabs = Resources.LoadAll("Prefabs/Old").Cast<GameObject>().ToList();
+        _prefabs = Resources.LoadAll("Prefabs").Cast<GameObject>().ToList();
 
 
     private void LoadDataFromJson()
@@ -116,11 +116,13 @@ public class MapDataController : MonoBehaviour
         {
             var random = new System.Random();
             RaycastHit[] hit = new RaycastHit[4];
-
+            Debug.Log("area: " + forestArea.size[0]);
             var field = forestArea.size[0]/80 * forestArea.size[1]/80;
             var density = 0.3f;
             var numberOfTrees = (int)(field * 0.37f * density); // 0.37 ≈ 1/pi -> pi - the area every tree takes(pi/r^2, r ≈ 1)
-
+            if(numberOfTrees == 0)
+                numberOfTrees =1; 
+            Debug.Log("numb of trees: " + numberOfTrees);
             var counter = 0;
 
             for (int i = 0; i < numberOfTrees; i++)
