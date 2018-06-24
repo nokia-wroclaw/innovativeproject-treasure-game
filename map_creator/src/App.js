@@ -1,22 +1,49 @@
 import React, { Component } from 'react';
-import Map from "./Map";
-
 import './App.css';
+import Map from "./Map";
+// import Misc from "./Misc";
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 class App extends Component {
+    constructor(props) {
+        super(props);
+        this.changeTab = this.changeTab.bind(this);
+        this.firstLoad = true;
+    }
+
     render() {
+        var styles = {
+            appBar: {
+                flexWrap: 'wrap'
+            },
+            tabs: {
+                width: '100%'
+            }
+        }
+        const value = 0;
         return (
-            <div className="App">
-                <header className="App-header">
-                    <h1 className="App-title">Steal the treasure game - Map editor</h1>
-                </header>
-                <p className="App-intro">
-                    Click on objects to place them on the map.
-                    Click <code>Generate map!</code> to create a map in .json format.
-                </p>
-                <Map />
-            </div>
+            <Router history={Router}>
+                <div>
+                    <MuiThemeProvider>
+                        <AppBar showMenuIconButton={false} style={styles.appBar} position="static">
+                            <Tabs onChange={this.changeTab} value={value}>
+                                <Tab label="Editor" component={Link} to="/" />
+                                {/* <Tab label="Misc" component={Link} to="/misc" /> */}
+                            </Tabs>
+                        </AppBar>
+                    </MuiThemeProvider>
+                    <Route exact path="/" component={(props) => <Map {...props} firstLoad={this.firstLoad} />} info={this.firstLoad} />
+                    {/* <Route path="/misc" component={(props) => <Misc {...props} firstLoad={this.firstLoad} />} /> */}
+                </div>
+            </Router >
         );
+    }
+    changeTab() {
+        this.firstLoad = false;
     }
 }
 export default App;
