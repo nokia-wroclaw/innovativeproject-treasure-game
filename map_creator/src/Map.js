@@ -38,8 +38,8 @@ const styles = {
 const getTerrains = () => {
     const terrains = [
         { path: require('./assets/guard.png'), type: 'guard' },
-        { path: require('./assets/trees.png'), type: 'tree1' },
-        { path: require('./assets/wall1.png'), type: 'wall1' },
+        { path: require('./assets/trees.png'), type: 'forestArea' },
+        { path: require('./assets/wall1.png'), type: 'wallf_1x1' },
     ];
     return terrains;
 };
