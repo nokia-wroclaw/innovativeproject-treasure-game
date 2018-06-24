@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class MainMenu : MonoBehaviour
 {
 	private bool _isPaused = false;
+	private bool _isButtonSet = false;
 	public void NewGame()
 	{
 		if(_isPaused)
@@ -33,6 +34,7 @@ public class MainMenu : MonoBehaviour
 	{
 		var resume = GameObject.Find("ResumeGame");
 		var resumeButton = resume.GetComponent<Button>();
+		resumeButton.Select();
 		KeyInput keyInput = FindObjectOfType<KeyInput>();
 		
 		if(keyInput != null)
@@ -47,5 +49,16 @@ public class MainMenu : MonoBehaviour
 			resumeButton.interactable = false;
 		}
 		
+	}
+
+	void Update()
+	{
+		if(Input.GetAxis("Vertical") != 0 && !_isButtonSet)
+		{
+			var newGame = GameObject.Find("ResumeGame");
+			var newButton = newGame.GetComponent<Button>();
+			newButton.Select();
+			_isButtonSet = true;
+		}
 	}
 }

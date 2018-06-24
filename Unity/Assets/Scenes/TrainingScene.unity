@@ -6648,6 +6648,11 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 41a1c3417dd512442a132bac20d0ebb8, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &693491972 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1899355917269602, guid: 2c00ebfeba23c12449098c686fcb9bf0,
+    type: 2}
+  m_PrefabInternal: {fileID: 1370332454}
 --- !u!1001 &699830399
 Prefab:
   m_ObjectHideFlags: 0
@@ -13928,6 +13933,11 @@ Prefab:
       propertyPath: m_Name
       value: Canvas (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 114894768014670738, guid: 2c00ebfeba23c12449098c686fcb9bf0,
+        type: 2}
+      propertyPath: m_Navigation.m_Mode
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2c00ebfeba23c12449098c686fcb9bf0, type: 2}
   m_IsPrefabParent: 0
@@ -18119,7 +18129,7 @@ MonoBehaviour:
   m_Script: {fileID: -619905303, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 0}
+  m_FirstSelected: {fileID: 693491972}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
 --- !u!4 &1770647771

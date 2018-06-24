@@ -6,7 +6,7 @@ public class PickupItem : Interactables
     [SerializeField]
     private Item _itemToPickup;
 
-    protected override Func<bool> InteractCondition => (() => Input.GetKeyDown(KeyCode.E));
+    protected override Func<bool> InteractCondition => (() => Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Joystick1Button0));
 
     protected override void Interact()
     {

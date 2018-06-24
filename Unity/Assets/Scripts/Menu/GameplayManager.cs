@@ -9,10 +9,12 @@ public class GameplayManager : MonoBehaviour {
 	public GameObject resultCanvas;
 	public Sprite winImage;
 	public Sprite loseImage;
+	public bool isEnd;
 	// Use this for initialization
 	void Start () 
 	{
 		resultCanvas.SetActive(false);
+		isEnd = false;
 	}
 	
 	// Update is called once per frame
@@ -24,18 +26,21 @@ public class GameplayManager : MonoBehaviour {
 	public void Win()
 	{
 		resultCanvas.GetComponent<Image>().sprite = winImage;
+		isEnd = true;
 		Pause();
 	}
 
 	public void Lose()
 	{
 		resultCanvas.GetComponent<Image>().sprite = loseImage;
+		isEnd = true;
 		Pause();
 	}
 
 	public void Continue()
 	{
 		Time.timeScale = 1.0f;
+		isEnd = false;
 		SceneManager.LoadScene("MainMenu");
 	}
 
