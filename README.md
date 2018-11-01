@@ -40,7 +40,7 @@ Start the client:
 
 ```
 cd db\server
-python client.py maps
+python zesralem_sie.py i_smierdzi
 ```
 
 #### Game
@@ -73,3 +73,4 @@ Start the game:
 - Wojciech Słowiński
 - Łukasz Zatorki
 - Filip Doroszkiewicz
+- Tomasz Terka
